@@ -45,11 +45,20 @@ header {
   padding: 60px;
   text-align: center;
   color: white;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.9)), url('assets/image/bg-header.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  position: relative;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.9));
 }
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* Gambar akan mengisi kontainer */
+  z-index: -1;  /* Menempatkan gambar di belakang konten */
+}
+
 
 nav {
   background-color: var(--primary-color);
