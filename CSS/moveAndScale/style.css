@@ -1,0 +1,54 @@
+/* Reset margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body, html {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+  }
+  
+  .animation-container {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .animated-box {
+    width: 50px;
+    height: 50px;
+    background-color: #3498db;
+    border-radius: 10px;
+    animation: moveAndScale 2s infinite ease-in-out;
+  }
+  
+  @keyframes moveAndScale {
+    0% {
+      transform: translate(0, 0) scale(1);
+      background-color: #3498db;
+    }
+    25% {
+      transform: translate(50px, 0) scale(1.2);
+      background-color: #e74c3c;
+    }
+    50% {
+      transform: translate(0, 50px) scale(1);
+      background-color: #2ecc71;
+    }
+    75% {
+      transform: translate(-50px, 0) scale(1.2);
+      background-color: #f39c12;
+    }
+    100% {
+      transform: translate(0, 0) scale(1);
+      background-color: #9b59b6;
+    }
+  }
+  
