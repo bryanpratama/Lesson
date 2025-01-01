@@ -1,0 +1,121 @@
+/* Reset default styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #87CEEB; /* Default sky color */
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Sky Animation */
+.sky {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #87CEEB, #FFD700);
+  animation: skyTransition 10s infinite;
+}
+
+/* Keyframes for Sky Transition */
+@keyframes skyTransition {
+  0% {
+    background: linear-gradient(to bottom, #87CEEB, #FFD700); /* Day */
+  }
+  50% {
+    background: linear-gradient(to bottom, #2C3E50, #34495E); /* Night */
+  }
+  100% {
+    background: linear-gradient(to bottom, #87CEEB, #FFD700); /* Back to Day */
+  }
+}
+
+/* Sun */
+.sun {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: #FFD700;
+  border-radius: 50%;
+  top: 60%;
+  left: 20%;
+  box-shadow: 0 0 30px rgba(255, 223, 0, 0.7);
+  animation: sunAnimation 10s infinite;
+}
+
+@keyframes sunAnimation {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-300px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Moon */
+.moon {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background-color: #F5F3CE;
+  border-radius: 50%;
+  top: 10%;
+  left: 70%;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+  animation: moonAnimation 10s infinite;
+  opacity: 0;
+}
+
+@keyframes moonAnimation {
+  0% {
+    transform: translateY(-300px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-300px);
+    opacity: 0;
+  }
+}
+
+/* Clouds */
+.cloud {
+  position: absolute;
+  width: 300px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50px;
+  top: 20%;
+  right: 0;
+  animation: cloudAnimation 20s linear infinite;
+}
+
+@keyframes cloudAnimation {
+  0% {
+    transform: translateX(100vw); /* Mulai dari luar kanan layar */
+  }
+  100% {
+    transform: translateX(-350px); /* Bergerak ke luar kiri layar */
+  }
+}
