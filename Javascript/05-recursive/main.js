@@ -2,7 +2,7 @@ import factorial from './factorial.js';
 import fibonacci from './fibonacci.js';
 
 const numberForFactorial = 5;
-console.log(`Faktorial dari ${numberForFactorial} adalah ${factorial(numberForFactorial)}`);
+console.log(`Faktorial dari ${numberForFactorial} adalah ${factorial(numberForFactorial)}}`);
 /**
  * Output yang diharapkan:
  * Faktorial dari 5 adalah 120
