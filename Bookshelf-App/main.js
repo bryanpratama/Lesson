@@ -5,25 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBookForm = document.getElementById('searchBook');
     const searchBookTitle = document.getElementById('searchBookTitle');
 
-    inputBookForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const title = document.getElementById('bookFormTitle').value;
-        const author = document.getElementById('bookFormAuthor').value;
-        const year = parseInt(document.getElementById('bookFormYear').value);
-        const isComplete = document.getElementById('bookFormIsComplete').checked;
-
-        const book = {
-            id: +new Date(),
-            title: title,
-            author: author,
-            year: year,
-            isComplete: isComplete
-        };
-
-        addBookToShelf(book);
-        saveData();
-        inputBookForm.reset();
-    });
+    inputBookForm.addEventListener('submit', handleAddBook);
 
     searchBookForm.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -68,6 +50,13 @@ document.addEventListener('DOMContentLoaded', function() {
             changeBookStatus(book.id);
         });
 
+        const editButton = document.createElement('button');
+        editButton.setAttribute('data-testid', 'bookItemEditButton');
+        editButton.textContent = 'Edit buku';
+        editButton.addEventListener('click', function() {
+            editBook(book);
+        });
+
         const deleteButton = document.createElement('button');
         deleteButton.setAttribute('data-testid', 'bookItemDeleteButton');
         deleteButton.textContent = 'Hapus buku';
@@ -76,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         actionContainer.appendChild(changeStatusButton);
+        actionContainer.appendChild(editButton);
         actionContainer.appendChild(deleteButton);
 
         bookContainer.appendChild(titleElement);
@@ -84,6 +74,86 @@ document.addEventListener('DOMContentLoaded', function() {
         bookContainer.appendChild(actionContainer);
 
         return bookContainer;
+    }
+
+    function editBook(book) {
+        const titleInput = document.getElementById('bookFormTitle');
+        const authorInput = document.getElementById('bookFormAuthor');
+        const yearInput = document.getElementById('bookFormYear');
+        const isCompleteCheckbox = document.getElementById('bookFormIsComplete');
+
+        // Prefill form with existing book data
+        titleInput.value = book.title;
+        authorInput.value = book.author;
+        yearInput.value = book.year;
+        isCompleteCheckbox.checked = book.isComplete;
+
+        // Temporarily change the submit button text
+        const submitButton = document.getElementById('bookFormSubmit');
+        submitButton.textContent = 'Update Buku';
+
+        // Change form submit behavior to handle edit
+        inputBookForm.onsubmit = function(event) {
+            event.preventDefault();
+
+            // Update book data
+            const updatedTitle = titleInput.value;
+            const updatedAuthor = authorInput.value;
+            const updatedYear = parseInt(yearInput.value);
+            const updatedIsComplete = isCompleteCheckbox.checked;
+
+            if (!updatedTitle || !updatedAuthor || isNaN(updatedYear)) {
+                alert('Mohon lengkapi semua data buku dengan benar!');
+                return;
+            }
+
+            book.title = updatedTitle;
+            book.author = updatedAuthor;
+            book.year = updatedYear;
+            book.isComplete = updatedIsComplete;
+
+            // Remove old book element
+            const oldBookElement = document.querySelector(`[data-bookid="${book.id}"]`);
+            if (oldBookElement) {
+                oldBookElement.remove();
+            }
+
+            // Add updated book to shelf
+            addBookToShelf(book);
+            saveData();
+
+            // Reset form and revert button text
+            inputBookForm.reset();
+            submitButton.textContent = 'Masukkan Buku ke rak';
+
+            // Restore default behavior of the form
+            inputBookForm.onsubmit = handleAddBook;
+        };
+    }
+
+    function handleAddBook(event) {
+        event.preventDefault();
+        const title = document.getElementById('bookFormTitle').value;
+        const author = document.getElementById('bookFormAuthor').value;
+        const year = parseInt(document.getElementById('bookFormYear').value);
+        const isComplete = document.getElementById('bookFormIsComplete').checked;
+
+        if (!title || !author || isNaN(year)) {
+            alert('Mohon lengkapi semua data buku dengan benar!');
+            return;
+        }
+
+        const newBook = {
+            id: +new Date(),
+            title: title,
+            author: author,
+            year: year,
+            isComplete: isComplete
+        };
+
+        addBookToShelf(newBook);
+        saveData();
+        inputBookForm.reset();
     }
 
     function changeBookStatus(bookId) {
