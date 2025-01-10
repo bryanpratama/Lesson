@@ -35,8 +35,8 @@
   <div class="controls">
     <input type="file" id="imageInput" accept="image/*" />
     <br>
-    <input type="text" id="topText" placeholder="Top Text" />
-    <input type="text" id="bottomText" placeholder="Bottom Text" />
+    <textarea id="topText" placeholder="Top Text" rows="2" style="width: 300px;"></textarea>
+    <textarea id="bottomText" placeholder="Bottom Text" rows="2" style="width: 300px;"></textarea>
     <br>
     <label>Font Size:</label>
     <button id="decreaseFontSize">-</button>
@@ -60,6 +60,7 @@
 
     let image = new Image();
     let fontSize = 40;
+    let interval = null;
 
     imageInput.addEventListener('change', (event) => {
       const file = event.target.files[0];
@@ -80,20 +81,28 @@
 
     topText.addEventListener('input', drawMeme);
     bottomText.addEventListener('input', drawMeme);
-    decreaseFontSizeButton.addEventListener('click', () => {
-      if (fontSize > 10) {
-        fontSize -= 2;
-        fontSizeDisplay.textContent = fontSize;
-        drawMeme();
-      }
-    });
-    increaseFontSizeButton.addEventListener('click', () => {
-      if (fontSize < 100) {
-        fontSize += 2;
-        fontSizeDisplay.textContent = fontSize;
-        drawMeme();
-      }
-    });
+
+    function adjustFontSize(change) {
+      fontSize = Math.min(Math.max(fontSize + change, 10), 100);
+      fontSizeDisplay.textContent = fontSize;
+      drawMeme();
+    }
+
+    function startAdjustingFontSize(change) {
+      adjustFontSize(change);
+      interval = setInterval(() => adjustFontSize(change), 100);
+    }
+
+    function stopAdjustingFontSize() {
+      clearInterval(interval);
+    }
+
+    decreaseFontSizeButton.addEventListener('mousedown', () => startAdjustingFontSize(-2));
+    increaseFontSizeButton.addEventListener('mousedown', () => startAdjustingFontSize(2));
+    decreaseFontSizeButton.addEventListener('mouseup', stopAdjustingFontSize);
+    increaseFontSizeButton.addEventListener('mouseup', stopAdjustingFontSize);
+    decreaseFontSizeButton.addEventListener('mouseleave', stopAdjustingFontSize);
+    increaseFontSizeButton.addEventListener('mouseleave', stopAdjustingFontSize);
 
     function drawMeme() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -106,13 +115,21 @@
       ctx.lineWidth = 2;
 
       if (topText.value) {
-        ctx.fillText(topText.value, canvas.width / 2, fontSize);
-        ctx.strokeText(topText.value, canvas.width / 2, fontSize);
+        const topLines = topText.value.split('\n');
+        topLines.forEach((line, index) => {
+          const y = fontSize + index * fontSize * 1.2;
+          ctx.fillText(line, canvas.width / 2, y);
+          ctx.strokeText(line, canvas.width / 2, y);
+        });
       }
 
       if (bottomText.value) {
-        ctx.fillText(bottomText.value, canvas.width / 2, canvas.height - 20);
-        ctx.strokeText(bottomText.value, canvas.width / 2, canvas.height - 20);
+        const bottomLines = bottomText.value.split('\n');
+        bottomLines.reverse().forEach((line, index) => {
+          const y = canvas.height - 20 - index * fontSize * 1.2;
+          ctx.fillText(line, canvas.width / 2, y);
+          ctx.strokeText(line, canvas.width / 2, y);
+        });
       }
     }
 
