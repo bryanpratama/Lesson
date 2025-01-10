@@ -18,7 +18,7 @@
     .controls {
       margin-bottom: 20px;
     }
-    input[type="text"], input[type="file"] {
+    input[type="text"], input[type="file"], input[type="number"] {
       margin: 10px;
       padding: 5px;
     }
@@ -37,6 +37,9 @@
     <input type="text" id="topText" placeholder="Top Text" />
     <input type="text" id="bottomText" placeholder="Bottom Text" />
     <br>
+    <label for="fontSize">Font Size:</label>
+    <input type="number" id="fontSize" value="40" min="10" max="100" />
+    <br>
     <button id="downloadButton">Download Meme</button>
   </div>
   <canvas id="memeCanvas" width="500" height="500"></canvas>
@@ -47,6 +50,7 @@
     const imageInput = document.getElementById('imageInput');
     const topText = document.getElementById('topText');
     const bottomText = document.getElementById('bottomText');
+    const fontSizeInput = document.getElementById('fontSize');
     const downloadButton = document.getElementById('downloadButton');
 
     let image = new Image();
@@ -70,20 +74,22 @@
 
     topText.addEventListener('input', drawMeme);
     bottomText.addEventListener('input', drawMeme);
+    fontSizeInput.addEventListener('input', drawMeme);
 
     function drawMeme() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
+      const fontSize = parseInt(fontSizeInput.value, 10);
       ctx.textAlign = 'center';
-      ctx.font = 'bold 40px Arial';
+      ctx.font = `bold ${fontSize}px Arial`;
       ctx.fillStyle = 'white';
       ctx.strokeStyle = 'black';
       ctx.lineWidth = 2;
 
       if (topText.value) {
-        ctx.fillText(topText.value, canvas.width / 2, 50);
-        ctx.strokeText(topText.value, canvas.width / 2, 50);
+        ctx.fillText(topText.value, canvas.width / 2, fontSize);
+        ctx.strokeText(topText.value, canvas.width / 2, fontSize);
       }
 
       if (bottomText.value) {
