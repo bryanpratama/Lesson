@@ -28,6 +28,9 @@
       cursor: pointer;
       margin: 5px;
     }
+    .color-picker {
+      margin: 10px;
+    }
   </style>
 </head>
 <body>
@@ -43,6 +46,10 @@
     <button id="increaseFontSize">+</button>
     <span id="fontSizeDisplay">40</span>
     <br>
+    <label for="backgroundColor">Text Background Color:</label>
+    <input type="color" id="backgroundColor" class="color-picker" value="#000000">
+    <label><input type="checkbox" id="transparentBackground"> Transparent</label>
+    <br>
     <button id="downloadButton">Download Meme</button>
   </div>
   <canvas id="memeCanvas" width="500" height="500"></canvas>
@@ -56,11 +63,15 @@
     const fontSizeDisplay = document.getElementById('fontSizeDisplay');
     const decreaseFontSizeButton = document.getElementById('decreaseFontSize');
     const increaseFontSizeButton = document.getElementById('increaseFontSize');
+    const backgroundColorInput = document.getElementById('backgroundColor');
+    const transparentBackgroundCheckbox = document.getElementById('transparentBackground');
     const downloadButton = document.getElementById('downloadButton');
 
     let image = new Image();
     let fontSize = 40;
     let interval = null;
+    let backgroundColor = '#000000';
+    let isTransparentBackground = false;
 
     imageInput.addEventListener('change', (event) => {
       const file = event.target.files[0];
@@ -81,6 +92,14 @@
 
     topText.addEventListener('input', drawMeme);
     bottomText.addEventListener('input', drawMeme);
+    backgroundColorInput.addEventListener('input', (e) => {
+      backgroundColor = e.target.value;
+      drawMeme();
+    });
+    transparentBackgroundCheckbox.addEventListener('change', (e) => {
+      isTransparentBackground = e.target.checked;
+      drawMeme();
+    });
 
     function adjustFontSize(change) {
       fontSize = Math.min(Math.max(fontSize + change, 10), 100);
@@ -118,8 +137,7 @@
         const topLines = topText.value.split('\n');
         topLines.forEach((line, index) => {
           const y = fontSize + index * fontSize * 1.2;
-          ctx.fillText(line, canvas.width / 2, y);
-          ctx.strokeText(line, canvas.width / 2, y);
+          drawTextWithBackground(line, canvas.width / 2, y);
         });
       }
 
@@ -127,10 +145,21 @@
         const bottomLines = bottomText.value.split('\n');
         bottomLines.reverse().forEach((line, index) => {
           const y = canvas.height - 20 - index * fontSize * 1.2;
-          ctx.fillText(line, canvas.width / 2, y);
-          ctx.strokeText(line, canvas.width / 2, y);
+          drawTextWithBackground(line, canvas.width / 2, y);
         });
       }
+    }
+
+    function drawTextWithBackground(text, x, y) {
+      const textWidth = ctx.measureText(text).width;
+      const padding = 10;
+      if (!isTransparentBackground) {
+        ctx.fillStyle = backgroundColor;
+        ctx.fillRect(x - textWidth / 2 - padding, y - fontSize, textWidth + padding * 2, fontSize + padding / 2);
+      }
+      ctx.fillStyle = 'white';
+      ctx.fillText(text, x, y);
+      ctx.strokeText(text, x, y);
     }
 
     downloadButton.addEventListener('click', () => {
