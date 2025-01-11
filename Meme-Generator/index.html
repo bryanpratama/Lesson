@@ -34,6 +34,29 @@
     .color-picker {
       margin: 10px;
     }
+    .fullscreen {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+    }
+    .fullscreen canvas {
+      max-width: 90%;
+      max-height: 90%;
+    }
+    .fullscreen button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: white;
+      border: none;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
@@ -54,8 +77,14 @@
     <label><input type="checkbox" id="transparentBackground"> Transparent</label>
     <br>
     <button id="downloadButton">Download Meme</button>
+    <button id="enterFullscreen">View Full</button>
   </div>
   <canvas id="memeCanvas" width="500" height="500"></canvas>
+
+  <div class="fullscreen" id="fullscreenContainer">
+    <canvas id="fullscreenCanvas"></canvas>
+    <button id="exitFullscreen">Close</button>
+  </div>
 
   <script>
     const canvas = document.getElementById('memeCanvas');
@@ -69,6 +98,11 @@
     const backgroundColorInput = document.getElementById('backgroundColor');
     const transparentBackgroundCheckbox = document.getElementById('transparentBackground');
     const downloadButton = document.getElementById('downloadButton');
+    const enterFullscreenButton = document.getElementById('enterFullscreen');
+    const fullscreenContainer = document.getElementById('fullscreenContainer');
+    const fullscreenCanvas = document.getElementById('fullscreenCanvas');
+    const fullscreenCtx = fullscreenCanvas.getContext('2d');
+    const exitFullscreenButton = document.getElementById('exitFullscreen');
 
     let image = new Image();
     let fontSize = 40;
@@ -170,6 +204,17 @@
       link.download = 'meme.png';
       link.href = canvas.toDataURL();
       link.click();
+    });
+
+    enterFullscreenButton.addEventListener('click', () => {
+      fullscreenContainer.style.display = 'flex';
+      fullscreenCanvas.width = canvas.width;
+      fullscreenCanvas.height = canvas.height;
+      fullscreenCtx.drawImage(canvas, 0, 0);
+    });
+
+    exitFullscreenButton.addEventListener('click', () => {
+      fullscreenContainer.style.display = 'none';
     });
   </script>
 </body>
