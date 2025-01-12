@@ -59,6 +59,22 @@
       border: none;
       border-radius: 5px;
     }
+    .preset-images {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .preset-images img {
+      width: 100px;
+      height: auto;
+      margin: 5px;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .preset-images img:hover {
+      border: 2px solid #007BFF;
+    }
   </style>
 </head>
 <body>
@@ -83,6 +99,12 @@
   </div>
   <canvas id="memeCanvas" width="500" height="500"></canvas>
 
+  <div class="preset-images" id="presetImages">
+    <img src="gambar1.jpg" alt="Preset Image 1">
+    <img src="gambar2.jpg" alt="Preset Image 2">
+    <img src="gambar3.jpg" alt="Preset Image 3">
+  </div>
+
   <div class="fullscreen" id="fullscreenContainer">
     <canvas id="fullscreenCanvas"></canvas>
     <button id="exitFullscreen">Close</button>
@@ -105,6 +127,7 @@
     const fullscreenCanvas = document.getElementById('fullscreenCanvas');
     const fullscreenCtx = fullscreenCanvas.getContext('2d');
     const exitFullscreenButton = document.getElementById('exitFullscreen');
+    const presetImages = document.getElementById('presetImages');
 
     let image = new Image();
     let fontSize = 40;
@@ -120,6 +143,12 @@
           image.src = e.target.result;
         };
         reader.readAsDataURL(file);
+      }
+    });
+
+    presetImages.addEventListener('click', (event) => {
+      if (event.target.tagName === 'IMG') {
+        image.src = event.target.src;
       }
     });
 
