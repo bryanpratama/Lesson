@@ -83,16 +83,19 @@
     <input type="file" id="imageInput" accept="image/*" />
     <br>
     <textarea id="topText" placeholder="Top Text" rows="2" style="width: 300px;"></textarea>
+    <label for="topBackgroundColor">Top Text Background Color:</label>
+    <input type="color" id="topBackgroundColor" class="color-picker" value="#000000">
+    <label><input type="checkbox" id="topTransparentBackground"> Transparent</label>
+    <br>
     <textarea id="bottomText" placeholder="Bottom Text" rows="2" style="width: 300px;"></textarea>
+    <label for="bottomBackgroundColor">Bottom Text Background Color:</label>
+    <input type="color" id="bottomBackgroundColor" class="color-picker" value="#000000">
+    <label><input type="checkbox" id="bottomTransparentBackground"> Transparent</label>
     <br>
     <label>Font Size:</label>
     <button id="decreaseFontSize">-</button>
     <button id="increaseFontSize">+</button>
     <span id="fontSizeDisplay">40</span>
-    <br>
-    <label for="backgroundColor">Text Background Color:</label>
-    <input type="color" id="backgroundColor" class="color-picker" value="#000000">
-    <label><input type="checkbox" id="transparentBackground"> Transparent</label>
     <br>
     <button id="downloadButton">Download Meme</button>
     <button id="enterFullscreen">View Full</button>
@@ -119,8 +122,10 @@
     const fontSizeDisplay = document.getElementById('fontSizeDisplay');
     const decreaseFontSizeButton = document.getElementById('decreaseFontSize');
     const increaseFontSizeButton = document.getElementById('increaseFontSize');
-    const backgroundColorInput = document.getElementById('backgroundColor');
-    const transparentBackgroundCheckbox = document.getElementById('transparentBackground');
+    const topBackgroundColorInput = document.getElementById('topBackgroundColor');
+    const bottomBackgroundColorInput = document.getElementById('bottomBackgroundColor');
+    const topTransparentBackgroundCheckbox = document.getElementById('topTransparentBackground');
+    const bottomTransparentBackgroundCheckbox = document.getElementById('bottomTransparentBackground');
     const downloadButton = document.getElementById('downloadButton');
     const enterFullscreenButton = document.getElementById('enterFullscreen');
     const fullscreenContainer = document.getElementById('fullscreenContainer');
@@ -132,8 +137,6 @@
     let image = new Image();
     let fontSize = 40;
     let interval = null;
-    let backgroundColor = '#000000';
-    let isTransparentBackground = false;
 
     imageInput.addEventListener('change', (event) => {
       const file = event.target.files[0];
@@ -160,14 +163,10 @@
 
     topText.addEventListener('input', drawMeme);
     bottomText.addEventListener('input', drawMeme);
-    backgroundColorInput.addEventListener('input', (e) => {
-      backgroundColor = e.target.value;
-      drawMeme();
-    });
-    transparentBackgroundCheckbox.addEventListener('change', (e) => {
-      isTransparentBackground = e.target.checked;
-      drawMeme();
-    });
+    topBackgroundColorInput.addEventListener('input', drawMeme);
+    bottomBackgroundColorInput.addEventListener('input', drawMeme);
+    topTransparentBackgroundCheckbox.addEventListener('change', drawMeme);
+    bottomTransparentBackgroundCheckbox.addEventListener('change', drawMeme);
 
     function adjustFontSize(change) {
       fontSize = Math.min(Math.max(fontSize + change, 10), 100);
@@ -197,7 +196,6 @@
 
       ctx.textAlign = 'center';
       ctx.font = `bold ${fontSize}px Arial`;
-      ctx.fillStyle = 'white';
       ctx.strokeStyle = 'black';
       ctx.lineWidth = 2;
 
@@ -205,7 +203,7 @@
         const topLines = topText.value.split('\n');
         topLines.forEach((line, index) => {
           const y = fontSize + index * fontSize * 1.2;
-          drawTextWithBackground(line, canvas.width / 2, y);
+          drawTextWithBackground(line, canvas.width / 2, y, topBackgroundColorInput.value, topTransparentBackgroundCheckbox.checked);
         });
       }
 
@@ -213,15 +211,15 @@
         const bottomLines = bottomText.value.split('\n');
         bottomLines.reverse().forEach((line, index) => {
           const y = canvas.height - 20 - index * fontSize * 1.2;
-          drawTextWithBackground(line, canvas.width / 2, y);
+          drawTextWithBackground(line, canvas.width / 2, y, bottomBackgroundColorInput.value, bottomTransparentBackgroundCheckbox.checked);
         });
       }
     }
 
-    function drawTextWithBackground(text, x, y) {
+    function drawTextWithBackground(text, x, y, backgroundColor, isTransparent) {
       const textWidth = ctx.measureText(text).width;
       const padding = 10;
-      if (!isTransparentBackground) {
+      if (!isTransparent) {
         ctx.fillStyle = backgroundColor;
         ctx.fillRect(x - textWidth / 2 - padding, y - fontSize, textWidth + padding * 2, fontSize + padding / 2);
       }
