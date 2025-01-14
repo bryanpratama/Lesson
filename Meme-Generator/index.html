@@ -87,6 +87,11 @@
     <input type="color" id="topBackgroundColor" class="color-picker" value="#000000">
     <label><input type="checkbox" id="topTransparentBackground"> Transparent</label>
     <br>
+    <textarea id="middleText" placeholder="Middle Text" rows="2" style="width: 300px;"></textarea>
+    <label for="middleBackgroundColor">Middle Text Background Color:</label>
+    <input type="color" id="middleBackgroundColor" class="color-picker" value="#000000">
+    <label><input type="checkbox" id="middleTransparentBackground"> Transparent</label>
+    <br>
     <textarea id="bottomText" placeholder="Bottom Text" rows="2" style="width: 300px;"></textarea>
     <label for="bottomBackgroundColor">Bottom Text Background Color:</label>
     <input type="color" id="bottomBackgroundColor" class="color-picker" value="#000000">
@@ -118,13 +123,16 @@
     const ctx = canvas.getContext('2d');
     const imageInput = document.getElementById('imageInput');
     const topText = document.getElementById('topText');
+    const middleText = document.getElementById('middleText');
     const bottomText = document.getElementById('bottomText');
     const fontSizeDisplay = document.getElementById('fontSizeDisplay');
     const decreaseFontSizeButton = document.getElementById('decreaseFontSize');
     const increaseFontSizeButton = document.getElementById('increaseFontSize');
     const topBackgroundColorInput = document.getElementById('topBackgroundColor');
+    const middleBackgroundColorInput = document.getElementById('middleBackgroundColor');
     const bottomBackgroundColorInput = document.getElementById('bottomBackgroundColor');
     const topTransparentBackgroundCheckbox = document.getElementById('topTransparentBackground');
+    const middleTransparentBackgroundCheckbox = document.getElementById('middleTransparentBackground');
     const bottomTransparentBackgroundCheckbox = document.getElementById('bottomTransparentBackground');
     const downloadButton = document.getElementById('downloadButton');
     const enterFullscreenButton = document.getElementById('enterFullscreen');
@@ -162,10 +170,13 @@
     };
 
     topText.addEventListener('input', drawMeme);
+    middleText.addEventListener('input', drawMeme);
     bottomText.addEventListener('input', drawMeme);
     topBackgroundColorInput.addEventListener('input', drawMeme);
+    middleBackgroundColorInput.addEventListener('input', drawMeme);
     bottomBackgroundColorInput.addEventListener('input', drawMeme);
     topTransparentBackgroundCheckbox.addEventListener('change', drawMeme);
+    middleTransparentBackgroundCheckbox.addEventListener('change', drawMeme);
     bottomTransparentBackgroundCheckbox.addEventListener('change', drawMeme);
 
     function adjustFontSize(change) {
@@ -204,6 +215,14 @@
         topLines.forEach((line, index) => {
           const y = fontSize + index * fontSize * 1.2;
           drawTextWithBackground(line, canvas.width / 2, y, topBackgroundColorInput.value, topTransparentBackgroundCheckbox.checked);
+        });
+      }
+
+      if (middleText.value) {
+        const middleLines = middleText.value.split('\n');
+        middleLines.forEach((line, index) => {
+          const y = canvas.height - 300 + index * fontSize * 1.2;
+          drawTextWithBackground(line, canvas.width / 2, y, middleBackgroundColorInput.value, middleTransparentBackgroundCheckbox.checked);
         });
       }
 
