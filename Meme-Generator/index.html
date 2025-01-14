@@ -219,12 +219,30 @@
       }
 
       if (middleText.value) {
-        const middleLines = middleText.value.split('\n');
-        middleLines.forEach((line, index) => {
-          const y = canvas.height - 300 + index * fontSize * 1.2;
-          drawTextWithBackground(line, canvas.width / 2, y, middleBackgroundColorInput.value, middleTransparentBackgroundCheckbox.checked);
-        });
-      }
+  const middleLines = middleText.value.split('\n');
+  
+  // Hitung tinggi total teks (termasuk jarak antar baris)
+  const totalTextHeight = middleLines.length * fontSize * 1.2;
+
+  // Tentukan posisi Y awal agar teks terpusat secara vertikal
+  const startY = (canvas.height / 2) - (totalTextHeight / 2) + (fontSize / 2);
+
+  middleLines.forEach((line, index) => {
+    // Hitung posisi Y untuk setiap baris
+    const y = startY + index * fontSize * 1.2;
+
+    // Gambar teks dengan latar belakang
+    drawTextWithBackground(
+      line,
+      canvas.width / 2, // Posisi X (tengah kanvas)
+      y,                // Posisi Y
+      middleBackgroundColorInput.value, 
+      middleTransparentBackgroundCheckbox.checked
+    );
+  });
+}
+
+
 
       if (bottomText.value) {
         const bottomLines = bottomText.value.split('\n');
