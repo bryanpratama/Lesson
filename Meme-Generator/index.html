@@ -106,7 +106,7 @@
     <button id="enterFullscreen">View Full</button>
   </div>
   <canvas id="memeCanvas" width="500" height="500"></canvas>
-
+  
   <div class="preset-images" id="presetImages">
     <img src="gambar1.jpg" alt="Preset Image 1">
     <img src="gambar2.jpg" alt="Preset Image 2">
@@ -204,6 +204,7 @@
     function drawMeme() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+      
 
       ctx.textAlign = 'center';
       ctx.font = `bold ${fontSize}px Arial`;
@@ -282,6 +283,9 @@
     exitFullscreenButton.addEventListener('click', () => {
       fullscreenContainer.style.display = 'none';
     });
+
+    
+
   </script>
 </body>
 </html>
