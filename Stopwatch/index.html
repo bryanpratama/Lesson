@@ -28,6 +28,24 @@
             font-size: 2em;
             margin: 20px 0;
         }
+        .history {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .history h2 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .history ul {
+            list-style: none;
+            padding: 0;
+        }
+        .history li {
+            background: #e9ecef;
+            margin: 5px 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
         button {
             background-color: #007BFF;
             color: #fff;
@@ -50,6 +68,10 @@
         <button onclick="startStopwatch()">Start</button>
         <button onclick="stopStopwatch()">Stop</button>
         <button onclick="resetStopwatch()">Reset</button>
+        <div class="history">
+            <h2>History</h2>
+            <ul id="historyList"></ul>
+        </div>
     </div>
 
     <script>
@@ -58,6 +80,7 @@
         let intervalId;
 
         const timeDisplay = document.getElementById('timeDisplay');
+        const historyList = document.getElementById('historyList');
 
         function updateDisplay() {
             const currentTime = new Date().getTime();
@@ -82,6 +105,7 @@
                 clearInterval(intervalId);
                 intervalId = null;
                 elapsedTime += new Date().getTime() - startTime;
+                addHistory();
             }
         }
 
@@ -89,6 +113,14 @@
             stopStopwatch();
             elapsedTime = 0;
             timeDisplay.textContent = "00:00:000";
+            historyList.innerHTML = ""; // Clear history
+        }
+
+        function addHistory() {
+            const time = timeDisplay.textContent;
+            const listItem = document.createElement('li');
+            listItem.textContent = time;
+            historyList.appendChild(listItem);
         }
     </script>
 </body>
