@@ -68,6 +68,7 @@
         <button onclick="startStopwatch()">Start</button>
         <button onclick="stopStopwatch()">Stop</button>
         <button onclick="resetStopwatch()">Reset</button>
+        <button onclick="addHistoryWhileRunning()">Add to History</button>
         <div class="history">
             <h2>History</h2>
             <ul id="historyList"></ul>
@@ -117,6 +118,13 @@
         }
 
         function addHistory() {
+            const time = timeDisplay.textContent;
+            const listItem = document.createElement('li');
+            listItem.textContent = time;
+            historyList.appendChild(listItem);
+        }
+
+        function addHistoryWhileRunning() {
             const time = timeDisplay.textContent;
             const listItem = document.createElement('li');
             listItem.textContent = time;
