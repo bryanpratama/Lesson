@@ -5,12 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stopwatch</title>
     <style>
+        :root {
+            --background-light: #f4f4f9;
+            --text-light: #333;
+            --background-dark: #1e1e2f;
+            --text-dark: #f4f4f9;
+            --button-light: #007BFF;
+            --button-hover-light: #0056b3;
+            --button-dark: #5a5aff;
+            --button-hover-dark: #3a3aff;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f9;
-            color: #333;
+            background-color: var(--background-light);
+            color: var(--text-light);
+            transition: background-color 0.3s, color 0.3s;
         }
         h1 {
             text-align: center;
@@ -47,7 +59,7 @@
             border-radius: 5px;
         }
         button {
-            background-color: #007BFF;
+            background-color: var(--button-light);
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -55,9 +67,27 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: var(--button-hover-light);
+        }
+        body.dark-mode {
+            background-color: var(--background-dark);
+            color: var(--text-dark);
+        }
+        body.dark-mode .container {
+            background: #2e2e3f;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        body.dark-mode button {
+            background-color: var(--button-dark);
+        }
+        body.dark-mode button:hover {
+            background-color: var(--button-hover-dark);
+        }
+        body.dark-mode .history li {
+            background: #3e3e4f;
         }
     </style>
 </head>
@@ -69,6 +99,7 @@
         <button onclick="stopStopwatch()">Stop</button>
         <button onclick="resetStopwatch()">Reset</button>
         <button onclick="addHistoryWhileRunning()">Add to History</button>
+        <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
         <div class="history">
             <h2>History</h2>
             <ul id="historyList"></ul>
@@ -129,6 +160,10 @@
             const listItem = document.createElement('li');
             listItem.textContent = time;
             historyList.appendChild(listItem);
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
         }
     </script>
 </body>
