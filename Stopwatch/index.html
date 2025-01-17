@@ -5,23 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stopwatch</title>
     <style>
-        :root {
-            --background-light: #f4f4f9;
-            --text-light: #333;
-            --background-dark: #1e1e2f;
-            --text-dark: #f4f4f9;
-            --button-light: #007BFF;
-            --button-hover-light: #0056b3;
-            --button-dark: #5a5aff;
-            --button-hover-dark: #3a3aff;
-        }
-
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: var(--background-light);
-            color: var(--text-light);
+            background-color: #f4f4f9;
+            color: #333;
             transition: background-color 0.3s, color 0.3s;
         }
         h1 {
@@ -35,6 +24,7 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             text-align: center;
+            position: relative;
         }
         .time-display {
             font-size: 2em;
@@ -59,7 +49,7 @@
             border-radius: 5px;
         }
         button {
-            background-color: var(--button-light);
+            background-color: #007BFF;
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -67,39 +57,53 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s;
         }
         button:hover {
-            background-color: var(--button-hover-light);
+            background-color: #0056b3;
         }
-        body.dark-mode {
-            background-color: var(--background-dark);
-            color: var(--text-dark);
+        .dark-mode {
+            background-color: #1e1e2f;
+            color: #ddd;
         }
-        body.dark-mode .container {
-            background: #2e2e3f;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        .dark-mode .container {
+            background: #29293d;
         }
-        body.dark-mode button {
-            background-color: var(--button-dark);
+        .dark-mode .history li {
+            background: #444455;
         }
-        body.dark-mode button:hover {
-            background-color: var(--button-hover-dark);
+        .dark-mode button {
+            background-color: #4444aa;
         }
-        body.dark-mode .history li {
-            background: #3e3e4f;
+        .dark-mode button:hover {
+            background-color: #222288;
+        }
+        .dark-mode-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
+            border: 1px solid #007BFF;
+            background-color: #007BFF;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .dark-mode .dark-mode-toggle {
+            background-color: #4444aa;
+            border-color: #4444aa;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">Dark Mode</button>
         <h1>Stopwatch</h1>
         <div class="time-display" id="timeDisplay">00:00:000</div>
         <button onclick="startStopwatch()">Start</button>
         <button onclick="stopStopwatch()">Stop</button>
         <button onclick="resetStopwatch()">Reset</button>
         <button onclick="addHistoryWhileRunning()">Add to History</button>
-        <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
         <div class="history">
             <h2>History</h2>
             <ul id="historyList"></ul>
@@ -110,6 +114,7 @@
         let startTime = 0;
         let elapsedTime = 0;
         let intervalId;
+        let isDarkMode = false;
 
         const timeDisplay = document.getElementById('timeDisplay');
         const historyList = document.getElementById('historyList');
@@ -163,7 +168,8 @@
         }
 
         function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode', isDarkMode);
         }
     </script>
 </body>
