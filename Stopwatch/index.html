@@ -11,7 +11,6 @@
             padding: 20px;
             background-color: #f4f4f9;
             color: #333;
-            transition: background-color 0.3s, color 0.3s;
         }
         h1 {
             text-align: center;
@@ -30,19 +29,19 @@
             font-size: 2em;
             margin: 20px 0;
         }
-        .history {
+        .history, .laps {
             margin-top: 20px;
             text-align: left;
         }
-        .history h2 {
+        .history h2, .laps h2 {
             font-size: 1.2em;
             margin-bottom: 10px;
         }
-        .history ul {
+        .history ul, .laps ul {
             list-style: none;
             padding: 0;
         }
-        .history li {
+        .history li, .laps li {
             background: #e9ecef;
             margin: 5px 0;
             padding: 5px 10px;
@@ -62,51 +61,39 @@
             background-color: #0056b3;
         }
         .dark-mode {
-            background-color: #1e1e2f;
-            color: #ddd;
+            background-color: #1e1e1e;
+            color: #f4f4f9;
         }
         .dark-mode .container {
-            background: #29293d;
+            background: #333;
         }
-        .dark-mode .history li {
-            background: #444455;
+        .dark-mode .history li, .dark-mode .laps li {
+            background: #444;
         }
-        .dark-mode button {
-            background-color: #4444aa;
-        }
-        .dark-mode button:hover {
-            background-color: #222288;
-        }
-        .dark-mode-toggle {
+        .toggle-dark-mode {
             position: absolute;
             top: 10px;
             right: 10px;
-            padding: 5px 10px;
-            font-size: 14px;
-            border: 1px solid #007BFF;
-            background-color: #007BFF;
-            color: #fff;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .dark-mode .dark-mode-toggle {
-            background-color: #4444aa;
-            border-color: #4444aa;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <button class="dark-mode-toggle" onclick="toggleDarkMode()">Dark Mode</button>
+        <button class="toggle-dark-mode" onclick="toggleDarkMode()">Toggle Dark Mode</button>
         <h1>Stopwatch</h1>
         <div class="time-display" id="timeDisplay">00:00:000</div>
         <button onclick="startStopwatch()">Start</button>
         <button onclick="stopStopwatch()">Stop</button>
         <button onclick="resetStopwatch()">Reset</button>
         <button onclick="addHistoryWhileRunning()">Add to History</button>
+        <button onclick="addLap()">Lap</button>
         <div class="history">
             <h2>History</h2>
             <ul id="historyList"></ul>
+        </div>
+        <div class="laps">
+            <h2>Laps</h2>
+            <ul id="lapsList"></ul>
         </div>
     </div>
 
@@ -114,10 +101,10 @@
         let startTime = 0;
         let elapsedTime = 0;
         let intervalId;
-        let isDarkMode = false;
 
         const timeDisplay = document.getElementById('timeDisplay');
         const historyList = document.getElementById('historyList');
+        const lapsList = document.getElementById('lapsList');
 
         function updateDisplay() {
             const currentTime = new Date().getTime();
@@ -151,6 +138,7 @@
             elapsedTime = 0;
             timeDisplay.textContent = "00:00:000";
             historyList.innerHTML = ""; // Clear history
+            lapsList.innerHTML = ""; // Clear laps
         }
 
         function addHistory() {
@@ -167,9 +155,15 @@
             historyList.appendChild(listItem);
         }
 
+        function addLap() {
+            const time = timeDisplay.textContent;
+            const listItem = document.createElement('li');
+            listItem.textContent = time;
+            lapsList.appendChild(listItem);
+        }
+
         function toggleDarkMode() {
-            isDarkMode = !isDarkMode;
-            document.body.classList.toggle('dark-mode', isDarkMode);
+            document.body.classList.toggle('dark-mode');
         }
     </script>
 </body>
