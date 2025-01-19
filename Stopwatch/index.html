@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stopwatch</title>
+    <title>Stopwatch with Countdown</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,6 +86,11 @@
         <button onclick="stopStopwatch()">Stop</button>
         <button onclick="resetStopwatch()">Reset</button>
         <button onclick="addLap()">Lap</button>
+        <h1>Countdown Timer</h1>
+        <input type="number" id="countdownMinutes" placeholder="Minutes" style="width: 80px; margin: 5px;">
+        <input type="number" id="countdownSeconds" placeholder="Seconds" style="width: 80px; margin: 5px;">
+        <button onclick="startCountdown()">Start Countdown</button>
+        <button onclick="resetCountdown()">Reset Countdown</button>
         <div class="laps">
             <h2>Laps</h2>
             <ul id="lapsList"></ul>
@@ -142,6 +147,41 @@
 
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
+        }
+
+        // Countdown Timer Variables
+        let countdownInterval;
+        let countdownTime = 0;
+
+        function startCountdown() {
+            const minutes = parseInt(document.getElementById('countdownMinutes').value) || 0;
+            const seconds = parseInt(document.getElementById('countdownSeconds').value) || 0;
+            countdownTime = (minutes * 60 + seconds) * 1000;
+
+            if (countdownTime > 0) {
+                if (countdownInterval) clearInterval(countdownInterval);
+                countdownInterval = setInterval(updateCountdownDisplay, 10);
+            }
+        }
+
+        function updateCountdownDisplay() {
+            if (countdownTime > 0) {
+                countdownTime -= 10;
+                const milliseconds = countdownTime % 1000;
+                const seconds = Math.floor((countdownTime / 1000) % 60);
+                const minutes = Math.floor(countdownTime / 60000);
+
+                timeDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(milliseconds).padStart(3, '0')}`;
+            } else {
+                clearInterval(countdownInterval);
+                timeDisplay.textContent = "Time's up!";
+            }
+        }
+
+        function resetCountdown() {
+            clearInterval(countdownInterval);
+            countdownTime = 0;
+            timeDisplay.textContent = "00:00:000";
         }
     </script>
 </body>
