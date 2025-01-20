@@ -11,41 +11,46 @@
             padding: 20px;
             background-color: #f4f4f9;
             color: #333;
-        }
-        h1 {
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .container {
             max-width: 400px;
-            margin: 0 auto;
+            width: 100%;
             background: #fff;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
-            position: relative;
         }
-        .time-display {
-            font-size: 2em;
-            margin: 20px 0;
+        .section {
+            margin-bottom: 30px;
         }
-        .laps {
-            margin-top: 20px;
-            text-align: left;
-        }
-        .laps h2 {
-            font-size: 1.2em;
+        .section h1 {
+            font-size: 1.5em;
             margin-bottom: 10px;
         }
-        .laps ul {
-            list-style: none;
-            padding: 0;
+        .time-display {
+            font-size: 2.5em;
+            margin: 20px 0;
+            color: #007BFF;
+            font-weight: bold;
         }
-        .laps li {
-            background: #e9ecef;
-            margin: 5px 0;
-            padding: 5px 10px;
+        .input-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .input-group input {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid #ccc;
             border-radius: 5px;
+            text-align: center;
+            font-size: 1em;
         }
         button {
             background-color: #007BFF;
@@ -56,6 +61,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s;
         }
         button:hover {
             background-color: #0056b3;
@@ -67,34 +73,56 @@
         .dark-mode .container {
             background: #333;
         }
-        .dark-mode .laps li {
-            background: #444;
+        hr {
+            border: 0;
+            height: 1px;
+            background: #ddd;
+            margin: 20px 0;
         }
         .toggle-dark-mode {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 20px;
+            right: 20px;
+            background-color: #555;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <button class="toggle-dark-mode" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-        <h1>Stopwatch</h1>
-        <div class="time-display" id="timeDisplay">00:00:000</div>
-        <button onclick="startStopwatch()">Start</button>
-        <button onclick="stopStopwatch()">Stop</button>
-        <button onclick="resetStopwatch()">Reset</button>
-        <button onclick="addLap()">Lap</button>
-        <h1>Countdown Timer</h1>
-        <input type="number" id="countdownMinutes" placeholder="Minutes" style="width: 80px; margin: 5px;">
-        <input type="number" id="countdownSeconds" placeholder="Seconds" style="width: 80px; margin: 5px;">
-        <button onclick="startCountdown()">Start Countdown</button>
-        <button onclick="resetCountdown()">Reset Countdown</button>
-        <h1>Share</h1>
-        <button onclick="shareOnSocialMedia()">Share on Social Media</button>
-        <div class="laps">
-            <h2>Laps</h2>
+
+        <div class="section">
+            <h1>Stopwatch</h1>
+            <div class="time-display" id="timeDisplay">00:00:000</div>
+            <button onclick="startStopwatch()">Start</button>
+            <button onclick="stopStopwatch()">Stop</button>
+            <button onclick="resetStopwatch()">Reset</button>
+            <button onclick="addLap()">Lap</button>
+        </div>
+
+        <hr>
+
+        <div class="section">
+            <h1>Countdown Timer</h1>
+            <div class="input-group">
+                <input type="number" id="countdownMinutes" placeholder="Minutes">
+                <input type="number" id="countdownSeconds" placeholder="Seconds">
+            </div>
+            <button onclick="startCountdown()">Start Countdown</button>
+            <button onclick="resetCountdown()">Reset Countdown</button>
+        </div>
+
+        <hr>
+
+        <div class="section">
+            <h1>Share</h1>
+            <button onclick="shareOnSocialMedia()">Share on Social Media</button>
+        </div>
+
+        <hr>
+
+        <div class="section laps">
+            <h1>Laps</h1>
             <ul id="lapsList"></ul>
         </div>
     </div>
@@ -187,9 +215,7 @@
         }
 
         function shareOnSocialMedia() {
-            const text = `Check out my time: ${timeDisplay.textContent}`;
-            const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-            window.open(shareUrl, '_blank');
+            alert("Feature to share on social media coming soon!");
         }
     </script>
 </body>
