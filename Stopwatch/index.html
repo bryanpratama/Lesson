@@ -91,6 +91,8 @@
         <input type="number" id="countdownSeconds" placeholder="Seconds" style="width: 80px; margin: 5px;">
         <button onclick="startCountdown()">Start Countdown</button>
         <button onclick="resetCountdown()">Reset Countdown</button>
+        <h1>Share</h1>
+        <button onclick="shareOnSocialMedia()">Share on Social Media</button>
         <div class="laps">
             <h2>Laps</h2>
             <ul id="lapsList"></ul>
@@ -182,6 +184,12 @@
             clearInterval(countdownInterval);
             countdownTime = 0;
             timeDisplay.textContent = "00:00:000";
+        }
+
+        function shareOnSocialMedia() {
+            const text = `Check out my time: ${timeDisplay.textContent}`;
+            const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            window.open(shareUrl, '_blank');
         }
     </script>
 </body>
