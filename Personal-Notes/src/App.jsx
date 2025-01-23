@@ -1,42 +1,63 @@
-import React from 'react';
+import React, { useState } from "react";
+import NoteInput from "./components/NoteInput";
+import NoteList from "./components/NoteList";
 import './styles/style.css';
 
+
+const initialNotes = [
+  {
+    id: 1,
+    title: "Babel",
+    body: "Babel merupakan tools open-source yang digunakan untuk mengubah sintaks ECMAScript 2015+ menjadi sintaks yang didukung oleh JavaScript engine versi lama.",
+    archived: false,
+    createdAt: "2022-04-14T04:27:34.572Z",
+  },
+  {
+    id: 2,
+    title: "React",
+    body: "React adalah pustaka JavaScript untuk membangun antarmuka pengguna.",
+    archived: false,
+    createdAt: "2022-04-15T10:00:00.000Z",
+  },
+];
+
 function App() {
+  const [notes, setNotes] = useState(initialNotes);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+
+  const handleAddNote = (e) => {
+    e.preventDefault();
+    if (!title || !body) return;
+
+    const newNote = {
+      id: +new Date(),
+      title,
+      body,
+      archived: false,
+      createdAt: new Date().toISOString(),
+    };
+
+    setNotes([...notes, newNote]);
+    setTitle("");
+    setBody("");
+  };
+
+  const handleDeleteNote = (id) => {
+    setNotes(notes.filter((note) => note.id !== id));
+  };
+
   return (
-    <div className="note-app">
-      <header className="note-app__header">
-        <h1>Aplikasi Catatan Pribadi</h1>
-      </header>
-      <div className="note-app__body">
-        <div className="note-input">
-          <h2>Buat Catatan</h2>
-          <p className="note-input__title__char-limit">Sisa karakter: 50</p>
-          <input
-            type="text"
-            placeholder="Judul catatan"
-            className="note-input__title"
-          />
-          <textarea
-            placeholder="Isi catatan..."
-            className="note-input__body"
-          ></textarea>
-          <button>Tambah Catatan</button>
-        </div>
-        <h2>Daftar Catatan</h2>
-        <div className="notes-list">
-          <div className="note-item">
-            <div className="note-item__content">
-              <h3 className="note-item__title">Judul Catatan</h3>
-              <p className="note-item__date">Dibuat pada: 01/01/2025</p>
-              <p className="note-item__body">Ini adalah isi catatan.</p>
-            </div>
-            <div className="note-item__action">
-              <button className="note-item__delete-button">Hapus</button>
-              <button className="note-item__archive-button">Arsipkan</button>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="App">
+      <h1>Aplikasi Catatan Pribadi</h1>
+      <NoteInput
+        title={title}
+        body={body}
+        setTitle={setTitle}
+        setBody={setBody}
+        handleAddNote={handleAddNote}
+      />
+      <NoteList notes={notes} handleDeleteNote={handleDeleteNote} />
     </div>
   );
 }
