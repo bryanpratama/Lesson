@@ -1,90 +1,42 @@
-// Import dependencies
-import React, { useState } from "react";
-
-// Initial data for notes
-const initialNotes = [
-  {
-    id: 1,
-    title: "Babel",
-    body: "Babel merupakan tools open-source yang digunakan untuk mengubah sintaks ECMAScript 2015+ menjadi sintaks yang didukung oleh JavaScript engine versi lama.",
-    archived: false,
-    createdAt: "2022-04-14T04:27:34.572Z",
-  },
-  {
-    id: 2,
-    title: "React",
-    body: "React adalah pustaka JavaScript untuk membangun antarmuka pengguna.",
-    archived: false,
-    createdAt: "2022-04-15T10:00:00.000Z",
-  },
-];
+import React from 'react';
+import './styles/style.css';
 
 function App() {
-  // State to store notes
-  const [notes, setNotes] = useState(initialNotes);
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-
-  // Handle form submission to add a note
-  const handleAddNote = (e) => {
-    e.preventDefault();
-    if (!title || !body) return;
-
-    const newNote = {
-      id: +new Date(), // Unique ID based on timestamp
-      title,
-      body,
-      archived: false,
-      createdAt: new Date().toISOString(),
-    };
-
-    setNotes([...notes, newNote]);
-    setTitle("");
-    setBody("");
-  };
-
-  // Handle note deletion
-  const handleDeleteNote = (id) => {
-    setNotes(notes.filter((note) => note.id !== id));
-  };
-
   return (
-    <div className="App">
-      <h1>Aplikasi Catatan Pribadi</h1>
-
-      {/* Form to add a new note */}
-      <form onSubmit={handleAddNote}>
-        <input
-          type="text"
-          placeholder="Judul"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <textarea
-          placeholder="Isi catatan"
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-        ></textarea>
-        <button type="submit">Tambah Catatan</button>
-      </form>
-
-      {/* Notes List */}
-      <h2>Daftar Catatan</h2>
-      {notes.length > 0 ? (
-        <ul>
-          {notes.map((note) => (
-            <li key={note.id}>
-              <h3>{note.title}</h3>
-              <p>{note.body}</p>
-              <small>Dibuat pada: {new Date(note.createdAt).toLocaleString()}</small>
-              <br />
-              <button onClick={() => handleDeleteNote(note.id)}>Hapus</button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Tidak ada catatan.</p>
-      )}
+    <div className="note-app">
+      <header className="note-app__header">
+        <h1>Aplikasi Catatan Pribadi</h1>
+      </header>
+      <div className="note-app__body">
+        <div className="note-input">
+          <h2>Buat Catatan</h2>
+          <p className="note-input__title__char-limit">Sisa karakter: 50</p>
+          <input
+            type="text"
+            placeholder="Judul catatan"
+            className="note-input__title"
+          />
+          <textarea
+            placeholder="Isi catatan..."
+            className="note-input__body"
+          ></textarea>
+          <button>Tambah Catatan</button>
+        </div>
+        <h2>Daftar Catatan</h2>
+        <div className="notes-list">
+          <div className="note-item">
+            <div className="note-item__content">
+              <h3 className="note-item__title">Judul Catatan</h3>
+              <p className="note-item__date">Dibuat pada: 01/01/2025</p>
+              <p className="note-item__body">Ini adalah isi catatan.</p>
+            </div>
+            <div className="note-item__action">
+              <button className="note-item__delete-button">Hapus</button>
+              <button className="note-item__archive-button">Arsipkan</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
