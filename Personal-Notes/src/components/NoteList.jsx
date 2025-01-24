@@ -3,10 +3,10 @@ import NoteItem from "./NoteItem";
 
 function NoteList({ notes, handleDeleteNote }) {
   return (
-    <div className="note-list">
-      <h2 className="note-list-title">Daftar Catatan</h2>
+    <div>
+      <h2>Daftar Catatan</h2>
       {notes.length > 0 ? (
-        <ul className="note-list-items">
+        <div className="notes-list">
           {notes.map((note) => (
             <NoteItem
               key={note.id}
@@ -14,9 +14,9 @@ function NoteList({ notes, handleDeleteNote }) {
               handleDeleteNote={handleDeleteNote}
             />
           ))}
-        </ul>
+        </div>
       ) : (
-        <p className="note-list-empty">Tidak ada catatan.</p>
+        <p className="notes-list__empty-message">Tidak ada catatan.</p>
       )}
     </div>
   );

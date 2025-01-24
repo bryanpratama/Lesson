@@ -1,24 +1,33 @@
 import React from "react";
 
 function NoteInput({ title, body, setTitle, setBody, handleAddNote }) {
+  // Fungsi untuk membatasi panjang input judul
+  const handleTitleChange = (e) => {
+    if (e.target.value.length <= 50) {
+      setTitle(e.target.value);
+    }
+  };
+
   return (
     <form className="note-input" onSubmit={handleAddNote}>
-      <input
-        className="note-input-title"
-        type="text"
-        placeholder="Judul"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+      <div className="note-input__title">
+        <input
+          type="text"
+          placeholder="Judul"
+          value={title}
+          onChange={handleTitleChange}
+        />
+        <p className="note-input__title__char-limit">
+          Sisa karakter: {50 - title.length}
+        </p>
+      </div>
       <textarea
-        className="note-input-body"
-        placeholder="Isi catatan"
+        className="note-input__body"
+        placeholder="Tulis catatanmu di sini..."
         value={body}
         onChange={(e) => setBody(e.target.value)}
       ></textarea>
-      <button className="note-input-submit" type="submit">
-        Tambah Catatan
-      </button>
+      <button type="submit">Tambah Catatan</button>
     </form>
   );
 }
