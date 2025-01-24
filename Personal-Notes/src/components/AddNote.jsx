@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import TitleInput from "./TitleInput";
 
 function AddNote({ onAddNote }) {
   const [title, setTitle] = useState("");
@@ -21,7 +22,6 @@ function AddNote({ onAddNote }) {
     }
   };
 
-  // Fungsi pembatas judul
   const handleTitleChange = (e) => {
     if (e.target.value.length <= MAX_TITLE_LENGTH) {
       setTitle(e.target.value);
@@ -30,18 +30,11 @@ function AddNote({ onAddNote }) {
 
   return (
     <form onSubmit={handleSubmit} className="note-input">
-      <div className="note-input__title">
-        <input
-          type="text"
-          placeholder="Masukkan judul..."
-          value={title}
-          onChange={handleTitleChange}
-          required
-        />
-        <p className="note-input__title__char-limit">
-          Sisa karakter: {MAX_TITLE_LENGTH - title.length}
-        </p>
-      </div>
+      <TitleInput
+        title={title}
+        maxLength={MAX_TITLE_LENGTH}
+        handleTitleChange={handleTitleChange}
+      />
       <textarea
         placeholder="Masukkan isi catatan..."
         value={body}
