@@ -50,6 +50,13 @@
             color: white;
             position: relative;
         }
+
+        .thank-you {
+            font-size: 2rem;
+            color: #4caf50;
+            text-align: center;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -58,9 +65,14 @@
         <button class="button accept">Terima</button>
         <button class="button decline">Tolak</button>
     </div>
+    <div class="thank-you">Terima kasih sudah setuju!</div>
 
     <script>
         const declineButton = document.querySelector('.decline');
+        const acceptButton = document.querySelector('.accept');
+        const question = document.querySelector('.question');
+        const buttonContainer = document.querySelector('.button-container');
+        const thankYouMessage = document.querySelector('.thank-you');
 
         declineButton.addEventListener('mouseover', () => {
             const x = Math.random() * (window.innerWidth - declineButton.offsetWidth);
@@ -69,6 +81,12 @@
             declineButton.style.position = 'absolute';
             declineButton.style.left = `${x}px`;
             declineButton.style.top = `${y}px`;
+        });
+
+        acceptButton.addEventListener('click', () => {
+            question.style.display = 'none';
+            buttonContainer.style.display = 'none';
+            thankYouMessage.style.display = 'block';
         });
     </script>
 </body>
