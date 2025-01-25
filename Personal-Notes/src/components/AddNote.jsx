@@ -5,7 +5,6 @@ function AddNote({ onAddNote }) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
-  // Maksimal panjang judul
   const MAX_TITLE_LENGTH = 50;
 
   const handleSubmit = (e) => {
@@ -30,6 +29,7 @@ function AddNote({ onAddNote }) {
 
   return (
     <form onSubmit={handleSubmit} className="note-input">
+      <h2>Tambah Catatan</h2>
       <TitleInput
         title={title}
         maxLength={MAX_TITLE_LENGTH}

@@ -1,7 +1,6 @@
 import React from "react";
 
 function NoteInput({ title, body, setTitle, setBody, handleAddNote }) {
-  // Fungsi untuk membatasi panjang input judul
   const handleTitleChange = (e) => {
     if (e.target.value.length <= 50) {
       setTitle(e.target.value);

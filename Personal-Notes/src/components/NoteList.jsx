@@ -1,10 +1,9 @@
 import React from "react";
 import NoteItem from "./NoteItem";
 
-function NoteList({ notes, handleDeleteNote }) {
+function NoteList({ notes, handleDeleteNote, handleArchiveNote }) {
   return (
     <div>
-      <h2>Daftar Catatan</h2>
       {notes.length > 0 ? (
         <div className="notes-list">
           {notes.map((note) => (
@@ -12,6 +11,7 @@ function NoteList({ notes, handleDeleteNote }) {
               key={note.id}
               note={note}
               handleDeleteNote={handleDeleteNote}
+              handleArchiveNote={handleArchiveNote}
             />
           ))}
         </div>
