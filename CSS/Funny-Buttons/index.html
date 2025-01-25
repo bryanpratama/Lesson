@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funny Buttons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f3f4f6;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .accept {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .accept:hover {
+            background-color: #45a049;
+        }
+
+        .decline {
+            background-color: #f44336;
+            color: white;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">Apakah kamu setuju dengan ini?</div>
+    <div class="button-container">
+        <button class="button accept">Terima</button>
+        <button class="button decline">Tolak</button>
+    </div>
+
+    <script>
+        const declineButton = document.querySelector('.decline');
+
+        declineButton.addEventListener('mouseover', () => {
+            const x = Math.random() * (window.innerWidth - declineButton.offsetWidth);
+            const y = Math.random() * (window.innerHeight - declineButton.offsetHeight);
+
+            declineButton.style.position = 'absolute';
+            declineButton.style.left = `${x}px`;
+            declineButton.style.top = `${y}px`;
+        });
+    </script>
+</body>
+</html>
