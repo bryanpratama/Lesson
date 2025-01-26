@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Button Designs</title>
     <style>
+        :root {
+            --bg-light: #f7f7f7;
+            --text-light: #000;
+            --bg-dark: #121212;
+            --text-dark: #fff;
+        }
+
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -12,7 +19,14 @@
             justify-content: center;
             gap: 20px;
             padding: 20px;
-            background-color: #f7f7f7;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
         }
 
         button {
@@ -139,9 +153,54 @@
             50% { left: 50%; }
             100% { left: 100%; }
         }
+
+        /* Dark Mode Styles */
+        body.dark-mode .btn-default {
+            background-color: #0056b3;
+        }
+
+        body.dark-mode .btn-outline {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        body.dark-mode .btn-gradient {
+            background: linear-gradient(45deg, #6610f2, #6f42c1);
+        }
+
+        body.dark-mode .btn-shadow {
+            background-color: #343a40;
+        }
+
+        body.dark-mode .btn-rounded {
+            background-color: #fd7e14;
+        }
+
+        body.dark-mode .btn-neon {
+            background-color: #121212;
+            color: #0ff;
+        }
+
+        body.dark-mode .btn-3d {
+            background-color: #20c997;
+        }
+
+        body.dark-mode .btn-icon {
+            background-color: #e83e8c;
+        }
+
+        body.dark-mode .btn-disabled {
+            background-color: #495057;
+            color: #adb5bd;
+        }
+
+        body.dark-mode .btn-loading {
+            background-color: #fd7e14;
+        }
     </style>
 </head>
 <body>
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
     <button class="btn-default">Default</button>
     <button class="btn-outline">Outline</button>
     <button class="btn-gradient">Gradient</button>
@@ -155,5 +214,11 @@
     </button>
     <button class="btn-disabled" disabled>Disabled</button>
     <button class="btn-loading">Loading</button>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
 </body>
 </html>
