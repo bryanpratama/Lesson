@@ -154,6 +154,71 @@
             100% { left: 100%; }
         }
 
+        /* 11. Pill Shape */
+        .btn-pill {
+            background-color: #fd7e14;
+            color: white;
+            border-radius: 50px;
+            padding: 10px 30px;
+        }
+        .btn-pill:hover {
+            background-color: #e5530d;
+        }
+
+        /* 12. Glassmorphism */
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* 13. Ripple */
+        .btn-ripple {
+            position: relative;
+            background-color: #20c997;
+            color: white;
+            overflow: hidden;
+        }
+        .btn-ripple::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 10%, transparent 10.01%);
+            background-size: 150%;
+            animation: ripple 0.6s;
+        }
+        @keyframes ripple {
+            from { transform: scale(0); }
+            to { transform: scale(4); }
+        }
+
+        /* 14. Flip */
+        .btn-flip {
+            background-color: #6610f2;
+            color: white;
+            perspective: 1000px;
+        }
+        .btn-flip:hover {
+            transform: rotateY(180deg);
+        }
+
+        /* 15. Tilted */
+        .btn-tilted {
+            background: linear-gradient(135deg, #e83e8c, #dc3545);
+            color: white;
+            transform: skewX(-20deg);
+        }
+        .btn-tilted:hover {
+            transform: skewX(-10deg);
+        }
+
         /* Dark Mode Styles */
         body.dark-mode .btn-default {
             background-color: #0056b3;
@@ -197,6 +262,27 @@
         body.dark-mode .btn-loading {
             background-color: #fd7e14;
         }
+
+        body.dark-mode .btn-pill {
+            background-color: #e5530d;
+        }
+
+        body.dark-mode .btn-glass {
+            background: rgba(50, 50, 50, 0.5);
+            border-color: rgba(50, 50, 50, 0.7);
+        }
+
+        body.dark-mode .btn-ripple {
+            background-color: #17a2b8;
+        }
+
+        body.dark-mode .btn-flip {
+            background-color: #5936a8;
+        }
+
+        body.dark-mode .btn-tilted {
+            background: linear-gradient(135deg, #fd7e14, #ffc107);
+        }
     </style>
 </head>
 <body>
@@ -214,6 +300,11 @@
     </button>
     <button class="btn-disabled" disabled>Disabled</button>
     <button class="btn-loading">Loading</button>
+    <button class="btn-pill">Pill Shape</button>
+    <button class="btn-glass">Glassmorphism</button>
+    <button class="btn-ripple">Ripple Effect</button>
+    <button class="btn-flip">Flip Animation</button>
+    <button class="btn-tilted">Tilted</button>
 
     <script>
         function toggleDarkMode() {
