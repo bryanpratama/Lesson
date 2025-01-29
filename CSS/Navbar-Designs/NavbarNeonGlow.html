@@ -10,10 +10,7 @@
             margin: 0;
             padding: 0;
             background: #1a1a1a;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            min-height: 200vh; /* Untuk testing scroll */
             color: white;
         }
         .navbar {
@@ -24,6 +21,12 @@
             align-items: center;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            position: sticky;
+            top: 10px; /* Jarak 10px dari atas */
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            z-index: 1000;
         }
         .navbar a {
             color: white;
@@ -69,6 +72,9 @@
             <a href="#services">Services</a>
             <a href="#contact">Contact</a>
         </div>
+    </div>
+    <div style="padding: 20px; text-align: center;">
+        <h1>Scroll ke bawah untuk melihat efek sticky</h1>
     </div>
 </body>
 </html>
