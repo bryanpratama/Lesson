@@ -1,139 +1,156 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Navbar Glassmorphism</title>
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            min-height: 200vh; /* Untuk testing scroll */
-            color: white;
-        }
-        .navbar {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            position: sticky;
-            top: 10px; /* Jarak 10px dari atas */
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            z-index: 1000;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            margin: 0 10px;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        .navbar a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: white;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-        .navbar a:hover::after {
-            width: 100%;
-        }
-        .navbar a:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .navbar .logo {
-            font-size: 24px;
-            font-weight: bold;
-        }
+      body {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        min-height: 200vh; /* Untuk testing scroll */
+        color: white;
+      }
+      .navbar {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        position: sticky;
+        top: 10px; /* Jarak 10px dari atas */
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+        z-index: 1000;
+      }
+      .menu::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgb(0, 0, 0);
+        backdrop-filter: blur(15px);
+        border-radius: 10px;
+        z-index: -1; /* Letakkan di bawah konten menu */
+      }
+      .navbar a {
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        margin: 0 10px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+      .navbar a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: white;
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+      .navbar a:hover::after {
+        width: 100%;
+      }
+      .navbar a:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .navbar .logo {
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .navbar .menu {
+        display: flex;
+        align-items: center;
+      }
+      .navbar .menu-icon {
+        display: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: white;
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        z-index: 1001;
+        transition: transform 0.3s ease;
+      }
+      @media (max-width: 768px) {
         .navbar .menu {
-            display: flex;
-            align-items: center;
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          background: rgba(255, 255, 255, 0.15); /* Transparansi lebih tinggi */
+          backdrop-filter: blur(15px);
+          -webkit-backdrop-filter: blur(15px);
+          border-radius: 10px;
+          margin-top: 10px;
+          position: absolute;
+          top: 60px;
+          left: 0;
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 0.3s ease, visibility 0.3s ease,
+            transform 0.3s ease;
+          transform: translateY(-20px);
+          z-index: 1000;
+        }
+        .navbar .menu.active {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
         }
         .navbar .menu-icon {
-            display: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: white;
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            z-index: 1001;
-            transition: transform 0.3s ease;
+          display: block;
         }
-        @media (max-width: 768px) {
-            .navbar .menu {
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-                background: rgba(255, 255, 255, 0.1);
-                border-radius: 10px;
-                margin-top: 10px;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                opacity: 0;
-                visibility: hidden;
-                transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-                transform: translateY(-20px);
-            }
-            .navbar .menu.active {
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-            }
-            .navbar .menu-icon {
-                display: block;
-            }
-            .navbar a {
-                margin: 5px 0;
-                text-align: center;
-            }
+        .navbar a {
+          margin: 5px 0;
+          text-align: center;
         }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="navbar">
-        <div class="logo">MyBrand</div>
-        <div class="menu-icon" id="menuIcon" onclick="toggleMenu()">&#9776;</div>
-        <div class="menu" id="menu">
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#services">Services</a>
-            <a href="#contact">Contact</a>
-        </div>
+      <div class="logo">MyBrand</div>
+      <div class="menu-icon" id="menuIcon" onclick="toggleMenu()">&#9776;</div>
+      <div class="menu" id="menu">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#contact">Contact</a>
+      </div>
     </div>
-    <div style="padding: 20px; text-align: center;">
-        <h1>Scroll ke bawah untuk melihat efek sticky</h1>
+    <div style="padding: 20px; text-align: center">
+      <h1>Scroll ke bawah untuk melihat efek sticky</h1>
+      <h1>Scroll ke bawah untuk melihat efek sticky</h1>
     </div>
 
     <script>
-        function toggleMenu() {
-            const menu = document.getElementById("menu");
-            const menuIcon = document.getElementById("menuIcon");
-            menu.classList.toggle("active");
-            if (menu.classList.contains("active")) {
-                menuIcon.innerHTML = "&times;"; // Tombol silang (X)
-                menuIcon.style.transform = "rotate(90deg)"; // Animasi tombol
-            } else {
-                menuIcon.innerHTML = "&#9776;"; // Tombol hamburger
-                menuIcon.style.transform = "rotate(0deg)"; // Animasi tombol
-            }
+      function toggleMenu() {
+        const menu = document.getElementById("menu");
+        const menuIcon = document.getElementById("menuIcon");
+        menu.classList.toggle("active");
+        if (menu.classList.contains("active")) {
+          menuIcon.innerHTML = "&times;"; // Tombol silang (X)
+          menuIcon.style.transform = "rotate(90deg)"; // Animasi tombol
+        } else {
+          menuIcon.innerHTML = "&#9776;"; // Tombol hamburger
+          menuIcon.style.transform = "rotate(0deg)"; // Animasi tombol
         }
+      }
     </script>
-</body>
+  </body>
 </html>
