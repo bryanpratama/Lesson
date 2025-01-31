@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kartu dengan Efek Hover</title>
+  <style>
+    .card-hover {
+      width: 200px;
+      height: 200px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      background-color: #fff;
+      transition: transform 0.3s ease;
+    }
+
+    .card-hover:hover {
+      transform: scale(1.1);
+    }
+
+    .card-hover-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .card-hover-title {
+      font-size: 1.5em;
+      margin: 0;
+    }
+
+    .card-hover-text {
+      font-size: 1em;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-hover">
+    <div class="card-hover-content">
+      <h2 class="card-hover-title">Hover Me!</h2>
+      <p class="card-hover-text">Ini adalah kartu dengan efek hover.</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelector('.card-hover').addEventListener('mouseenter', function() {
+      this.style.backgroundColor = '#f0f0f0';
+    });
+
+    document.querySelector('.card-hover').addEventListener('mouseleave', function() {
+      this.style.backgroundColor = '#fff';
+    });
+  </script>
+</body>
+</html>
