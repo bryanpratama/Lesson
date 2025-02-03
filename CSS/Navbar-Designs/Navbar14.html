@@ -7,18 +7,19 @@
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
         }
 
         /* Navbar styling */
         .navbar {
-            background-color: #3A6EA5; /* Updated to a modern blue */
+            background-color: #3a75c4;
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1rem 2rem;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
 
         .navbar a {
@@ -30,7 +31,7 @@
         }
 
         .navbar a:hover {
-            color: #BFD8E9; /* Slightly lighter blue */
+            color: #e2e2e2;
         }
 
         /* Dropdown container */
@@ -41,26 +42,25 @@
         .dropdown-content {
             display: none;
             position: absolute;
-            top: 100%;
-            left: 0;
             background-color: #ffffff;
-            min-width: 160px;
+            min-width: 180px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             z-index: 1;
             border-radius: 4px;
             overflow: hidden;
+            margin-top: 0.5rem;
         }
 
         .dropdown-content a {
             color: #333;
-            padding: 0.75rem 1rem; /* Added more padding for better spacing */
+            padding: 0.8rem 1rem;
             display: block;
             text-decoration: none;
             transition: background-color 0.3s ease;
         }
 
         .dropdown-content a:hover {
-            background-color: #f0f0f0;
+            background-color: #f1f1f1;
         }
 
         /* Show dropdown */
@@ -75,40 +75,87 @@
 
         .menu-toggle {
             display: none;
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
         @media (max-width: 768px) {
             .menu {
                 display: none;
                 flex-direction: column;
-                background-color: #3A6EA5;
+                background-color: #3a75c4;
                 width: 100%;
                 padding: 1rem 0;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             }
 
             .menu a {
                 margin: 0.5rem 0;
                 text-align: center;
+                padding: 1rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
 
             .menu-toggle {
                 display: block;
-                background-color: transparent;
-                border: none;
-                color: white;
-                font-size: 1.5rem;
-                cursor: pointer;
+                position: absolute;
+                top: 1rem;
+                right: 1.5rem;
             }
 
             .menu.active {
                 display: flex;
             }
+
+            /* Adjustments for dropdown on mobile */
+            .menu .dropdown .dropdown-content {
+                position: static;
+                box-shadow: none;
+                margin-top: 0;
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+
+            .menu .dropdown-content a {
+                color: white;
+                padding: 1rem;
+                text-align: center;
+            }
+
+            .menu .dropdown-content a:hover {
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        /* Additional styling for better appearance */
+        .navbar a.logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .navbar .menu a {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar .menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-content a {
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
     <nav class="navbar">
-        <a href="#">Logo</a>
+        <a href="#" class="logo">Logo</a>
         <button class="menu-toggle" id="menuToggle">☰</button>
         <div class="menu" id="menu">
             <a href="#">Home</a>
@@ -131,6 +178,16 @@
 
         menuToggle.addEventListener('click', () => {
             menu.classList.toggle('active');
+            menuToggle.textContent = menu.classList.contains('active') ? 'X' : '☰';
+        });
+
+        // Close the menu when a menu item is clicked
+        const menuItems = document.querySelectorAll('.menu a');
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                menu.classList.remove('active');
+                menuToggle.textContent = '☰';
+            });
         });
     </script>
 </body>
