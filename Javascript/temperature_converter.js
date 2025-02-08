@@ -6,6 +6,12 @@ const rl = readline.createInterface({
 });
 
 rl.question('Masukkan suhu: ', (temp) => {
+    if (isNaN(temp)) {
+        console.log('Input harus berupa angka!');
+        rl.close();
+        return;
+    }
+
     rl.question('Konversi ke (C/F): ', (unit) => {
         const temperature = parseFloat(temp);
         let convertedTemp;
