@@ -16,12 +16,24 @@ function askNumber(question, callback) {
     });
 }
 
+function askOperation(callback) {
+    rl.question('Pilih operasi (tambah, kurang, kali, bagi): ', (operation) => {
+        const validOperations = ['tambah', 'kurang', 'kali', 'bagi'];
+        if (!validOperations.includes(operation.toLowerCase())) {
+            console.log('Operasi tidak dikenali! Silakan pilih antara tambah, kurang, kali, atau bagi.');
+            askOperation(callback);
+        } else {
+            callback(operation.toLowerCase());
+        }
+    });
+}
+
 askNumber('Masukkan angka pertama: ', (num1) => {
     askNumber('Masukkan angka kedua: ', (num2) => {
-        rl.question('Pilih operasi (tambah, kurang, kali, bagi): ', (operation) => {
+        askOperation((operation) => {
             let result;
 
-            switch (operation.toLowerCase()) {
+            switch (operation) {
                 case 'tambah':
                     result = num1 + num2;
                     break;
@@ -34,8 +46,6 @@ askNumber('Masukkan angka pertama: ', (num1) => {
                 case 'bagi':
                     result = num2 !== 0 ? num1 / num2 : 'Tidak bisa membagi dengan nol';
                     break;
-                default:
-                    result = 'Operasi tidak dikenali';
             }
 
             console.log(`Hasil: ${result}`);
