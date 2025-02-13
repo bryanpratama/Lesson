@@ -36,17 +36,26 @@ function askQuestion(query) {
     return new Promise(resolve => rl.question(query, resolve));
 }
 
+// Fungsi untuk meminta panjang password sampai valid
+async function getValidPasswordLength() {
+    let length;
+    while (true) {
+        const input = await askQuestion("Masukkan panjang password: ");
+        length = parseInt(input, 10);
+
+        if (!isNaN(length) && length > 0) {
+            return length;
+        }
+
+        console.log("Panjang password harus berupa angka positif! Silakan coba lagi.");
+    }
+}
+
 // Main function
 async function main() {
     console.log("=== Password Generator ===");
 
-    const length = parseInt(await askQuestion("Masukkan panjang password: "), 10);
-    if (isNaN(length) || length <= 0) {
-        console.log("Panjang password harus berupa angka positif!");
-        rl.close();
-        return;
-    }
-
+    const length = await getValidPasswordLength();
     const useUpper = (await askQuestion("Gunakan huruf besar? (y/n): ")).toLowerCase() === "y";
     const useLower = (await askQuestion("Gunakan huruf kecil? (y/n): ")).toLowerCase() === "y";
     const useNumbers = (await askQuestion("Gunakan angka? (y/n): ")).toLowerCase() === "y";
