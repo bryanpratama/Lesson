@@ -42,22 +42,32 @@ function checkPasswordStrength(password) {
   return { strength, suggestions };
 }
 
-rl.question("Masukkan password untuk diuji kekuatannya: ", (password) => {
-  const { strength, suggestions } = checkPasswordStrength(password);
+function askPassword() {
+  rl.question("Masukkan password untuk diuji kekuatannya | (X) untuk keluar: ", (password) => {
+    if (password.toUpperCase() === "X") {
+      console.log("Terima kasih! Program selesai. 👋");
+      rl.close();
+      return;
+    }
 
-  console.log("\nHasil Analisis Password:");
-  if (strength === 5) {
-    console.log("✅ Password Anda **KUAT**! 💪");
-  } else if (strength >= 3) {
-    console.log("⚠️ Password Anda **SEDANG**. Bisa lebih kuat.");
-  } else {
-    console.log("❌ Password Anda **LEMAH**. Harap diperbaiki!");
-  }
+    const { strength, suggestions } = checkPasswordStrength(password);
 
-  if (suggestions.length > 0) {
-    console.log("\n🔹 **Tips untuk memperkuat password:**");
-    suggestions.forEach((tip) => console.log("- " + tip));
-  }
+    console.log("\nHasil Analisis Password:");
+    if (strength === 5) {
+      console.log("✅ Password Anda **KUAT**! 💪\n");
+      rl.close();
+    } else {
+      console.log("❌ Password Anda **LEMAH**. Harap diperbaiki!\n");
 
-  rl.close();
-});
+      if (suggestions.length > 0) {
+        console.log("🔹 **Tips untuk memperkuat password:**");
+        suggestions.forEach((tip) => console.log("- " + tip));
+      }
+
+      console.log("\nSilakan coba lagi...\n");
+      askPassword(); // Meminta input lagi jika password lemah
+    }
+  });
+}
+
+askPassword(); // Memulai program
