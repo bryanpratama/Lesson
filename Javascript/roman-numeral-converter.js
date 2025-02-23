@@ -33,8 +33,15 @@ function toRoman(num) {
 }
 
 function startConversion() {
-  rl.question("Masukkan angka untuk dikonversi ke Romawi: ", (number) => {
-    console.log(`✅ Hasil: ${number} = ${toRoman(parseInt(number))}`);
+  rl.question("Masukkan angka untuk dikonversi ke Romawi: ", (input) => {
+    // Cek apakah input adalah angka valid
+    if (!/^\d+$/.test(input)) {
+      console.log("❌ Input harus berupa angka!");
+      return startConversion(); // Ulangi input
+    }
+
+    const number = parseInt(input);
+    console.log(`✅ Hasil: ${number} = ${toRoman(number)}`);
     rl.close();
   });
 }
