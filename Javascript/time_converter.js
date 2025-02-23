@@ -16,6 +16,10 @@ const timeUnits = {
   tahun: 31536000, // 365 hari
 };
 
+function formatNumber(num) {
+  return new Intl.NumberFormat("id-ID").format(num);
+}
+
 function convertTime(amount, fromUnit, toUnit) {
   if (!timeUnits[fromUnit] || !timeUnits[toUnit]) {
     return "Satuan waktu tidak valid!";
@@ -24,7 +28,7 @@ function convertTime(amount, fromUnit, toUnit) {
   const inSeconds = amount * timeUnits[fromUnit];
   const convertedValue = inSeconds / timeUnits[toUnit];
 
-  return `${amount} ${fromUnit} = ${convertedValue.toFixed(2)} ${toUnit}`;
+  return `${formatNumber(amount)} ${fromUnit} = ${formatNumber(convertedValue.toFixed(2))} ${toUnit}`;
 }
 
 function startConversion() {
