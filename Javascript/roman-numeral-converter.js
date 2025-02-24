@@ -60,18 +60,26 @@ function fromRoman(roman) {
 
 // Fungsi untuk memproses input
 function startConversion() {
-  rl.question("Masukkan angka atau angka Romawi: ", (input) => {
+  rl.question("Masukkan angka atau angka Romawi atau (X) untuk keluar: ", (input) => {
+    input = input.trim().toUpperCase();
+
+    if (input === "X") {
+      console.log("👋 Program selesai. Terima kasih!");
+      rl.close();
+      return;
+    }
+
     if (/^\d+$/.test(input)) {
       // Jika input angka biasa
       const number = parseInt(input);
       console.log(`✅ Hasil: ${number} = ${toRoman(number)}`);
     } else if (/^[IVXLCDM]+$/i.test(input)) {
       // Jika input angka Romawi
-      const result = fromRoman(input.toUpperCase());
+      const result = fromRoman(input);
       if (isNaN(result)) {
         console.log("❌ Input angka Romawi tidak valid!");
       } else {
-        console.log(`✅ Hasil: ${input.toUpperCase()} = ${result}`);
+        console.log(`✅ Hasil: ${input} = ${result}`);
       }
     } else {
       console.log("❌ Input tidak valid! Masukkan angka atau angka Romawi yang benar.");
