@@ -60,10 +60,10 @@ function fromRoman(roman) {
 
 // Fungsi untuk memproses input
 function startConversion() {
-  rl.question("Masukkan angka atau angka Romawi atau (X) untuk keluar: ", (input) => {
+  rl.question("Masukkan angka atau angka Romawi atau (q) untuk keluar: ", (input) => {
     input = input.trim().toUpperCase();
 
-    if (input === "X") {
+    if (input === "Q") {
       console.log("👋 Program selesai. Terima kasih!");
       rl.close();
       return;
