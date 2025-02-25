@@ -78,6 +78,7 @@ function checkIP(ip) {
     console.log(`🔹 Segmen: ${ip.split(".").join(" | ")}`);
     console.log(`🔹 IPv4 terdeteksi. Jenis: ${checkIPv4Type(ip)}`);
     console.log(`🔹 IPv4 dalam Biner: ${convertIPv4ToBinary(ip)}`);
+    console.log(`🔹 Localhost/Loopback: ${checkIPv4Type(ip) === "Loopback" ? "Ya" : "Tidak"}`);
   } else if (isIPv6(ip)) {
     console.log(`✅ IP Address: ${ip}`);
     console.log(`🔹 Versi: IPv6`);
@@ -85,6 +86,7 @@ function checkIP(ip) {
     console.log(`🔹 IPv6 terdeteksi. Jenis: ${checkIPv6Type(ip)}`);
     console.log(`🔹 IPv6 dalam Expanded Format: ${expandIPv6(ip)}`);
     console.log(`🔹 IPv6 dalam Biner: ${convertIPv6ToBinary(ip)}`);
+    console.log(`🔹 Localhost/Loopback: ${checkIPv6Type(ip) === "Loopback" ? "Ya" : "Tidak"}`);
   } else {
     console.log("❌ IP Address tidak valid!");
   }
