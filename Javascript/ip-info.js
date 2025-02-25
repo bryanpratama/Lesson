@@ -37,16 +37,8 @@ function checkIPv4Type(ip) {
   }
 }
 
-function checkIPv6Type(ip) {
-  if (ip.startsWith("fe80:")) {
-    return "Link-Local";
-  } else if (ip.startsWith("fc") || ip.startsWith("fd")) {
-    return "Unique Local";
-  } else if (ip === "::1") {
-    return "Loopback";
-  } else {
-    return "Global";
-  }
+function convertIPv4ToBinary(ip) {
+  return ip.split(".").map(part => Number(part).toString(2).padStart(8, '0')).join(".");
 }
 
 function checkIP(ip) {
@@ -55,11 +47,12 @@ function checkIP(ip) {
     console.log(`🔹 Versi: IPv4`);
     console.log(`🔹 Segmen: ${ip.split(".").join(" | ")}`);
     console.log(`🔹 IPv4 terdeteksi. Jenis: ${checkIPv4Type(ip)}`);
+    console.log(`🔹 IPv4 dalam Biner: ${convertIPv4ToBinary(ip)}`);
   } else if (isIPv6(ip)) {
     console.log(`✅ IP Address: ${ip}`);
     console.log(`🔹 Versi: IPv6`);
     console.log(`🔹 Segmen: ${ip.split(":").join(" | ")}`);
-    console.log(`🔹 IPv6 terdeteksi. Jenis: ${checkIPv6Type(ip)}`);
+    console.log(`🔹 IPv6 terdeteksi.`);
   } else {
     console.log("❌ IP Address tidak valid!");
   }
