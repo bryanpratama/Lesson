@@ -32,6 +32,8 @@ function checkIPv4Type(ip) {
     return "Private";
   } else if (parts[0] === 127) {
     return "Loopback";
+  } else if (parts[0] === 255 && parts[1] === 255 && parts[2] === 255 && parts[3] === 255) {
+    return "Broadcast";
   } else {
     return "Public";
   }
@@ -73,20 +75,23 @@ function convertIPv6ToBinary(ip) {
 
 function checkIP(ip) {
   if (isIPv4(ip)) {
+    const type = checkIPv4Type(ip);
     console.log(`✅ IP Address: ${ip}`);
     console.log(`🔹 Versi: IPv4`);
     console.log(`🔹 Segmen: ${ip.split(".").join(" | ")}`);
-    console.log(`🔹 IPv4 terdeteksi. Jenis: ${checkIPv4Type(ip)}`);
+    console.log(`🔹 IPv4 terdeteksi. Jenis: ${type}`);
     console.log(`🔹 IPv4 dalam Biner: ${convertIPv4ToBinary(ip)}`);
-    console.log(`🔹 Localhost/Loopback: ${checkIPv4Type(ip) === "Loopback" ? "Ya" : "Tidak"}`);
+    console.log(`🔹 Localhost/Loopback: ${type === "Loopback" ? "Ya" : "Tidak"}`);
+    console.log(`🔹 Broadcast Address: ${type === "Broadcast" ? "Ya" : "Tidak"}`);
   } else if (isIPv6(ip)) {
+    const type = checkIPv6Type(ip);
     console.log(`✅ IP Address: ${ip}`);
     console.log(`🔹 Versi: IPv6`);
     console.log(`🔹 Segmen: ${ip.split(":").join(" | ")}`);
-    console.log(`🔹 IPv6 terdeteksi. Jenis: ${checkIPv6Type(ip)}`);
+    console.log(`🔹 IPv6 terdeteksi. Jenis: ${type}`);
     console.log(`🔹 IPv6 dalam Expanded Format: ${expandIPv6(ip)}`);
     console.log(`🔹 IPv6 dalam Biner: ${convertIPv6ToBinary(ip)}`);
-    console.log(`🔹 Localhost/Loopback: ${checkIPv6Type(ip) === "Loopback" ? "Ya" : "Tidak"}`);
+    console.log(`🔹 Localhost/Loopback: ${type === "Loopback" ? "Ya" : "Tidak"}`);
   } else {
     console.log("❌ IP Address tidak valid!");
   }
