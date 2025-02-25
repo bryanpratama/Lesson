@@ -37,8 +37,38 @@ function checkIPv4Type(ip) {
   }
 }
 
+function checkIPv6Type(ip) {
+  if (ip.startsWith("fe80")) {
+    return "Link-Local";
+  } else if (ip.startsWith("fc") || ip.startsWith("fd")) {
+    return "Unique Local";
+  } else if (ip === "::1") {
+    return "Loopback";
+  } else {
+    return "Global";
+  }
+}
+
 function convertIPv4ToBinary(ip) {
   return ip.split(".").map(part => Number(part).toString(2).padStart(8, '0')).join(".");
+}
+
+function expandIPv6(ip) {
+  let parts = ip.split(":");
+  let missing = 8 - parts.filter(p => p !== "").length;
+  let expanded = [];
+  for (let part of parts) {
+    if (part === "") {
+      for (let i = 0; i <= missing; i++) expanded.push("0000");
+    } else {
+      expanded.push(part.padStart(4, "0"));
+    }
+  }
+  return expanded.join(":");
+}
+
+function convertIPv6ToBinary(ip) {
+  return expandIPv6(ip).split(":").map(part => parseInt(part, 16).toString(2).padStart(16, '0')).join(":");
 }
 
 function checkIP(ip) {
@@ -52,7 +82,9 @@ function checkIP(ip) {
     console.log(`✅ IP Address: ${ip}`);
     console.log(`🔹 Versi: IPv6`);
     console.log(`🔹 Segmen: ${ip.split(":").join(" | ")}`);
-    console.log(`🔹 IPv6 terdeteksi.`);
+    console.log(`🔹 IPv6 terdeteksi. Jenis: ${checkIPv6Type(ip)}`);
+    console.log(`🔹 IPv6 dalam Expanded Format: ${expandIPv6(ip)}`);
+    console.log(`🔹 IPv6 dalam Biner: ${convertIPv6ToBinary(ip)}`);
   } else {
     console.log("❌ IP Address tidak valid!");
   }
