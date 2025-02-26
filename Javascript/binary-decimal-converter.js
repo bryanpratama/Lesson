@@ -5,6 +5,14 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+function isBinary(input) {
+  return /^[01]+$/.test(input);
+}
+
+function isDecimal(input) {
+  return /^\d+$/.test(input);
+}
+
 function binaryToDecimal(binary) {
   return parseInt(binary, 2);
 }
@@ -13,27 +21,24 @@ function decimalToBinary(decimal) {
   return Number(decimal).toString(2);
 }
 
-function isBinary(input) {
-  return /^[01]+$/.test(input);
-}
-
-function isDecimal(input) {
-  return /^[0-9]+$/.test(input);
-}
-
-function askForInput() {
-  rl.question("Masukkan angka biner atau desimal: ", (input) => {
-    if (isBinary(input)) {
-      console.log(`✅ Hasil konversi: ${binaryToDecimal(input)} (Decimal)`);
+function startConverter() {
+  rl.question("Masukkan angka biner atau desimal. (X) untuk Keluar : ", (input) => {
+    if (input.toUpperCase() === "X") {
+      console.log("Keluar dari program.");
       rl.close();
-    } else if (isDecimal(input)) {
-      console.log(`✅ Hasil konversi: ${decimalToBinary(input)} (Binary)`);
-      rl.close();
-    } else {
-      console.log("❌ Input tidak valid! Harap masukkan angka biner (hanya 0 dan 1) atau angka desimal.");
-      askForInput();
+      return;
     }
+
+    if (isBinary(input)) {
+      console.log(`✅ Hasil: ${input} (biner) = ${binaryToDecimal(input)} (desimal)`);
+    } else if (isDecimal(input)) {
+      console.log(`✅ Hasil: ${input} (desimal) = ${decimalToBinary(input)} (biner)`);
+    } else {
+      console.log("❌ Input tidak valid. Masukkan hanya angka biner atau desimal.");
+    }
+
+    startConverter();
   });
 }
 
-askForInput();
+startConverter();
