@@ -21,13 +21,19 @@ function isDecimal(input) {
   return /^[0-9]+$/.test(input);
 }
 
-rl.question("Masukkan angka biner atau desimal: ", (input) => {
-  if (isBinary(input)) {
-    console.log(`✅ Hasil konversi: ${binaryToDecimal(input)} (Decimal)`);
-  } else if (isDecimal(input)) {
-    console.log(`✅ Hasil konversi: ${decimalToBinary(input)} (Binary)`);
-  } else {
-    console.log("❌ Input tidak valid! Harap masukkan angka biner (hanya 0 dan 1) atau angka desimal.");
-  }
-  rl.close();
-});
+function askForInput() {
+  rl.question("Masukkan angka biner atau desimal: ", (input) => {
+    if (isBinary(input)) {
+      console.log(`✅ Hasil konversi: ${binaryToDecimal(input)} (Decimal)`);
+      rl.close();
+    } else if (isDecimal(input)) {
+      console.log(`✅ Hasil konversi: ${decimalToBinary(input)} (Binary)`);
+      rl.close();
+    } else {
+      console.log("❌ Input tidak valid! Harap masukkan angka biner (hanya 0 dan 1) atau angka desimal.");
+      askForInput();
+    }
+  });
+}
+
+askForInput();
