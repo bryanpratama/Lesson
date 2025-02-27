@@ -5,34 +5,29 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+function normalizeText(text) {
+  return text.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
 function isAnagram(str1, str2) {
+  const normalized1 = normalizeText(str1);
+  const normalized2 = normalizeText(str2);
   return (
-    str1.split("").sort().join("") === str2.split("").sort().join("")
+    normalized1.split("").sort().join("") === normalized2.split("").sort().join("")
   );
 }
 
-function isValidInput(str) {
-  return /^[a-zA-Z]+$/.test(str);
-}
-
-function askForInput(question, callback) {
-  rl.question(question, (input) => {
-    if (!isValidInput(input)) {
-      console.log("❌ Input hanya boleh berisi huruf! Coba lagi.");
-      askForInput(question, callback);
-    } else {
-      callback(input);
-    }
+function checkAnagram() {
+  rl.question("Masukkan kata atau kalimat pertama: ", (input1) => {
+    rl.question("Masukkan kata atau kalimat kedua: ", (input2) => {
+      if (isAnagram(input1, input2)) {
+        console.log("✅ Anagram!");
+      } else {
+        console.log("❌ Bukan Anagram.");
+      }
+      checkAnagram();
+    });
   });
 }
 
-askForInput("Masukkan kata pertama: ", (word1) => {
-  askForInput("Masukkan kata kedua: ", (word2) => {
-    if (isAnagram(word1.toLowerCase(), word2.toLowerCase())) {
-      console.log("✅ Kedua kata adalah anagram!");
-    } else {
-      console.log("❌ Bukan anagram.");
-    }
-    rl.close();
-  });
-});
+checkAnagram();
