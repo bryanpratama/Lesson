@@ -6,11 +6,29 @@ const rl = readline.createInterface({
 });
 
 function textToASCII(text) {
-  return text.split("").map(char => char.charCodeAt(0)).join(" ");
+  return text.split("").map(char => char.charCodeAt(0)).join("");
 }
 
 function asciiToText(ascii) {
-  return ascii.split(" ").map(num => String.fromCharCode(Number(num))).join("");
+  let result = "";
+  let i = 0;
+
+  while (i < ascii.length) {
+    let threeDigit = ascii.substring(i, i + 3);
+    let twoDigit = ascii.substring(i, i + 2);
+
+    if (threeDigit >= 32 && threeDigit <= 126) {
+      result += String.fromCharCode(threeDigit);
+      i += 3;
+    } else if (twoDigit >= 32 && twoDigit <= 126) {
+      result += String.fromCharCode(twoDigit);
+      i += 2;
+    } else {
+      console.log("⚠️ Kesalahan konversi! Pastikan input benar.");
+      return "";
+    }
+  }
+  return result;
 }
 
 function main() {
@@ -27,7 +45,7 @@ function main() {
         main();
       });
     } else if (choice === "2") {
-      rl.question("Masukkan kode ASCII (pisahkan dengan spasi): ", (input) => {
+      rl.question("Masukkan kode ASCII tanpa spasi: ", (input) => {
         console.log(`✅ Hasil Teks: ${asciiToText(input)}`);
         main();
       });
