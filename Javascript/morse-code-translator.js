@@ -15,25 +15,26 @@ const morseCodeMap = {
   "Y": "-.--",  "Z": "--..",
   "1": ".----", "2": "..---", "3": "...--", "4": "....-", "5": ".....",
   "6": "-....", "7": "--...", "8": "---..", "9": "----.", "0": "-----",
-  " ": "/"
+  " ": "/" // Spasi antar kata dalam Morse
 };
 
+// Buat mapping Morse → Teks
 const textMap = Object.fromEntries(Object.entries(morseCodeMap).map(([char, morse]) => [morse, char]));
 
 function isValidText(text) {
-  return /^[a-zA-Z0-9 ]+$/.test(text);
+  return /^[a-zA-Z0-9\s]+$/.test(text); // Mengizinkan spasi
 }
 
 function isValidMorse(morse) {
-  return /^[.\-\/ ]+$/.test(morse);
+  return /^[.\-\/|]+$/.test(morse); // Mengizinkan '.', '-', '/', dan '|'
 }
 
 function textToMorse(text) {
-  return text.toUpperCase().split("").map(char => morseCodeMap[char] || "").join(" ");
+  return text.toUpperCase().split("").map(char => morseCodeMap[char] || "").join("|");
 }
 
 function morseToText(morse) {
-  return morse.split(" ").map(code => textMap[code] || "").join("");
+  return morse.split("|").map(code => textMap[code] || "").join("");
 }
 
 function main() {
@@ -55,9 +56,9 @@ function main() {
         main();
       });
     } else if (choice === "2") {
-      rl.question("Masukkan kode Morse (pisahkan dengan spasi): ", (input) => {
+      rl.question("Masukkan kode Morse (gunakan '|' antar huruf, '/' antar kata): ", (input) => {
         if (!isValidMorse(input)) {
-          console.log("❌ Input tidak valid. Hanya karakter '.', '-', '/' dan spasi yang diperbolehkan.");
+          console.log("❌ Input tidak valid. Hanya karakter '.', '-', '/', dan '|' yang diperbolehkan.");
           main();
           return;
         }
