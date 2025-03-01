@@ -18,8 +18,15 @@ const morseCodeMap = {
   " ": "/"
 };
 
-// Buat mapping Morse → Teks
 const textMap = Object.fromEntries(Object.entries(morseCodeMap).map(([char, morse]) => [morse, char]));
+
+function isValidText(text) {
+  return /^[a-zA-Z0-9 ]+$/.test(text);
+}
+
+function isValidMorse(morse) {
+  return /^[.\-\/ ]+$/.test(morse);
+}
 
 function textToMorse(text) {
   return text.toUpperCase().split("").map(char => morseCodeMap[char] || "").join(" ");
@@ -39,11 +46,21 @@ function main() {
 
     if (choice === "1") {
       rl.question("Masukkan teks: ", (input) => {
+        if (!isValidText(input)) {
+          console.log("❌ Input tidak valid. Hanya huruf, angka, dan spasi yang diperbolehkan.");
+          main();
+          return;
+        }
         console.log(`✅ Hasil Morse: ${textToMorse(input)}`);
         main();
       });
     } else if (choice === "2") {
       rl.question("Masukkan kode Morse (pisahkan dengan spasi): ", (input) => {
+        if (!isValidMorse(input)) {
+          console.log("❌ Input tidak valid. Hanya karakter '.', '-', '/' dan spasi yang diperbolehkan.");
+          main();
+          return;
+        }
         console.log(`✅ Hasil Teks: ${morseToText(input)}`);
         main();
       });
