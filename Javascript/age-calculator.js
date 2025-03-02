@@ -5,36 +5,49 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-function calculateAge(birthYear, targetYear = new Date().getFullYear()) {
-  const ageYears = targetYear - birthYear;
-  const ageMonths = ageYears * 12;
-  const ageDays = ageYears * 365; // Asumsi 1 tahun = 365 hari (tanpa kabisat)
-  
-  return { ageYears, ageMonths, ageDays };
+function calculateExactAge(birthDate, targetDate = new Date()) {
+  const birth = new Date(birthDate);
+  const target = new Date(targetDate);
+
+  let years = target.getFullYear() - birth.getFullYear();
+  let months = target.getMonth() - birth.getMonth();
+  let days = target.getDate() - birth.getDate();
+
+  if (days < 0) {
+    months--;
+    const prevMonth = new Date(target.getFullYear(), target.getMonth(), 0);
+    days += prevMonth.getDate();
+  }
+
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  return { years, months, days };
 }
 
 function main() {
-  rl.question("Masukkan tahun lahir: ", (birthYear) => {
-    birthYear = parseInt(birthYear);
-    if (isNaN(birthYear) || birthYear <= 0) {
-      console.log("❌ Input tidak valid. Masukkan tahun yang benar!");
+  rl.question("Masukkan tanggal lahir (YYYY-MM-DD): ", (birthDate) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(birthDate)) {
+      console.log("❌ Format tanggal salah! Gunakan format YYYY-MM-DD.");
       return main();
     }
 
-    rl.question("Masukkan tahun target (kosongkan untuk tahun ini): ", (targetYear) => {
-      targetYear = targetYear ? parseInt(targetYear) : new Date().getFullYear();
+    rl.question("Masukkan tanggal target (YYYY-MM-DD, kosongkan untuk hari ini): ", (targetDate) => {
+      targetDate = targetDate || new Date().toISOString().split("T")[0];
 
-      if (isNaN(targetYear) || targetYear < birthYear) {
-        console.log("❌ Tahun target tidak valid.");
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(targetDate)) {
+        console.log("❌ Format tanggal target salah!");
         return main();
       }
 
-      const { ageYears, ageMonths, ageDays } = calculateAge(birthYear, targetYear);
+      const { years, months, days } = calculateExactAge(birthDate, targetDate);
       
-      console.log(`\n📅 Umur kamu pada tahun ${targetYear}:`);
-      console.log(`🟢 ${ageYears} tahun`);
-      console.log(`🟡 ${ageMonths} bulan`);
-      console.log(`🟣 ${ageDays} hari (perkiraan)\n`);
+      console.log(`\n📅 Umur kamu pada tanggal ${targetDate}:`);
+      console.log(`🟢 ${years} tahun`);
+      console.log(`🟡 ${months} bulan`);
+      console.log(`🟣 ${days} hari\n`);
 
       rl.close();
     });
