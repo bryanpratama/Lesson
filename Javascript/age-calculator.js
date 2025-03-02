@@ -6,7 +6,11 @@ const rl = readline.createInterface({
 });
 
 function calculateAge(birthYear, targetYear = new Date().getFullYear()) {
-  return targetYear - birthYear;
+  const ageYears = targetYear - birthYear;
+  const ageMonths = ageYears * 12;
+  const ageDays = ageYears * 365; // Asumsi 1 tahun = 365 hari (tanpa kabisat)
+  
+  return { ageYears, ageMonths, ageDays };
 }
 
 function main() {
@@ -25,7 +29,13 @@ function main() {
         return main();
       }
 
-      console.log(`✅ Umur kamu pada tahun ${targetYear} adalah ${calculateAge(birthYear, targetYear)} tahun.`);
+      const { ageYears, ageMonths, ageDays } = calculateAge(birthYear, targetYear);
+      
+      console.log(`\n📅 Umur kamu pada tahun ${targetYear}:`);
+      console.log(`🟢 ${ageYears} tahun`);
+      console.log(`🟡 ${ageMonths} bulan`);
+      console.log(`🟣 ${ageDays} hari (perkiraan)\n`);
+
       rl.close();
     });
   });
