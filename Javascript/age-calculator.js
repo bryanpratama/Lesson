@@ -43,6 +43,21 @@ function calculateExactAge(birthDate, targetDate = new Date()) {
   return { years, months, days, totalDaysLived };
 }
 
+function daysUntilNextBirthday(birthDate, targetDate = new Date()) {
+  const birth = new Date(birthDate);
+  const target = new Date(targetDate);
+
+  let nextBirthday = new Date(target.getFullYear(), birth.getMonth(), birth.getDate());
+
+  if (nextBirthday < target) {
+    nextBirthday.setFullYear(target.getFullYear() + 1);
+  }
+
+  const diff = Math.ceil((nextBirthday - target) / (1000 * 60 * 60 * 24));
+
+  return diff;
+}
+
 function main() {
   rl.question("Masukkan tanggal lahir (YYYY-MM-DD): ", (birthDate) => {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(birthDate)) {
@@ -59,12 +74,14 @@ function main() {
       }
 
       const { years, months, days, totalDaysLived } = calculateExactAge(birthDate, targetDate);
-      
+      const daysToBirthday = daysUntilNextBirthday(birthDate, targetDate);
+
       console.log(`\n📅 Umur kamu pada tanggal ${targetDate}:`);
       console.log(`🟢 ${years} tahun`);
       console.log(`🟡 ${months} bulan`);
       console.log(`🟣 ${days} hari`);
-      console.log(`📆 Total hari hidup: ${totalDaysLived} hari\n`);
+      console.log(`📆 Total hari hidup: ${totalDaysLived} hari`);
+      console.log(`🎂 Umur bertambah dalam ${daysToBirthday} hari!\n`);
 
       rl.close();
     });
