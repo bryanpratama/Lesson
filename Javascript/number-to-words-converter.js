@@ -19,8 +19,14 @@ const angkaKeKata = (num) => {
     let ratusanKata = ratusan === 1 ? "seratus" : satuan[ratusan] + " ratus";
     return ratusanKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
   }
+  if (num < 10000) {
+    let ribuan = Math.floor(num / 1000);
+    let sisa = num % 1000;
+    let ribuanKata = ribuan === 1 ? "seribu" : satuan[ribuan] + " ribu";
+    return ribuanKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
+  }
 
-  return "Belum mendukung angka lebih dari 999!";
+  return "Belum mendukung angka lebih dari 9999!";
 };
 
 rl.question("Masukkan angka: ", (angka) => {
