@@ -19,50 +19,26 @@ const angkaKeKata = (num) => {
     let ratusanKata = ratusan === 1 ? "seratus" : satuan[ratusan] + " ratus";
     return ratusanKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
   }
-  if (num < 10000) {
+  if (num < 1000000) {
     let ribuan = Math.floor(num / 1000);
     let sisa = num % 1000;
-    let ribuanKata = ribuan === 1 ? "seribu" : satuan[ribuan] + " ribu";
+    let ribuanKata = angkaKeKata(ribuan) + " ribu";
     return ribuanKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
   }
-  if (num < 100000) {
-    let puluhanRibu = Math.floor(num / 1000);
-    let sisa = num % 1000;
-    let puluhanRibuKata =
-      puluhanRibu < 20
-        ? angkaKeKata(puluhanRibu) + " ribu"
-        : puluhan[Math.floor(puluhanRibu / 10)] + (puluhanRibu % 10 !== 0 ? " " + satuan[puluhanRibu % 10] : "") + " ribu";
-    return puluhanRibuKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
-  }
-  if (num < 1000000) {
-    let ratusanRibu = Math.floor(num / 1000);
-    let sisa = num % 1000;
-    let ratusanRibuKata = (ratusanRibu === 1 ? "seratus" : angkaKeKata(ratusanRibu)) + " ribu";
-    return ratusanRibuKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
-  }
-  if (num < 10000000) {
+  if (num < 1000000000) {
     let jutaan = Math.floor(num / 1000000);
     let sisa = num % 1000000;
-    let jutaanKata = (jutaan === 1 ? "satu" : angkaKeKata(jutaan)) + " juta";
+    let jutaanKata = angkaKeKata(jutaan) + " juta";
     return jutaanKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
   }
-  if (num < 100000000) {
-    let puluhanJuta = Math.floor(num / 1000000);
-    let sisa = num % 1000000;
-    let puluhanJutaKata =
-      puluhanJuta < 20
-        ? angkaKeKata(puluhanJuta) + " juta"
-        : puluhan[Math.floor(puluhanJuta / 10)] + (puluhanJuta % 10 !== 0 ? " " + satuan[puluhanJuta % 10] : "") + " juta";
-    return puluhanJutaKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
-  }
-  if (num < 1000000000) {
-    let ratusanJuta = Math.floor(num / 1000000);
-    let sisa = num % 1000000;
-    let ratusanJutaKata = (ratusanJuta === 1 ? "seratus" : angkaKeKata(ratusanJuta)) + " juta";
-    return ratusanJutaKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
+  if (num < 10000000000) {
+    let miliaran = Math.floor(num / 1000000000);
+    let sisa = num % 1000000000;
+    let miliaranKata = angkaKeKata(miliaran) + " miliar";
+    return miliaranKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
   }
 
-  return "Belum mendukung angka lebih dari 999.999.999!";
+  return "Belum mendukung angka lebih dari 9.999.999.999!";
 };
 
 rl.question("Masukkan angka: ", (angka) => {
