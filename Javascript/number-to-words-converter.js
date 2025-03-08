@@ -55,8 +55,14 @@ const angkaKeKata = (num) => {
         : puluhan[Math.floor(puluhanJuta / 10)] + (puluhanJuta % 10 !== 0 ? " " + satuan[puluhanJuta % 10] : "") + " juta";
     return puluhanJutaKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
   }
+  if (num < 1000000000) {
+    let ratusanJuta = Math.floor(num / 1000000);
+    let sisa = num % 1000000;
+    let ratusanJutaKata = (ratusanJuta === 1 ? "seratus" : angkaKeKata(ratusanJuta)) + " juta";
+    return ratusanJutaKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
+  }
 
-  return "Belum mendukung angka lebih dari 99.999.999!";
+  return "Belum mendukung angka lebih dari 999.999.999!";
 };
 
 rl.question("Masukkan angka: ", (angka) => {
