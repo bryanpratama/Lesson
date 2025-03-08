@@ -31,14 +31,14 @@ const angkaKeKata = (num) => {
     let jutaanKata = angkaKeKata(jutaan) + " juta";
     return jutaanKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
   }
-  if (num < 10000000000) {
+  if (num < 100000000000) {
     let miliaran = Math.floor(num / 1000000000);
     let sisa = num % 1000000000;
     let miliaranKata = angkaKeKata(miliaran) + " miliar";
     return miliaranKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
   }
 
-  return "Belum mendukung angka lebih dari 9.999.999.999!";
+  return "Belum mendukung angka lebih dari 99.999.999.999!";
 };
 
 rl.question("Masukkan angka: ", (angka) => {
