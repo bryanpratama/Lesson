@@ -43,8 +43,17 @@ const angkaKeKata = (num) => {
     let triliunanKata = angkaKeKata(triliunan) + " triliun";
     return triliunanKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
   }
+  if (num < 100000000000000000) {
+    let puluhanTriliun = Math.floor(num / 1000000000000);
+    let sisa = num % 1000000000000;
+    let puluhanTriliunKata =
+      puluhanTriliun < 20
+        ? angkaKeKata(puluhanTriliun) + " triliun"
+        : puluhan[Math.floor(puluhanTriliun / 10)] + (puluhanTriliun % 10 !== 0 ? " " + satuan[puluhanTriliun % 10] : "") + " triliun";
+    return puluhanTriliunKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
+  }
 
-  return "Belum mendukung angka lebih dari 9.999.999.999.999!";
+  return "Belum mendukung angka lebih dari 99.999.999.999.999!";
 };
 
 rl.question("Masukkan angka: ", (angka) => {
