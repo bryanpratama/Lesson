@@ -6,49 +6,44 @@ const rl = readline.createInterface({
 });
 
 const angkaKeKata = (num) => {
+  if (typeof num !== "bigint") num = BigInt(num);
+
   const satuan = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan"];
   const belasan = ["sepuluh", "sebelas", "dua belas", "tiga belas", "empat belas", "lima belas", "enam belas", "tujuh belas", "delapan belas", "sembilan belas"];
   const puluhan = ["", "", "dua puluh", "tiga puluh", "empat puluh", "lima puluh", "enam puluh", "tujuh puluh", "delapan puluh", "sembilan puluh"];
+  const tingkat = ["", "ribu", "juta", "miliar", "triliun", "kuadriliun"];
 
-  if (num < 10) return satuan[num];
-  if (num < 20) return belasan[num - 10];
-  if (num < 100) return puluhan[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + satuan[num % 10] : "");
-  if (num < 1000) {
-    let ratusan = Math.floor(num / 100);
-    let sisa = num % 100;
-    let ratusanKata = ratusan === 1 ? "seratus" : satuan[ratusan] + " ratus";
-    return ratusanKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
-  }
-  if (num < 1000000) {
-    let ribuan = Math.floor(num / 1000);
-    let sisa = num % 1000;
-    let ribuanKata = angkaKeKata(ribuan) + " ribu";
-    return ribuanKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
-  }
-  if (num < 1000000000) {
-    let jutaan = Math.floor(num / 1000000);
-    let sisa = num % 1000000;
-    let jutaanKata = angkaKeKata(jutaan) + " juta";
-    return jutaanKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
-  }
-  if (num < 1000000000000) {
-    let miliaran = Math.floor(num / 1000000000);
-    let sisa = num % 1000000000;
-    let miliaranKata = angkaKeKata(miliaran) + " miliar";
-    return miliaranKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
-  }
-  if (num < 1000000000000000) {
-    let triliunan = Math.floor(num / 1000000000000);
-    let sisa = num % 1000000000000;
-    let triliunanKata = angkaKeKata(triliunan) + " triliun";
-    return triliunanKata + (sisa !== 0 ? " " + angkaKeKata(sisa) : "");
+  if (num < 10n) return satuan[Number(num)];
+  if (num < 20n) return belasan[Number(num - 10n)];
+  if (num < 100n) return puluhan[Number(num / 10n)] + (num % 10n !== 0n ? " " + satuan[Number(num % 10n)] : "");
+  if (num < 1000n) return (num < 200n ? "seratus" : satuan[Number(num / 100n)] + " ratus") + (num % 100n !== 0n ? " " + angkaKeKata(num % 100n) : "");
+
+  let hasil = "";
+  let i = 0n;
+
+  while (num > 0n) {
+    let bagian = num % 1000n;
+    if (bagian > 0n) {
+      let kata = angkaKeKata(bagian);
+      if (i === 1n && bagian === 1n) {
+        hasil = "seribu " + hasil;
+      } else {
+        hasil = kata + (i > 0n ? " " + tingkat[Number(i)] + " " : "") + hasil;
+      }
+    }
+    num /= 1000n;
+    i++;
   }
 
-  return "Belum mendukung angka lebih dari 999.999.999.999.999!";
+  return hasil.trim();
 };
 
 rl.question("Masukkan angka: ", (angka) => {
-  const hasil = angkaKeKata(parseInt(angka, 10));
-  console.log(`Hasil: ${hasil}`);
+  try {
+    const hasil = angkaKeKata(BigInt(angka));
+    console.log(`Hasil: ${hasil}`);
+  } catch (error) {
+    console.log("Angka terlalu besar atau tidak valid!");
+  }
   rl.close();
 });
