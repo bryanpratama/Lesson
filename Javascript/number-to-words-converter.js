@@ -5,45 +5,47 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+const satuan = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan"];
+const belasan = ["sepuluh", "sebelas", "dua belas", "tiga belas", "empat belas", "lima belas", "enam belas", "tujuh belas", "delapan belas", "sembilan belas"];
+const puluhan = ["", "", "dua puluh", "tiga puluh", "empat puluh", "lima puluh", "enam puluh", "tujuh puluh", "delapan puluh", "sembilan puluh"];
+const skala = ["", "ribu", "juta", "miliar", "triliun", "kuadriliun", "kuintiliun", "sekstiliun"];
+
 const angkaKeKata = (num) => {
-  if (typeof num !== "bigint") num = BigInt(num);
-
-  const satuan = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan"];
-  const belasan = ["sepuluh", "sebelas", "dua belas", "tiga belas", "empat belas", "lima belas", "enam belas", "tujuh belas", "delapan belas", "sembilan belas"];
-  const puluhan = ["", "", "dua puluh", "tiga puluh", "empat puluh", "lima puluh", "enam puluh", "tujuh puluh", "delapan puluh", "sembilan puluh"];
-  const tingkat = ["", "ribu", "juta", "miliar", "triliun", "kuadriliun"];
-
-  if (num < 10n) return satuan[Number(num)];
-  if (num < 20n) return belasan[Number(num - 10n)];
-  if (num < 100n) return puluhan[Number(num / 10n)] + (num % 10n !== 0n ? " " + satuan[Number(num % 10n)] : "");
-  if (num < 1000n) return (num < 200n ? "seratus" : satuan[Number(num / 100n)] + " ratus") + (num % 100n !== 0n ? " " + angkaKeKata(num % 100n) : "");
-
+  if (num === 0n) return "nol";
   let hasil = "";
-  let i = 0n;
+  let grup = 0;
 
   while (num > 0n) {
-    let bagian = num % 1000n;
-    if (bagian > 0n) {
-      let kata = angkaKeKata(bagian);
-      if (i === 1n && bagian === 1n) {
-        hasil = "seribu " + hasil;
-      } else {
-        hasil = kata + (i > 0n ? " " + tingkat[Number(i)] + " " : "") + hasil;
-      }
+    let tigaDigit = num % 1000n;
+    if (tigaDigit > 0n) {
+      let bagian = konversiTigaDigit(Number(tigaDigit)) + (skala[grup] ? " " + skala[grup] : "");
+      hasil = bagian + (hasil ? " " + hasil : "");
     }
-    num /= 1000n;
-    i++;
+    num = num / 1000n;
+    grup++;
   }
 
-  return hasil.trim();
+  return hasil;
+};
+
+const konversiTigaDigit = (num) => {
+  if (num === 0) return "";
+  if (num < 10) return satuan[num];
+  if (num < 20) return belasan[num - 10];
+  if (num < 100) return puluhan[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + satuan[num % 10] : "");
+  
+  let ratusan = Math.floor(num / 100);
+  let sisa = num % 100;
+  let ratusanKata = ratusan === 1 ? "seratus" : satuan[ratusan] + " ratus";
+  return ratusanKata + (sisa !== 0 ? " " + konversiTigaDigit(sisa) : "");
 };
 
 rl.question("Masukkan angka: ", (angka) => {
-  try {
-    const hasil = angkaKeKata(BigInt(angka));
-    console.log(`Hasil: ${hasil}`);
-  } catch (error) {
-    console.log("Angka terlalu besar atau tidak valid!");
+  let num = BigInt(angka);
+  if (num > 9999999999999999999n) {
+    console.log("Maaf, angka terlalu besar! Maksimum adalah 9 sekstiliun.");
+  } else {
+    console.log(`Hasil: ${angkaKeKata(num)}`);
   }
   rl.close();
 });
