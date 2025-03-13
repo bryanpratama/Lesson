@@ -42,7 +42,7 @@ const konversiTigaDigit = (num) => {
 
 rl.question("Masukkan angka: ", (angka) => {
   let num = BigInt(angka);
-  if (num > 999999999999999999999999n) {
+  if (num > 9999999999999999999999999n) {
     console.log("Maaf, angka terlalu besar! Maksimum adalah 9 septiliun.");
   } else {
     console.log(`Hasil: ${angkaKeKata(num)}`);
