@@ -42,8 +42,8 @@ const konversiTigaDigit = (num) => {
 
 rl.question("Masukkan angka: ", (angka) => {
   let num = BigInt(angka);
-  if (num > 99999999999999999999999999999n) {
-    console.log("Maaf, angka terlalu besar! Maksimum adalah 99 oktiliun.");
+  if (num > 999999999999999999999999999999n) {
+    console.log("Maaf, angka terlalu besar! Maksimum adalah 999 oktiliun.");
   } else {
     console.log(`Hasil: ${angkaKeKata(num)}`);
   }
