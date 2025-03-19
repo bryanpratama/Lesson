@@ -8,7 +8,7 @@ const rl = readline.createInterface({
 const satuan = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan"];
 const belasan = ["sepuluh", "sebelas", "dua belas", "tiga belas", "empat belas", "lima belas", "enam belas", "tujuh belas", "delapan belas", "sembilan belas"];
 const puluhan = ["", "", "dua puluh", "tiga puluh", "empat puluh", "lima puluh", "enam puluh", "tujuh puluh", "delapan puluh", "sembilan puluh"];
-const skala = ["", "ribu", "juta", "miliar", "triliun", "kuadriliun", "kuintiliun", "sekstiliun", "septiliun", "oktiliun", "noniliun", "desiliun"];
+const skala = ["", "ribu", "juta", "miliar", "triliun", "kuadriliun", "kuintiliun", "sekstiliun", "septiliun", "oktiliun", "noniliun", "desiliun", "undesiliun"];
 
 const angkaKeKata = (num) => {
   if (num === 0n) return "nol";
@@ -42,8 +42,8 @@ const konversiTigaDigit = (num) => {
 
 rl.question("Masukkan angka: ", (angka) => {
   let num = BigInt(angka);
-  if (num > 999999999999999999999999999999999999n) {
-    console.log("Maaf, angka terlalu besar! Maksimum adalah 999 desiliun.");
+  if (num > 9999999999999999999999999999999999999n) {
+    console.log("Maaf, angka terlalu besar! Maksimum adalah 9 undesiliun.");
   } else {
     console.log(`Hasil: ${angkaKeKata(num)}`);
   }
