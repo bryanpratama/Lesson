@@ -11,8 +11,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      padding: 30px 15px;
       margin: 0;
     }
 
@@ -49,7 +48,6 @@
       margin-top: 20px;
       font-size: 18px;
       color: #444;
-      width: 80%;
       max-width: 600px;
       text-align: center;
       word-wrap: break-word;
@@ -89,6 +87,57 @@
       pointer-events: auto;
       transform: translateY(0);
     }
+
+    .history-container {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .history-header h2 {
+      font-size: 20px;
+      color: #333;
+    }
+
+    .history-list {
+      margin-top: 10px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-item:hover {
+      background-color: #f0f0f0;
+    }
+
+    .clear-btn {
+      background-color: #dc3545;
+      font-size: 14px;
+      padding: 5px 10px;
+    }
+
+    .clear-btn:hover {
+      background-color: #c82333;
+    }
   </style>
 </head>
 <body>
@@ -100,6 +149,14 @@
 
   <div class="toast" id="toast">
     📋 Hasil disalin ke clipboard!
+  </div>
+
+  <div class="history-container">
+    <div class="history-header">
+      <h2>Riwayat Konversi</h2>
+      <button class="clear-btn" onclick="clearRiwayat()">Hapus Semua</button>
+    </div>
+    <div class="history-list" id="historyList"></div>
   </div>
 
   <script>
@@ -131,7 +188,7 @@
       if (num < 10) return satuan[num];
       if (num < 20) return belasan[num - 10];
       if (num < 100) return puluhan[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + satuan[num % 10] : "");
-      
+
       let ratusan = Math.floor(num / 100);
       let sisa = num % 100;
       let ratusanKata = ratusan === 1 ? "seratus" : satuan[ratusan] + " ratus";
@@ -141,12 +198,9 @@
     function formatAngka(el) {
       let angka = el.value.replace(/\D/g, "");
       let formatted = angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
       let cursorPos = el.selectionStart;
       let prevLength = el.value.length;
-
       el.value = formatted;
-
       let diff = formatted.length - prevLength;
       el.setSelectionRange(cursorPos + diff, cursorPos + diff);
     }
@@ -159,7 +213,6 @@
       try {
         let num = BigInt(input);
         let max = BigInt("9".repeat(75));
-
         if (num > max) {
           hasilEl.innerText = "Maaf, angka terlalu besar! Maksimum adalah 999 duovigintiliun.";
           copyBtn.style.display = "none";
@@ -167,6 +220,7 @@
           const hasil = angkaKeKata(num);
           hasilEl.innerText = hasil;
           copyBtn.style.display = "inline-block";
+          simpanRiwayat(input, hasil);
         }
       } catch (e) {
         hasilEl.innerText = "Masukkan angka yang valid!";
@@ -178,19 +232,52 @@
       const hasilText = document.getElementById("hasil").innerText;
       navigator.clipboard.writeText(hasilText).then(() => {
         showToast();
-      }).catch(() => {
-        alert("Gagal menyalin teks!");
       });
     }
 
     function showToast() {
       const toast = document.getElementById("toast");
       toast.classList.add("show");
-
       setTimeout(() => {
         toast.classList.remove("show");
       }, 3000);
     }
+
+    function simpanRiwayat(angka, hasil) {
+      let riwayat = JSON.parse(localStorage.getItem("riwayatKonversi") || "[]");
+      riwayat.unshift({ angka, hasil });
+      if (riwayat.length > 10) riwayat = riwayat.slice(0, 10); // max 10 riwayat
+      localStorage.setItem("riwayatKonversi", JSON.stringify(riwayat));
+      tampilkanRiwayat();
+    }
+
+    function tampilkanRiwayat() {
+      const list = document.getElementById("historyList");
+      list.innerHTML = "";
+      let riwayat = JSON.parse(localStorage.getItem("riwayatKonversi") || "[]");
+      riwayat.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "history-item";
+        div.innerText = `${item.angka} → ${item.hasil}`;
+        div.onclick = () => {
+          document.getElementById("inputAngka").value = formatWithDots(item.angka);
+          konversi();
+        };
+        list.appendChild(div);
+      });
+    }
+
+    function formatWithDots(angka) {
+      return angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function clearRiwayat() {
+      localStorage.removeItem("riwayatKonversi");
+      tampilkanRiwayat();
+    }
+
+    // Tampilkan saat load
+    tampilkanRiwayat();
   </script>
 </body>
 </html>
