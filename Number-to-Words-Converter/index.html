@@ -54,6 +54,16 @@
       text-align: center;
       word-wrap: break-word;
     }
+
+    #copyButton {
+      display: none;
+      margin-top: 10px;
+      background-color: #28a745;
+    }
+
+    #copyButton:hover {
+      background-color: #1e7e34;
+    }
   </style>
 </head>
 <body>
@@ -61,6 +71,7 @@
   <input type="text" id="inputAngka" placeholder="Masukkan angka besar..." oninput="formatAngka(this)">
   <button onclick="konversi()">Konversi</button>
   <div id="hasil"></div>
+  <button id="copyButton" onclick="copyHasil()">Copy Hasil</button>
 
   <script>
     const satuan = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan"];
@@ -99,10 +110,9 @@
     }
 
     function formatAngka(el) {
-      let angka = el.value.replace(/\D/g, ""); // hilangkan semua non-digit
-      let formatted = angka.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // kasih titik per 3 digit
+      let angka = el.value.replace(/\D/g, "");
+      let formatted = angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
-      // Simpan posisi kursor
       let cursorPos = el.selectionStart;
       let prevLength = el.value.length;
 
@@ -115,6 +125,7 @@
     function konversi() {
       const input = document.getElementById("inputAngka").value.trim().replace(/\./g, "");
       const hasilEl = document.getElementById("hasil");
+      const copyBtn = document.getElementById("copyButton");
 
       try {
         let num = BigInt(input);
@@ -122,12 +133,25 @@
 
         if (num > max) {
           hasilEl.innerText = "Maaf, angka terlalu besar! Maksimum adalah 999 duovigintiliun.";
+          copyBtn.style.display = "none";
         } else {
-          hasilEl.innerText = angkaKeKata(num);
+          const hasil = angkaKeKata(num);
+          hasilEl.innerText = hasil;
+          copyBtn.style.display = "inline-block";
         }
       } catch (e) {
         hasilEl.innerText = "Masukkan angka yang valid!";
+        copyBtn.style.display = "none";
       }
+    }
+
+    function copyHasil() {
+      const hasilText = document.getElementById("hasil").innerText;
+      navigator.clipboard.writeText(hasilText).then(() => {
+        alert("Hasil berhasil disalin ke clipboard! 📋");
+      }).catch(() => {
+        alert("Gagal menyalin teks!");
+      });
     }
   </script>
 </body>
