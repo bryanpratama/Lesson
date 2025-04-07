@@ -64,6 +64,31 @@
     #copyButton:hover {
       background-color: #1e7e34;
     }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #323232;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      z-index: 9999;
+    }
+
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -72,6 +97,10 @@
   <button onclick="konversi()">Konversi</button>
   <div id="hasil"></div>
   <button id="copyButton" onclick="copyHasil()">Copy Hasil</button>
+
+  <div class="toast" id="toast">
+    📋 Hasil disalin ke clipboard!
+  </div>
 
   <script>
     const satuan = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan"];
@@ -148,10 +177,19 @@
     function copyHasil() {
       const hasilText = document.getElementById("hasil").innerText;
       navigator.clipboard.writeText(hasilText).then(() => {
-        alert("Hasil berhasil disalin ke clipboard! 📋");
+        showToast();
       }).catch(() => {
         alert("Gagal menyalin teks!");
       });
+    }
+
+    function showToast() {
+      const toast = document.getElementById("toast");
+      toast.classList.add("show");
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
     }
   </script>
 </body>
