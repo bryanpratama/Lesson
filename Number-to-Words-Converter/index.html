@@ -1,340 +1,347 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Konversi Angka ke Terbilang</title>
-    <style>
-      :root {
-        --bg: #f5f5f5;
-        --text: #333;
-        --input-bg: white;
-        --input-border: #ccc;
-        --button-bg: #007bff;
-        --button-hover: #0056b3;
-        --copy-bg: #28a745;
-        --copy-hover: #1e7e34;
-        --danger-bg: #dc3545;
-        --danger-hover: #c82333;
-        --toast-bg: #323232;
-        --card-bg: white;
-        --item-hover: #f0f0f0;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Konversi Angka ke Terbilang</title>
+  <style>
+    :root {
+      --bg: #f5f5f5;
+      --text: #333;
+      --input-bg: white;
+      --input-border: #ccc;
+      --button-bg: #007bff;
+      --button-hover: #0056b3;
+      --copy-bg: #28a745;
+      --copy-hover: #1e7e34;
+      --danger-bg: #dc3545;
+      --danger-hover: #c82333;
+      --toast-bg: #323232;
+      --card-bg: white;
+      --item-hover: #f0f0f0;
+    }
 
-      body.dark {
-        --bg: #121212;
-        --text: #eee;
-        --input-bg: #1e1e1e;
-        --input-border: #444;
-        --button-bg: #3b82f6;
-        --button-hover: #2563eb;
-        --copy-bg: #22c55e;
-        --copy-hover: #15803d;
-        --danger-bg: #ef4444;
-        --danger-hover: #b91c1c;
-        --toast-bg: #2c2c2c;
-        --card-bg: #1e1e1e;
-        --item-hover: #333;
-      }
+    body.dark {
+      --bg: #121212;
+      --text: #eee;
+      --input-bg: #1e1e1e;
+      --input-border: #444;
+      --button-bg: #3b82f6;
+      --button-hover: #2563eb;
+      --copy-bg: #22c55e;
+      --copy-hover: #15803d;
+      --danger-bg: #ef4444;
+      --danger-hover: #b91c1c;
+      --toast-bg: #2c2c2c;
+      --card-bg: #1e1e1e;
+      --item-hover: #333;
+    }
 
-      body {
-        font-family: Arial, sans-serif;
-        background-color: var(--bg);
-        color: var(--text);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 30px 15px;
-        margin: 0;
-        transition: all 0.3s ease;
-      }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 15px;
+      margin: 0;
+      transition: all 0.3s ease;
+    }
 
-      h1 {
-        margin-bottom: 20px;
-      }
+    h1 {
+      margin-bottom: 20px;
+    }
 
-      input {
-        padding: 10px;
-        font-size: 18px;
-        width: 300px;
-        border-radius: 5px;
-        border: 1px solid var(--input-border);
-        text-align: right;
-        background: var(--input-bg);
-        color: var(--text);
-      }
+    input {
+      padding: 10px;
+      font-size: 18px;
+      width: 300px;
+      border-radius: 5px;
+      border: 1px solid var(--input-border);
+      text-align: right;
+      background: var(--input-bg);
+      color: var(--text);
+    }
 
-      button {
-        margin-top: 10px;
-        padding: 10px 20px;
-        font-size: 16px;
-        background-color: var(--button-bg);
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: var(--button-bg);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-      button:hover {
-        background-color: var(--button-hover);
-      }
+    button:hover {
+      background-color: var(--button-hover);
+    }
 
-      #hasil {
-        margin-top: 20px;
-        font-size: 18px;
-        max-width: 600px;
-        text-align: center;
-        word-wrap: break-word;
-      }
+    #hasil {
+      margin-top: 20px;
+      font-size: 18px;
+      max-width: 600px;
+      text-align: center;
+      word-wrap: break-word;
+    }
 
-      #copyButton {
-        display: none;
-        margin-top: 10px;
-        background-color: var(--copy-bg);
-      }
+    #copyButton {
+      display: none;
+      margin-top: 10px;
+      background-color: var(--copy-bg);
+    }
 
-      #copyButton:hover {
-        background-color: var(--copy-hover);
-      }
+    #copyButton:hover {
+      background-color: var(--copy-hover);
+    }
 
-      .toast {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: var(--toast-bg);
-        color: #fff;
-        padding: 12px 20px;
-        border-radius: 6px;
-        opacity: 0;
-        pointer-events: none;
-        transform: translateY(20px);
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 16px;
-        z-index: 9999;
-      }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--toast-bg);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      z-index: 9999;
+    }
 
-      .toast.show {
-        opacity: 1;
-        pointer-events: auto;
-        transform: translateY(0);
-      }
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
 
-      .history-container {
-        margin-top: 30px;
-        width: 100%;
-        max-width: 600px;
-      }
+    .history-container {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 600px;
+    }
 
-      .history-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-      .history-header h2 {
-        font-size: 20px;
-      }
+    .history-header h2 {
+      font-size: 20px;
+    }
 
-      .history-list {
-        margin-top: 10px;
-        background: var(--card-bg);
-        border: 1px solid var(--input-border);
-        border-radius: 6px;
-        padding: 10px;
-        max-height: 200px;
-        overflow-y: auto;
-      }
+    .history-list {
+      margin-top: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 6px;
+      padding: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
 
-      .history-item {
-        padding: 8px;
-        border-bottom: 1px solid #5553;
-        cursor: pointer;
-      }
+    .history-item {
+      padding: 8px;
+      border-bottom: 1px solid #5553;
+      cursor: pointer;
+    }
 
-      .history-item:hover {
-        background-color: var(--item-hover);
-      }
+    .history-item:hover {
+      background-color: var(--item-hover);
+    }
 
-      .clear-btn {
-        background-color: var(--danger-bg);
-        font-size: 14px;
-        padding: 5px 10px;
-      }
+    .clear-btn {
+      background-color: var(--danger-bg);
+      font-size: 14px;
+      padding: 5px 10px;
+    }
 
-      .clear-btn:hover {
-        background-color: var(--danger-hover);
-      }
+    .clear-btn:hover {
+      background-color: var(--danger-hover);
+    }
 
-      .dark-toggle {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: #888;
-        color: white;
-        padding: 6px 10px;
-        font-size: 14px;
-        border-radius: 5px;
-        cursor: pointer;
-        border: none;
-      }
+    .dark-toggle {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #888;
+      color: white;
+      padding: 6px 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      border: none;
+    }
 
-      .dark-toggle:hover {
-        background: #555;
-      }
-    </style>
-  </head>
-  <body>
-    <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
-    <h1>Konversi Angka ke Terbilang</h1>
-    <input
-      type="text"
-      id="inputAngka"
-      placeholder="Masukkan angka besar..."
-      oninput="formatAngka(this)"
-    />
-    <button onclick="konversi()">Konversi</button>
-    <div id="hasil"></div>
-    <button id="copyButton" onclick="copyHasil()">Copy Hasil</button>
+    .dark-toggle:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+  <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+  <h1>Konversi Angka ke Terbilang</h1>
+  <input type="text" id="inputAngka" placeholder="Masukkan angka besar..." oninput="formatAngka(this)" />
+  <button onclick="konversi()">Konversi</button>
+  <div id="hasil"></div>
+  <button id="copyButton" onclick="copyHasil()">Copy Hasil</button>
 
-    <div class="toast" id="toast">📋 Hasil disalin ke clipboard!</div>
+  <div class="toast" id="toast">📋 Hasil disalin ke clipboard!</div>
 
-    <div class="history-container">
-      <div class="history-header">
-        <h2>Riwayat Konversi</h2>
-        <button class="clear-btn" onclick="clearRiwayat()">Hapus Semua</button>
-      </div>
-      <div class="history-list" id="historyList"></div>
+  <div class="history-container">
+    <div class="history-header">
+      <h2>Riwayat Konversi</h2>
+      <button class="clear-btn" onclick="clearRiwayat()">Hapus Semua</button>
     </div>
+    <div class="history-list" id="historyList"></div>
+  </div>
 
-    <script>
-      // dark mode
-      function toggleDarkMode() {
-        document.body.classList.toggle("dark");
-        localStorage.setItem("darkMode", document.body.classList.contains("dark"));
-      }
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("darkMode", document.body.classList.contains("dark"));
+    }
 
-      // load mode saat awal
-      if (localStorage.getItem("darkMode") === "true") {
-        document.body.classList.add("dark");
-      }
+    if (localStorage.getItem("darkMode") === "true") {
+      document.body.classList.add("dark");
+    }
 
-      // fungsi lainnya tetap sama
-      const satuan = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan"];
-      const belasan = ["sepuluh", "sebelas", "dua belas", "tiga belas", "empat belas", "lima belas", "enam belas", "tujuh belas", "delapan belas", "sembilan belas"];
-      const puluhan = ["", "", "dua puluh", "tiga puluh", "empat puluh", "lima puluh", "enam puluh", "tujuh puluh", "delapan puluh", "sembilan puluh"];
-      const skala = ["", "ribu", "juta", "miliar", "triliun", "kuadriliun", "kuintiliun", "sekstiliun", "septiliun", "oktiliun", "noniliun", "desiliun", "undesiliun", "duodesiliun", "tresdesiliun", "kuattuordesiliun", "kuinquadesiliun", "seksdesiliun", "septendesiliun", "oktodesiliun", "novemdesiliun", "vigisiliun", "unvigintiliun", "duovigintiliun"];
+    const satuan = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan"];
+    const belasan = ["sepuluh", "sebelas", "dua belas", "tiga belas", "empat belas", "lima belas", "enam belas", "tujuh belas", "delapan belas", "sembilan belas"];
+    const puluhan = ["", "", "dua puluh", "tiga puluh", "empat puluh", "lima puluh", "enam puluh", "tujuh puluh", "delapan puluh", "sembilan puluh"];
+    const skala = ["", "ribu", "juta", "miliar", "triliun", "kuadriliun", "kuintiliun", "sekstiliun", "septiliun", "oktiliun", "noniliun", "desiliun", "undesiliun", "duodesiliun"];
 
-      function angkaKeKata(num) {
-        if (num === 0n) return "nol";
-        let hasil = "", grup = 0;
-        while (num > 0n) {
-          let tigaDigit = num % 1000n;
-          if (tigaDigit > 0n) {
-            let bagian = konversiTigaDigit(Number(tigaDigit)) + (skala[grup] ? " " + skala[grup] : "");
-            hasil = bagian + (hasil ? " " + hasil : "");
-          }
-          num = num / 1000n;
-          grup++;
+    function angkaKeKata(num) {
+      if (num === 0n) return "nol";
+      let hasil = "", grup = 0;
+      while (num > 0n) {
+        let tigaDigit = num % 1000n;
+        if (tigaDigit > 0n) {
+          let bagian = konversiTigaDigit(Number(tigaDigit)) + (skala[grup] ? " " + skala[grup] : "");
+          hasil = bagian + (hasil ? " " + hasil : "");
         }
-        return hasil.trim();
+        num = num / 1000n;
+        grup++;
       }
+      return hasil.trim();
+    }
 
-      function konversiTigaDigit(num) {
-        if (num === 0) return "";
-        if (num < 10) return satuan[num];
-        if (num < 20) return belasan[num - 10];
-        if (num < 100)
-          return puluhan[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + satuan[num % 10] : "");
-        let ratusan = Math.floor(num / 100);
-        let sisa = num % 100;
-        let ratusanKata = ratusan === 1 ? "seratus" : satuan[ratusan] + " ratus";
-        return ratusanKata + (sisa !== 0 ? " " + konversiTigaDigit(sisa) : "");
-      }
+    function konversiTigaDigit(num) {
+      if (num === 0) return "";
+      if (num < 10) return satuan[num];
+      if (num < 20) return belasan[num - 10];
+      if (num < 100)
+        return puluhan[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + satuan[num % 10] : "");
+      let ratusan = Math.floor(num / 100);
+      let sisa = num % 100;
+      let ratusanKata = ratusan === 1 ? "seratus" : satuan[ratusan] + " ratus";
+      return ratusanKata + (sisa !== 0 ? " " + konversiTigaDigit(sisa) : "");
+    }
 
-      function formatAngka(el) {
-        let angka = el.value.replace(/\D/g, "");
-        let formatted = angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        let cursorPos = el.selectionStart;
-        let prevLength = el.value.length;
-        el.value = formatted;
-        let diff = formatted.length - prevLength;
-        el.setSelectionRange(cursorPos + diff, cursorPos + diff);
-      }
+    function formatAngka(el) {
+      let angka = el.value.replace(/\D/g, "");
+      let formatted = angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      let cursorPos = el.selectionStart;
+      let prevLength = el.value.length;
+      el.value = formatted;
+      let diff = formatted.length - prevLength;
+      el.setSelectionRange(cursorPos + diff, cursorPos + diff);
+    }
 
-      function konversi() {
-        const input = document.getElementById("inputAngka").value.trim().replace(/\./g, "");
-        const hasilEl = document.getElementById("hasil");
-        const copyBtn = document.getElementById("copyButton");
+    function konversi() {
+      const input = document.getElementById("inputAngka").value.trim().replace(/\./g, "");
+      const hasilEl = document.getElementById("hasil");
+      const copyBtn = document.getElementById("copyButton");
 
-        try {
-          let num = BigInt(input);
-          let max = BigInt("9".repeat(75));
-          if (num > max) {
-            hasilEl.innerText = "Maaf, angka terlalu besar!";
-            copyBtn.style.display = "none";
-          } else {
-            const hasil = angkaKeKata(num);
-            hasilEl.innerText = hasil;
-            copyBtn.style.display = "inline-block";
-            simpanRiwayat(input, hasil);
-          }
-        } catch {
-          hasilEl.innerText = "Masukkan angka yang valid!";
+      try {
+        let num = BigInt(input);
+        let max = BigInt("9".repeat(75));
+        if (num > max) {
+          hasilEl.innerText = "Maaf, angka terlalu besar!";
           copyBtn.style.display = "none";
+        } else {
+          const hasil = angkaKeKata(num);
+          const singkat = formatSingkat(num);
+          hasilEl.innerHTML = `${hasil}<br><br>💡 Deskripsi: ${singkat}`;
+          copyBtn.style.display = "inline-block";
+          simpanRiwayat(input, hasil + " - " + singkat);
+        }
+      } catch {
+        hasilEl.innerText = "Masukkan angka yang valid!";
+        copyBtn.style.display = "none";
+      }
+    }
+
+    function formatSingkat(n) {
+      const num = BigInt(n);
+      const format = [
+        [1_000_000_000_000n, "triliun"],
+        [1_000_000_000n, "miliar"],
+        [1_000_000n, "juta"],
+        [1_000n, "ribu"]
+      ];
+      for (let [nilai, label] of format) {
+        if (num >= nilai) {
+          let hasil = (Number(num) / Number(nilai)).toFixed(1).replace(/\.0$/, "");
+          return `${hasil} ${label}`;
         }
       }
+      return num.toString();
+    }
 
-      function copyHasil() {
-        const hasilText = document.getElementById("hasil").innerText;
-        navigator.clipboard.writeText(hasilText).then(() => {
-          showToast();
-        });
-      }
+    function copyHasil() {
+      const hasilText = document.getElementById("hasil").innerText;
+      navigator.clipboard.writeText(hasilText).then(() => {
+        showToast();
+      });
+    }
 
-      function showToast() {
-        const toast = document.getElementById("toast");
-        toast.classList.add("show");
-        setTimeout(() => {
-          toast.classList.remove("show");
-        }, 3000);
-      }
+    function showToast() {
+      const toast = document.getElementById("toast");
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
 
-      function simpanRiwayat(angka, hasil) {
-        let riwayat = JSON.parse(localStorage.getItem("riwayatKonversi") || "[]");
-        riwayat.unshift({ angka, hasil });
-        if (riwayat.length > 10) riwayat = riwayat.slice(0, 10);
-        localStorage.setItem("riwayatKonversi", JSON.stringify(riwayat));
-        tampilkanRiwayat();
-      }
-
-      function tampilkanRiwayat() {
-        const list = document.getElementById("historyList");
-        list.innerHTML = "";
-        let riwayat = JSON.parse(localStorage.getItem("riwayatKonversi") || "[]");
-        riwayat.forEach((item) => {
-          const div = document.createElement("div");
-          div.className = "history-item";
-          div.innerText = `${item.angka} → ${item.hasil}`;
-          div.onclick = () => {
-            document.getElementById("inputAngka").value = formatWithDots(item.angka);
-          };
-          list.appendChild(div);
-        });
-      }
-
-      function formatWithDots(angka) {
-        return angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      }
-
-      function clearRiwayat() {
-        localStorage.removeItem("riwayatKonversi");
-        tampilkanRiwayat();
-      }
-
+    function simpanRiwayat(angka, hasil) {
+      let riwayat = JSON.parse(localStorage.getItem("riwayatKonversi") || "[]");
+      riwayat.unshift({ angka, hasil });
+      if (riwayat.length > 10) riwayat = riwayat.slice(0, 10);
+      localStorage.setItem("riwayatKonversi", JSON.stringify(riwayat));
       tampilkanRiwayat();
-    </script>
-  </body>
+    }
+
+    function tampilkanRiwayat() {
+      const list = document.getElementById("historyList");
+      const riwayat = JSON.parse(localStorage.getItem("riwayatKonversi") || "[]");
+      list.innerHTML = "";
+      riwayat.forEach(item => {
+        const el = document.createElement("div");
+        el.className = "history-item";
+        el.innerText = `${item.angka} → ${item.hasil}`;
+        el.onclick = () => {
+          document.getElementById("inputAngka").value = item.angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+          konversi();
+        };
+        list.appendChild(el);
+      });
+    }
+
+    function clearRiwayat() {
+      localStorage.removeItem("riwayatKonversi");
+      tampilkanRiwayat();
+    }
+
+    tampilkanRiwayat();
+  </script>
+</body>
 </html>
