@@ -1,413 +1,600 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Konversi Angka ke Terbilang</title>
-  <style>
-    :root {
-      --bg: #f5f5f5;
-      --text: #333;
-      --input-bg: white;
-      --input-border: #ccc;
-      --button-bg: #007bff;
-      --button-hover: #0056b3;
-      --copy-bg: #28a745;
-      --copy-hover: #1e7e34;
-      --danger-bg: #dc3545;
-      --danger-hover: #c82333;
-      --toast-bg: #323232;
-      --card-bg: white;
-      --item-hover: #f0f0f0;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Konversi Angka ke Terbilang</title>
+    <style>
+      :root {
+        --bg: #f5f5f5;
+        --text: #333;
+        --input-bg: white;
+        --input-border: #ccc;
+        --button-bg: #007bff;
+        --button-hover: #0056b3;
+        --copy-bg: #28a745;
+        --copy-hover: #1e7e34;
+        --danger-bg: #dc3545;
+        --danger-hover: #c82333;
+        --toast-bg: #323232;
+        --card-bg: white;
+        --item-hover: #f0f0f0;
+      }
 
-    body.dark {
-      --bg: #121212;
-      --text: #eee;
-      --input-bg: #1e1e1e;
-      --input-border: #444;
-      --button-bg: #3b82f6;
-      --button-hover: #2563eb;
-      --copy-bg: #22c55e;
-      --copy-hover: #15803d;
-      --danger-bg: #ef4444;
-      --danger-hover: #b91c1c;
-      --toast-bg: #2c2c2c;
-      --card-bg: #1e1e1e;
-      --item-hover: #333;
-    }
+      body.dark {
+        --bg: #121212;
+        --text: #eee;
+        --input-bg: #1e1e1e;
+        --input-border: #444;
+        --button-bg: #3b82f6;
+        --button-hover: #2563eb;
+        --copy-bg: #22c55e;
+        --copy-hover: #15803d;
+        --danger-bg: #ef4444;
+        --danger-hover: #b91c1c;
+        --toast-bg: #2c2c2c;
+        --card-bg: #1e1e1e;
+        --item-hover: #333;
+      }
 
-    body {
-      font-family: Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px 15px;
-      margin: 0;
-      transition: all 0.3s ease;
-    }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 15px;
+        margin: 0;
+        transition: all 0.3s ease;
+        position: relative;
+      }
 
-    h1 {
-      margin-bottom: 20px;
-    }
+      h1 {
+        margin-bottom: 20px;
+      }
 
-    input {
-      padding: 10px;
-      font-size: 18px;
-      width: 300px;
-      border-radius: 5px;
-      border: 1px solid var(--input-border);
-      text-align: right;
-      background: var(--input-bg);
-      color: var(--text);
-    }
+      input {
+        padding: 10px;
+        font-size: 18px;
+        width: 100%;
+        max-width: 300px;
+        border-radius: 5px;
+        border: 1px solid var(--input-border);
+        text-align: right;
+        background: var(--input-bg);
+        color: var(--text);
+      }
 
-    button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: var(--button-bg);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+      .top-buttons {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
 
-    button:hover {
-      background-color: var(--button-hover);
-    }
+      button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: var(--button-bg);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
 
-    #hasil {
-      margin-top: 20px;
-      font-size: 18px;
-      max-width: 600px;
-      text-align: center;
-      word-wrap: break-word;
-    }
+      button:hover {
+        background-color: var(--button-hover);
+      }
 
-    #copyButton {
-      display: none;
-      margin-top: 10px;
-      background-color: var(--copy-bg);
-    }
+      #hasil {
+        margin-top: 20px;
+        font-size: 18px;
+        max-width: 600px;
+        text-align: center;
+        word-wrap: break-word;
+      }
 
-    #copyButton:hover {
-      background-color: var(--copy-hover);
-    }
+      #copyButton {
+        display: none;
+        margin-top: 10px;
+        background-color: var(--copy-bg);
+      }
 
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: var(--toast-bg);
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 6px;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(20px);
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 16px;
-      z-index: 9999;
-    }
+      #copyButton:hover {
+        background-color: var(--copy-hover);
+      }
 
-    .toast.show {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0);
-    }
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: var(--toast-bg);
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 6px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(20px);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 16px;
+        z-index: 9999;
+      }
 
-    .history-container {
-      margin-top: 30px;
-      width: 100%;
-      max-width: 600px;
-    }
+      .toast.show {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
 
-    .history-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+      .history-container {
+        margin-top: 30px;
+        width: 100%;
+        max-width: 600px;
+      }
 
-    .history-header h2 {
-      font-size: 20px;
-    }
+      .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-    .history-list {
-      margin-top: 10px;
-      background: var(--card-bg);
-      border: 1px solid var(--input-border);
-      border-radius: 6px;
-      padding: 10px;
-      max-height: 200px;
-      overflow-y: auto;
-    }
+      .history-header h2 {
+        font-size: 20px;
+      }
 
-    .history-item {
-      padding: 8px;
-      border-bottom: 1px solid #5553;
-      cursor: pointer;
-    }
+      .history-list {
+        margin-top: 10px;
+        background: var(--card-bg);
+        border: 1px solid var(--input-border);
+        border-radius: 6px;
+        padding: 10px;
+        max-height: 200px;
+        overflow-y: auto;
+      }
 
-    .history-item:hover {
-      background-color: var(--item-hover);
-    }
+      .history-item {
+        padding: 8px;
+        border-bottom: 1px solid #5553;
+        cursor: pointer;
+      }
 
-    .clear-btn {
-      background-color: var(--danger-bg);
-      font-size: 14px;
-      padding: 5px 10px;
-    }
+      .history-item:hover {
+        background-color: var(--item-hover);
+      }
 
-    .clear-btn:hover {
-      background-color: var(--danger-hover);
-    }
+      .clear-btn {
+        background-color: var(--danger-bg);
+        font-size: 14px;
+        padding: 5px 10px;
+      }
 
-    .dark-toggle, .lang-toggle {
-      position: absolute;
-      top: 15px;
-      padding: 6px 10px;
-      font-size: 14px;
-      border-radius: 5px;
-      cursor: pointer;
-      border: none;
-    }
+      .clear-btn:hover {
+        background-color: var(--danger-hover);
+      }
 
-    .dark-toggle {
-      right: 15px;
-      background: #888;
-      color: white;
-    }
+      .dark-toggle,
+      .lang-toggle {
+        position: absolute;
+        top: 15px;
+        padding: 6px 10px;
+        font-size: 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        border: none;
+      }
 
-    .dark-toggle:hover {
-      background: #555;
-    }
+      .dark-toggle {
+        right: 15px;
+        background: #888;
+        color: white;
+      }
 
-    .lang-toggle {
-      left: 15px;
-      background: #555;
-      color: white;
-    }
+      .dark-toggle:hover {
+        background: #555;
+      }
 
-    .lang-toggle:hover {
-      background: #333;
-    }
-  </style>
-</head>
-<body>
-  <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
-  <button class="lang-toggle" onclick="toggleLang()">🌐 ID / EN</button>
-  <h1 id="title">Konversi Angka ke Terbilang</h1>
-  <input type="text" id="inputAngka" placeholder="Masukkan angka besar..." oninput="formatAngka(this)" />
-  <button onclick="konversi()" id="convertBtn">Konversi</button>
-  <div id="hasil"></div>
-  <button id="copyButton" onclick="copyHasil()">Copy Hasil</button>
+      .lang-toggle {
+        left: 15px;
+        background: #555;
+        color: white;
+      }
 
-  <div class="toast" id="toast">📋 Hasil disalin ke clipboard!</div>
+      .lang-toggle:hover {
+        background: #333;
+      }
 
-  <div class="history-container">
-    <div class="history-header">
-      <h2 id="historyTitle">Riwayat Konversi</h2>
-      <button class="clear-btn" onclick="clearRiwayat()" id="clearBtn">Hapus Semua</button>
+      @media (max-width: 480px) {
+        input {
+          width: 100%;
+          font-size: 16px;
+        }
+
+        .top-buttons {
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+        }
+
+        button {
+          width: 100%;
+          font-size: 14px;
+          padding: 10px;
+        }
+
+        .dark-toggle,
+        .lang-toggle {
+          font-size: 12px;
+          padding: 5px 8px;
+          position: relative;
+          right: auto;
+          left: auto;
+        }
+
+        .history-container {
+          margin-top: 20px;
+          max-width: 100%;
+        }
+
+        .toast {
+          right: 10px;
+          left: 10px;
+          bottom: 10px;
+          font-size: 14px;
+        }
+
+        h1 {
+          font-size: 20px;
+          text-align: center;
+        }
+
+        #hasil {
+          font-size: 16px;
+          padding: 0 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top-buttons">
+      <button class="lang-toggle" onclick="toggleLang()">🌐 ID / EN</button>
+      <button class="dark-toggle" onclick="toggleDarkMode()">
+        🌙 Dark Mode
+      </button>
     </div>
-    <div class="history-list" id="historyList"></div>
-  </div>
 
-  <script>
-    const langText = {
-      id: {
-        title: "Konversi Angka ke Terbilang",
-        placeholder: "Masukkan angka besar...",
-        convertBtn: "Konversi",
-        copyBtn: "Copy Hasil",
-        copied: "📋 Hasil disalin ke clipboard!",
-        history: "Riwayat Konversi",
-        clear: "Hapus Semua",
-        invalid: "Masukkan angka yang valid!",
-        tooBig: "Maaf, angka terlalu besar!",
-        desc: "💡 Deskripsi:"
-      },
-      en: {
-        title: "Number to Words Converter",
-        placeholder: "Enter a large number...",
-        convertBtn: "Convert",
-        copyBtn: "Copy Result",
-        copied: "📋 Result copied to clipboard!",
-        history: "Conversion History",
-        clear: "Clear All",
-        invalid: "Please enter a valid number!",
-        tooBig: "Sorry, number too large!",
-        desc: "💡 Description:"
+    <h1 id="title">Konversi Angka ke Terbilang</h1>
+    <input
+      type="text"
+      id="inputAngka"
+      placeholder="Masukkan angka besar..."
+      oninput="formatAngka(this)"
+    />
+    <button onclick="konversi()" id="convertBtn">Konversi</button>
+    <div id="hasil"></div>
+    <button id="copyButton" onclick="copyHasil()">Copy Hasil</button>
+
+    <div class="toast" id="toast">📋 Hasil disalin ke clipboard!</div>
+
+    <div class="history-container">
+      <div class="history-header">
+        <h2 id="historyTitle">Riwayat Konversi</h2>
+        <button class="clear-btn" onclick="clearRiwayat()" id="clearBtn">
+          Hapus Semua
+        </button>
+      </div>
+      <div class="history-list" id="historyList"></div>
+    </div>
+
+    <script>
+      const langText = {
+        id: {
+          title: "Konversi Angka ke Terbilang",
+          placeholder: "Masukkan angka besar...",
+          convertBtn: "Konversi",
+          copyBtn: "Copy Hasil",
+          copied: "📋 Hasil disalin ke clipboard!",
+          history: "Riwayat Konversi",
+          clear: "Hapus Semua",
+          invalid: "Masukkan angka yang valid!",
+          tooBig: "Maaf, angka terlalu besar!",
+          desc: "💡 Deskripsi:",
+        },
+        en: {
+          title: "Number to Words Converter",
+          placeholder: "Enter a large number...",
+          convertBtn: "Convert",
+          copyBtn: "Copy Result",
+          copied: "📋 Result copied to clipboard!",
+          history: "Conversion History",
+          clear: "Clear All",
+          invalid: "Please enter a valid number!",
+          tooBig: "Sorry, number too large!",
+          desc: "💡 Description:",
+        },
+      };
+
+      let currentLang = localStorage.getItem("lang") || "id";
+
+      function updateLang() {
+        const t = langText[currentLang];
+        document.getElementById("title").innerText = t.title;
+        document.getElementById("inputAngka").placeholder = t.placeholder;
+        document.getElementById("convertBtn").innerText = t.convertBtn;
+        document.getElementById("copyButton").innerText = t.copyBtn;
+        document.getElementById("toast").innerText = t.copied;
+        document.getElementById("historyTitle").innerText = t.history;
+        document.getElementById("clearBtn").innerText = t.clear;
       }
-    };
 
-    let currentLang = localStorage.getItem("lang") || "id";
+      function toggleLang() {
+        currentLang = currentLang === "id" ? "en" : "id";
+        localStorage.setItem("lang", currentLang);
+        updateLang();
+      }
 
-    function updateLang() {
-      const t = langText[currentLang];
-      document.getElementById("title").innerText = t.title;
-      document.getElementById("inputAngka").placeholder = t.placeholder;
-      document.getElementById("convertBtn").innerText = t.convertBtn;
-      document.getElementById("copyButton").innerText = t.copyBtn;
-      document.getElementById("toast").innerText = t.copied;
-      document.getElementById("historyTitle").innerText = t.history;
-      document.getElementById("clearBtn").innerText = t.clear;
-    }
-
-    function toggleLang() {
-      currentLang = currentLang === "id" ? "en" : "id";
-      localStorage.setItem("lang", currentLang);
       updateLang();
-    }
 
-    updateLang();
-
-    function toggleDarkMode() {
-      document.body.classList.toggle("dark");
-      localStorage.setItem("darkMode", document.body.classList.contains("dark"));
-    }
-
-    if (localStorage.getItem("darkMode") === "true") {
-      document.body.classList.add("dark");
-    }
-
-    function formatAngka(el) {
-      let angka = el.value.replace(/\D/g, "");
-      let formatted = angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      let cursorPos = el.selectionStart;
-      let prevLength = el.value.length;
-      el.value = formatted;
-      let diff = formatted.length - prevLength;
-      el.setSelectionRange(cursorPos + diff, cursorPos + diff);
-    }
-
-    function angkaKeKata(num) {
-      if (num === 0n) return currentLang === "id" ? "nol" : "zero";
-      let hasil = "", grup = 0;
-      const satuan = currentLang === "id" ? ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan"] :
-                                            ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-      const belasan = currentLang === "id" ? ["sepuluh", "sebelas", "dua belas", "tiga belas", "empat belas", "lima belas", "enam belas", "tujuh belas", "delapan belas", "sembilan belas"] :
-                                             ["ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
-      const puluhan = currentLang === "id" ? ["", "", "dua puluh", "tiga puluh", "empat puluh", "lima puluh", "enam puluh", "tujuh puluh", "delapan puluh", "sembilan puluh"] :
-                                             ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
-      const skala = currentLang === "id"
-        ? ["", "ribu", "juta", "miliar", "triliun"]
-        : ["", "thousand", "million", "billion", "trillion"];
-      while (num > 0n) {
-        let tigaDigit = num % 1000n;
-        if (tigaDigit > 0n) {
-          let bagian = konversiTigaDigit(Number(tigaDigit), satuan, belasan, puluhan);
-          hasil = bagian + (skala[grup] ? " " + skala[grup] : "") + (hasil ? " " + hasil : "");
-        }
-        num = num / 1000n;
-        grup++;
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark");
+        localStorage.setItem(
+          "darkMode",
+          document.body.classList.contains("dark")
+        );
       }
-      return hasil.trim();
-    }
 
-    function konversiTigaDigit(num, satuan, belasan, puluhan) {
-      if (num === 0) return "";
-      if (num < 10) return satuan[num];
-      if (num < 20) return belasan[num - 10];
-      if (num < 100)
-        return puluhan[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + satuan[num % 10] : "");
-      let ratusan = Math.floor(num / 100);
-      let sisa = num % 100;
-      let ratusanKata = (ratusan === 1)
-        ? (currentLang === "id" ? "seratus" : "one hundred")
-        : satuan[ratusan] + " " + (currentLang === "id" ? "ratus" : "hundred");
-      return ratusanKata + (sisa !== 0 ? " " + konversiTigaDigit(sisa, satuan, belasan, puluhan) : "");
-    }
+      if (localStorage.getItem("darkMode") === "true") {
+        document.body.classList.add("dark");
+      }
 
-    function konversi() {
-      const input = document.getElementById("inputAngka").value.trim().replace(/\./g, "");
-      const hasilEl = document.getElementById("hasil");
-      const copyBtn = document.getElementById("copyButton");
+      function formatAngka(el) {
+        let angka = el.value.replace(/\D/g, "");
+        let formatted = angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        let cursorPos = el.selectionStart;
+        let prevLength = el.value.length;
+        el.value = formatted;
+        let diff = formatted.length - prevLength;
+        el.setSelectionRange(cursorPos + diff, cursorPos + diff);
+      }
 
-      try {
-        let num = BigInt(input);
-        let max = BigInt("9".repeat(75));
-        if (num > max) {
-          hasilEl.innerText = langText[currentLang].tooBig;
+      function angkaKeKata(num) {
+        if (num === 0n) return currentLang === "id" ? "nol" : "zero";
+        let hasil = "",
+          grup = 0;
+        const satuan =
+          currentLang === "id"
+            ? [
+                "",
+                "satu",
+                "dua",
+                "tiga",
+                "empat",
+                "lima",
+                "enam",
+                "tujuh",
+                "delapan",
+                "sembilan",
+              ]
+            : [
+                "",
+                "one",
+                "two",
+                "three",
+                "four",
+                "five",
+                "six",
+                "seven",
+                "eight",
+                "nine",
+              ];
+        const belasan =
+          currentLang === "id"
+            ? [
+                "sepuluh",
+                "sebelas",
+                "dua belas",
+                "tiga belas",
+                "empat belas",
+                "lima belas",
+                "enam belas",
+                "tujuh belas",
+                "delapan belas",
+                "sembilan belas",
+              ]
+            : [
+                "ten",
+                "eleven",
+                "twelve",
+                "thirteen",
+                "fourteen",
+                "fifteen",
+                "sixteen",
+                "seventeen",
+                "eighteen",
+                "nineteen",
+              ];
+        const puluhan =
+          currentLang === "id"
+            ? [
+                "",
+                "",
+                "dua puluh",
+                "tiga puluh",
+                "empat puluh",
+                "lima puluh",
+                "enam puluh",
+                "tujuh puluh",
+                "delapan puluh",
+                "sembilan puluh",
+              ]
+            : [
+                "",
+                "",
+                "twenty",
+                "thirty",
+                "forty",
+                "fifty",
+                "sixty",
+                "seventy",
+                "eighty",
+                "ninety",
+              ];
+        const skala =
+          currentLang === "id"
+            ? ["", "ribu", "juta", "miliar", "triliun"]
+            : ["", "thousand", "million", "billion", "trillion"];
+        while (num > 0n) {
+          let tigaDigit = num % 1000n;
+          if (tigaDigit > 0n) {
+            let bagian = konversiTigaDigit(
+              Number(tigaDigit),
+              satuan,
+              belasan,
+              puluhan
+            );
+            hasil =
+              bagian +
+              (skala[grup] ? " " + skala[grup] : "") +
+              (hasil ? " " + hasil : "");
+          }
+          num = num / 1000n;
+          grup++;
+        }
+        return hasil.trim();
+      }
+
+      function konversiTigaDigit(num, satuan, belasan, puluhan) {
+        if (num === 0) return "";
+        if (num < 10) return satuan[num];
+        if (num < 20) return belasan[num - 10];
+        if (num < 100)
+          return (
+            puluhan[Math.floor(num / 10)] +
+            (num % 10 !== 0 ? " " + satuan[num % 10] : "")
+          );
+        let ratusan = Math.floor(num / 100);
+        let sisa = num % 100;
+        let ratusanKata =
+          ratusan === 1
+            ? currentLang === "id"
+              ? "seratus"
+              : "one hundred"
+            : satuan[ratusan] +
+              " " +
+              (currentLang === "id" ? "ratus" : "hundred");
+        return (
+          ratusanKata +
+          (sisa !== 0
+            ? " " + konversiTigaDigit(sisa, satuan, belasan, puluhan)
+            : "")
+        );
+      }
+
+      function konversi() {
+        const input = document
+          .getElementById("inputAngka")
+          .value.trim()
+          .replace(/\./g, "");
+        const hasilEl = document.getElementById("hasil");
+        const copyBtn = document.getElementById("copyButton");
+
+        try {
+          let num = BigInt(input);
+          let max = BigInt("9".repeat(75));
+          if (num > max) {
+            hasilEl.innerText = langText[currentLang].tooBig;
+            copyBtn.style.display = "none";
+          } else {
+            const hasil = angkaKeKata(num);
+            const singkat = formatSingkat(num);
+            hasilEl.innerHTML = `${hasil}<br><br>${langText[currentLang].desc} ${singkat}`;
+            copyBtn.style.display = "inline-block";
+            simpanRiwayat(input, hasil + " - " + singkat);
+          }
+        } catch {
+          hasilEl.innerText = langText[currentLang].invalid;
           copyBtn.style.display = "none";
-        } else {
-          const hasil = angkaKeKata(num);
-          const singkat = formatSingkat(num);
-          hasilEl.innerHTML = `${hasil}<br><br>${langText[currentLang].desc} ${singkat}`;
-          copyBtn.style.display = "inline-block";
-          simpanRiwayat(input, hasil + " - " + singkat);
-        }
-      } catch {
-        hasilEl.innerText = langText[currentLang].invalid;
-        copyBtn.style.display = "none";
-      }
-    }
-
-    function formatSingkat(n) {
-      const num = BigInt(n);
-      const format = [
-        [1_000_000_000_000n, currentLang === "id" ? "triliun" : "trillion"],
-        [1_000_000_000n, currentLang === "id" ? "miliar" : "billion"],
-        [1_000_000n, currentLang === "id" ? "juta" : "million"],
-        [1_000n, currentLang === "id" ? "ribu" : "thousand"]
-      ];
-      for (let [nilai, label] of format) {
-        if (num >= nilai) {
-          let hasil = (Number(num) / Number(nilai)).toFixed(1).replace(/\.0$/, "");
-          return `${hasil} ${label}`;
         }
       }
-      return num.toString();
-    }
 
-    function copyHasil() {
-      const hasilText = document.getElementById("hasil").innerText;
-      navigator.clipboard.writeText(hasilText).then(() => {
-        showToast();
-      });
-    }
-
-    function showToast() {
-      const toast = document.getElementById("toast");
-      toast.innerText = langText[currentLang].copied;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 3000);
-    }
-
-    function simpanRiwayat(angka, hasil) {
-      let riwayat = JSON.parse(localStorage.getItem("riwayatKonversi") || "[]");
-      riwayat.unshift({ angka, hasil });
-      localStorage.setItem("riwayatKonversi", JSON.stringify(riwayat.slice(0, 10)));
-      tampilkanRiwayat();
-    }
-
-    function tampilkanRiwayat() {
-      const container = document.getElementById("historyList");
-      const riwayat = JSON.parse(localStorage.getItem("riwayatKonversi") || "[]");
-      container.innerHTML = "";
-      for (let item of riwayat) {
-        const div = document.createElement("div");
-        div.className = "history-item";
-        div.innerText = `${item.angka} ➜ ${item.hasil}`;
-        div.onclick = () => {
-          document.getElementById("inputAngka").value = item.angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-          konversi();
-        };
-        container.appendChild(div);
+      function formatSingkat(n) {
+        const num = BigInt(n);
+        const format = [
+          [1_000_000_000_000n, currentLang === "id" ? "triliun" : "trillion"],
+          [1_000_000_000n, currentLang === "id" ? "miliar" : "billion"],
+          [1_000_000n, currentLang === "id" ? "juta" : "million"],
+          [1_000n, currentLang === "id" ? "ribu" : "thousand"],
+        ];
+        for (let [nilai, label] of format) {
+          if (num >= nilai) {
+            let hasil = (Number(num) / Number(nilai))
+              .toFixed(1)
+              .replace(/\.0$/, "");
+            return `${hasil} ${label}`;
+          }
+        }
+        return num.toString();
       }
-    }
 
-    function clearRiwayat() {
-      localStorage.removeItem("riwayatKonversi");
+      function copyHasil() {
+        const hasilText = document.getElementById("hasil").innerText;
+        navigator.clipboard.writeText(hasilText).then(() => {
+          showToast();
+        });
+      }
+
+      function showToast() {
+        const toast = document.getElementById("toast");
+        toast.innerText = langText[currentLang].copied;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+      }
+
+      function simpanRiwayat(angka, hasil) {
+        let riwayat = JSON.parse(
+          localStorage.getItem("riwayatKonversi") || "[]"
+        );
+        riwayat.unshift({ angka, hasil });
+        localStorage.setItem(
+          "riwayatKonversi",
+          JSON.stringify(riwayat.slice(0, 10))
+        );
+        tampilkanRiwayat();
+      }
+
+      function tampilkanRiwayat() {
+        const container = document.getElementById("historyList");
+        const riwayat = JSON.parse(
+          localStorage.getItem("riwayatKonversi") || "[]"
+        );
+        container.innerHTML = "";
+        for (let item of riwayat) {
+          const div = document.createElement("div");
+          div.className = "history-item";
+          div.innerText = `${item.angka} ➜ ${item.hasil}`;
+          div.onclick = () => {
+            document.getElementById("inputAngka").value = item.angka.replace(
+              /\B(?=(\d{3})+(?!\d))/g,
+              "."
+            );
+            konversi();
+          };
+          container.appendChild(div);
+        }
+      }
+
+      function clearRiwayat() {
+        localStorage.removeItem("riwayatKonversi");
+        tampilkanRiwayat();
+      }
+
       tampilkanRiwayat();
-    }
-
-    tampilkanRiwayat();
-  </script>
-</body>
+    </script>
+  </body>
 </html>
