@@ -278,7 +278,9 @@
     />
     <button onclick="konversi()" id="convertBtn">Konversi</button>
     <div id="hasil"></div>
-    <button id="copyButton" onclick="copyHasil()">Copy Hasil</button>
+    <button id="copyButton" onclick="copyHasil()" style="display: none">
+      Copy Hasil
+    </button>
     <button id="ttsButton" onclick="playTTS()" style="display: none">
       🔊 Baca Teks
     </button>
@@ -307,7 +309,6 @@
           clear: "Hapus Semua",
           invalid: "Masukkan angka yang valid!",
           tooBig: "Maaf, angka terlalu besar!",
-          desc: "💡 Deskripsi:",
           speak: "🔊 Baca Teks",
         },
         en: {
@@ -320,7 +321,6 @@
           clear: "Clear All",
           invalid: "Please enter a valid number!",
           tooBig: "Sorry, number too large!",
-          desc: "💡 Description:",
           speak: "🔊 Speak",
         },
       };
@@ -512,12 +512,31 @@
 
       renderRiwayat();
 
+      let isSpeaking = false;
+      let utterance = null;
+
       function playTTS() {
-        let hasil = document.getElementById("hasil").innerText;
-        let speech = new SpeechSynthesisUtterance(hasil);
-        speech.lang = currentLang === "id" ? "id-ID" : "en-US";
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(speech);
+        const hasil = document.getElementById("hasil").innerText;
+
+        // Jika sedang berbicara, hentikan dan ubah status
+        if (isSpeaking) {
+          window.speechSynthesis.cancel();
+          isSpeaking = false;
+          return;
+        }
+
+        // Jika tidak sedang berbicara, mulai dari awal
+        utterance = new SpeechSynthesisUtterance(hasil);
+        utterance.lang = currentLang === "id" ? "id-ID" : "en-US";
+
+        // Saat selesai bicara, reset flag isSpeaking
+        utterance.onend = () => {
+          isSpeaking = false;
+        };
+
+        window.speechSynthesis.cancel(); // Hentikan bacaan sebelumnya jika ada
+        window.speechSynthesis.speak(utterance);
+        isSpeaking = true;
       }
     </script>
   </body>
