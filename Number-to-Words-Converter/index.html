@@ -279,6 +279,9 @@
     <button onclick="konversi()" id="convertBtn">Konversi</button>
     <div id="hasil"></div>
     <button id="copyButton" onclick="copyHasil()">Copy Hasil</button>
+    <button id="ttsButton" onclick="playTTS()" style="display: none">
+      🔊 Baca Teks
+    </button>
 
     <div class="toast" id="toast">📋 Hasil disalin ke clipboard!</div>
 
@@ -305,6 +308,7 @@
           invalid: "Masukkan angka yang valid!",
           tooBig: "Maaf, angka terlalu besar!",
           desc: "💡 Deskripsi:",
+          speak: "🔊 Baca Teks",
         },
         en: {
           title: "Number to Words Converter",
@@ -317,6 +321,7 @@
           invalid: "Please enter a valid number!",
           tooBig: "Sorry, number too large!",
           desc: "💡 Description:",
+          speak: "🔊 Speak",
         },
       };
 
@@ -328,6 +333,7 @@
         document.getElementById("inputAngka").placeholder = t.placeholder;
         document.getElementById("convertBtn").innerText = t.convertBtn;
         document.getElementById("copyButton").innerText = t.copyBtn;
+        document.getElementById("ttsButton").innerText = t.speak;
         document.getElementById("toast").innerText = t.copied;
         document.getElementById("historyTitle").innerText = t.history;
         document.getElementById("clearBtn").innerText = t.clear;
@@ -393,208 +399,126 @@
                 "eight",
                 "nine",
               ];
-        const belasan =
-          currentLang === "id"
-            ? [
-                "sepuluh",
-                "sebelas",
-                "dua belas",
-                "tiga belas",
-                "empat belas",
-                "lima belas",
-                "enam belas",
-                "tujuh belas",
-                "delapan belas",
-                "sembilan belas",
-              ]
-            : [
-                "ten",
-                "eleven",
-                "twelve",
-                "thirteen",
-                "fourteen",
-                "fifteen",
-                "sixteen",
-                "seventeen",
-                "eighteen",
-                "nineteen",
-              ];
-        const puluhan =
-          currentLang === "id"
-            ? [
-                "",
-                "",
-                "dua puluh",
-                "tiga puluh",
-                "empat puluh",
-                "lima puluh",
-                "enam puluh",
-                "tujuh puluh",
-                "delapan puluh",
-                "sembilan puluh",
-              ]
-            : [
-                "",
-                "",
-                "twenty",
-                "thirty",
-                "forty",
-                "fifty",
-                "sixty",
-                "seventy",
-                "eighty",
-                "ninety",
-              ];
         const skala =
           currentLang === "id"
-            ? ["", "ribu", "juta", "miliar", "triliun"]
-            : ["", "thousand", "million", "billion", "trillion"];
+            ? ["", "ribu", "juta", "miliar", "triliun", "kuadriliun"]
+            : ["", "thousand", "million", "billion", "trillion", "quadrillion"];
+
         while (num > 0n) {
-          let tigaDigit = num % 1000n;
-          if (tigaDigit > 0n) {
-            let bagian = konversiTigaDigit(
-              Number(tigaDigit),
-              satuan,
-              belasan,
-              puluhan
-            );
-            hasil =
-              bagian +
-              (skala[grup] ? " " + skala[grup] : "") +
-              (hasil ? " " + hasil : "");
+          let tiga = num % 1000n;
+          if (tiga > 0n) {
+            let teks = "";
+            let ratus = tiga / 100n;
+            let puluh = (tiga / 10n) % 10n;
+            let satu = tiga % 10n;
+
+            if (ratus > 0n)
+              teks +=
+                ratus === 1n
+                  ? currentLang === "id"
+                    ? "seratus "
+                    : "one hundred "
+                  : satuan[ratus] +
+                    (currentLang === "id" ? " ratus " : " hundred ");
+            if (puluh > 1n)
+              teks +=
+                satuan[puluh] + (currentLang === "id" ? " puluh " : "ty ");
+            if (puluh === 1n) {
+              if (satu === 0n)
+                teks += currentLang === "id" ? "sepuluh " : "ten ";
+              else if (satu === 1n)
+                teks += currentLang === "id" ? "sebelas " : "eleven ";
+              else
+                teks +=
+                  satuan[satu] + (currentLang === "id" ? " belas " : "teen ");
+            } else if (satu > 0n) teks += satuan[satu] + " ";
+
+            if (currentLang === "id" && grup === 1 && tiga === 1n) {
+              hasil = "seribu " + hasil;
+            } else {
+              hasil = teks + skala[grup] + " " + hasil;
+            }
           }
           num = num / 1000n;
           grup++;
         }
+
         return hasil.trim();
       }
 
-      function konversiTigaDigit(num, satuan, belasan, puluhan) {
-        if (num === 0) return "";
-        if (num < 10) return satuan[num];
-        if (num < 20) return belasan[num - 10];
-        if (num < 100)
-          return (
-            puluhan[Math.floor(num / 10)] +
-            (num % 10 !== 0 ? " " + satuan[num % 10] : "")
-          );
-        let ratusan = Math.floor(num / 100);
-        let sisa = num % 100;
-        let ratusanKata =
-          ratusan === 1
-            ? currentLang === "id"
-              ? "seratus"
-              : "one hundred"
-            : satuan[ratusan] +
-              " " +
-              (currentLang === "id" ? "ratus" : "hundred");
-        return (
-          ratusanKata +
-          (sisa !== 0
-            ? " " + konversiTigaDigit(sisa, satuan, belasan, puluhan)
-            : "")
-        );
-      }
-
       function konversi() {
-        const input = document
+        let val = document
           .getElementById("inputAngka")
-          .value.trim()
-          .replace(/\./g, "");
-        const hasilEl = document.getElementById("hasil");
-        const copyBtn = document.getElementById("copyButton");
-
+          .value.replace(/\./g, "");
+        if (!/^\d+$/.test(val)) {
+          alert(langText[currentLang].invalid);
+          return;
+        }
         try {
-          let num = BigInt(input);
-          let max = BigInt("9".repeat(75));
-          if (num > max) {
-            hasilEl.innerText = langText[currentLang].tooBig;
-            copyBtn.style.display = "none";
-          } else {
-            const hasil = angkaKeKata(num);
-            const singkat = formatSingkat(num);
-            hasilEl.innerHTML = `${hasil}<br><br>${langText[currentLang].desc} ${singkat}`;
-            copyBtn.style.display = "inline-block";
-            simpanRiwayat(input, hasil + " - " + singkat);
+          let bigNum = BigInt(val);
+          if (bigNum > 999999999999999999999n) {
+            alert(langText[currentLang].tooBig);
+            return;
           }
+          let hasil = angkaKeKata(bigNum);
+          document.getElementById("hasil").innerText = hasil;
+          document.getElementById("copyButton").style.display = "inline-block";
+          document.getElementById("ttsButton").style.display = "inline-block";
+          saveRiwayat(val, hasil);
         } catch {
-          hasilEl.innerText = langText[currentLang].invalid;
-          copyBtn.style.display = "none";
+          alert(langText[currentLang].invalid);
         }
-      }
-
-      function formatSingkat(n) {
-        const num = BigInt(n);
-        const format = [
-          [1_000_000_000_000n, currentLang === "id" ? "triliun" : "trillion"],
-          [1_000_000_000n, currentLang === "id" ? "miliar" : "billion"],
-          [1_000_000n, currentLang === "id" ? "juta" : "million"],
-          [1_000n, currentLang === "id" ? "ribu" : "thousand"],
-        ];
-        for (let [nilai, label] of format) {
-          if (num >= nilai) {
-            let hasil = (Number(num) / Number(nilai))
-              .toFixed(1)
-              .replace(/\.0$/, "");
-            return `${hasil} ${label}`;
-          }
-        }
-        return num.toString();
       }
 
       function copyHasil() {
-        const hasilText = document.getElementById("hasil").innerText;
-        navigator.clipboard.writeText(hasilText).then(() => {
-          showToast();
+        let hasil = document.getElementById("hasil").innerText;
+        navigator.clipboard.writeText(hasil).then(() => {
+          let toast = document.getElementById("toast");
+          toast.classList.add("show");
+          setTimeout(() => toast.classList.remove("show"), 2000);
         });
       }
 
-      function showToast() {
-        const toast = document.getElementById("toast");
-        toast.innerText = langText[currentLang].copied;
-        toast.classList.add("show");
-        setTimeout(() => toast.classList.remove("show"), 3000);
-      }
-
-      function simpanRiwayat(angka, hasil) {
-        let riwayat = JSON.parse(
-          localStorage.getItem("riwayatKonversi") || "[]"
-        );
+      function saveRiwayat(angka, hasil) {
+        let riwayat = JSON.parse(localStorage.getItem("riwayat") || "[]");
         riwayat.unshift({ angka, hasil });
-        localStorage.setItem(
-          "riwayatKonversi",
-          JSON.stringify(riwayat.slice(0, 10))
-        );
-        tampilkanRiwayat();
+        if (riwayat.length > 20) riwayat = riwayat.slice(0, 20);
+        localStorage.setItem("riwayat", JSON.stringify(riwayat));
+        renderRiwayat();
       }
 
-      function tampilkanRiwayat() {
-        const container = document.getElementById("historyList");
-        const riwayat = JSON.parse(
-          localStorage.getItem("riwayatKonversi") || "[]"
-        );
-        container.innerHTML = "";
-        for (let item of riwayat) {
-          const div = document.createElement("div");
+      function renderRiwayat() {
+        let list = document.getElementById("historyList");
+        list.innerHTML = "";
+        let riwayat = JSON.parse(localStorage.getItem("riwayat") || "[]");
+        riwayat.forEach((item) => {
+          let div = document.createElement("div");
           div.className = "history-item";
-          div.innerText = `${item.angka} ➜ ${item.hasil}`;
+          div.innerText = item.angka + " ➜ " + item.hasil;
           div.onclick = () => {
-            document.getElementById("inputAngka").value = item.angka.replace(
-              /\B(?=(\d{3})+(?!\d))/g,
-              "."
-            );
-            konversi();
+            document.getElementById("hasil").innerText = item.hasil;
+            document.getElementById("copyButton").style.display =
+              "inline-block";
+            document.getElementById("ttsButton").style.display = "inline-block";
           };
-          container.appendChild(div);
-        }
+          list.appendChild(div);
+        });
       }
 
       function clearRiwayat() {
-        localStorage.removeItem("riwayatKonversi");
-        tampilkanRiwayat();
+        localStorage.removeItem("riwayat");
+        renderRiwayat();
       }
 
-      tampilkanRiwayat();
+      renderRiwayat();
+
+      function playTTS() {
+        let hasil = document.getElementById("hasil").innerText;
+        let speech = new SpeechSynthesisUtterance(hasil);
+        speech.lang = currentLang === "id" ? "id-ID" : "en-US";
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(speech);
+      }
     </script>
   </body>
 </html>
