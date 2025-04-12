@@ -284,6 +284,7 @@
     <button id="ttsButton" onclick="playTTS()" style="display: none">
       🔊 Baca Teks
     </button>
+    <select id="voiceSelect" style="margin-top: 10px; display: none"></select>
 
     <div class="toast" id="toast">📋 Hasil disalin ke clipboard!</div>
 
@@ -537,6 +538,42 @@
         window.speechSynthesis.cancel(); // Hentikan bacaan sebelumnya jika ada
         window.speechSynthesis.speak(utterance);
         isSpeaking = true;
+      }
+
+      let voices = [];
+      const voiceSelect = document.getElementById("voiceSelect");
+
+      function populateVoiceList() {
+        voices = window.speechSynthesis.getVoices();
+        voiceSelect.innerHTML = "";
+        voices.forEach((voice, index) => {
+          const option = document.createElement("option");
+          option.value = index;
+          option.textContent = `${voice.name} (${voice.lang})`;
+          voiceSelect.appendChild(option);
+        });
+      }
+
+      function playTTS() {
+        const text = document.getElementById("hasil").innerText;
+        if (!text.trim()) return;
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        const selectedVoice = voices[voiceSelect.value] || voices[0];
+        utterance.voice = selectedVoice;
+        window.speechSynthesis.speak(utterance);
+      }
+
+      // Pastikan daftar voice muncul saat sudah tersedia
+      if (typeof speechSynthesis !== "undefined") {
+        populateVoiceList();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+          speechSynthesis.onvoiceschanged = populateVoiceList;
+        }
+
+        // Tampilkan dropdown dan tombol jika tersedia
+        document.getElementById("ttsButton").style.display = "inline-block";
+        voiceSelect.style.display = "inline-block";
       }
     </script>
   </body>
