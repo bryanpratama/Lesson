@@ -541,7 +541,62 @@
         isSpeaking = true;
       }
 
-      
+      let synth = window.speechSynthesis;
+  let voices = [];
+
+  function populateVoices() {
+    voices = synth.getVoices();
+    const voiceSelect = document.getElementById("voiceSelect");
+    voiceSelect.innerHTML = "";
+
+    voices.forEach((voice, index) => {
+      const option = document.createElement("option");
+      option.value = index;
+      option.textContent = `${voice.name} (${voice.lang})`;
+      voiceSelect.appendChild(option);
+    });
+  }
+
+  populateVoices();
+  if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = populateVoices;
+  }
+
+  function playTTS() {
+    const text = document.getElementById("hasil").innerText;
+    const words = text.split(" ");
+    const hasilDiv = document.getElementById("hasil");
+    let currentIndex = 0;
+
+    function speakNextWord() {
+      if (currentIndex >= words.length) {
+        hasilDiv.innerHTML = text; // Hapus highlight setelah selesai
+        return;
+      }
+
+      const word = words[currentIndex];
+      const utterance = new SpeechSynthesisUtterance(word);
+      const selectedVoiceIndex = document.getElementById("voiceSelect").value;
+      utterance.voice = voices[selectedVoiceIndex] || null;
+
+      utterance.onstart = () => {
+        // Highlight kata yang sedang dibaca
+        let highlighted = words
+          .map((w, i) => (i === currentIndex ? `<mark>${w}</mark>` : w))
+          .join(" ");
+        hasilDiv.innerHTML = highlighted;
+      };
+
+      utterance.onend = () => {
+        currentIndex++;
+        speakNextWord();
+      };
+
+      synth.speak(utterance);
+    }
+
+    speakNextWord();
+  }
       
     </script>
   </body>
