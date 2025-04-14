@@ -284,8 +284,7 @@
     <button id="ttsButton" onclick="playTTS()" style="display: none">
       🔊 Baca Teks
     </button>
-    <select id="voiceSelect" style="margin-top: 10px; display: none;"></select>
-
+    <select id="voiceSelect" style="margin-top: 10px; display: none"></select>
 
     <div class="toast" id="toast">📋 Hasil disalin ke clipboard!</div>
 
@@ -542,62 +541,89 @@
       }
 
       let synth = window.speechSynthesis;
-  let voices = [];
+      let voices = [];
 
-  function populateVoices() {
-    voices = synth.getVoices();
-    const voiceSelect = document.getElementById("voiceSelect");
-    voiceSelect.innerHTML = "";
+      function populateVoices() {
+        voices = synth.getVoices();
+        const voiceSelect = document.getElementById("voiceSelect");
+        voiceSelect.innerHTML = "";
 
-    voices.forEach((voice, index) => {
-      const option = document.createElement("option");
-      option.value = index;
-      option.textContent = `${voice.name} (${voice.lang})`;
-      voiceSelect.appendChild(option);
-    });
-  }
-
-  populateVoices();
-  if (speechSynthesis.onvoiceschanged !== undefined) {
-    speechSynthesis.onvoiceschanged = populateVoices;
-  }
-
-  function playTTS() {
-    const text = document.getElementById("hasil").innerText;
-    const words = text.split(" ");
-    const hasilDiv = document.getElementById("hasil");
-    let currentIndex = 0;
-
-    function speakNextWord() {
-      if (currentIndex >= words.length) {
-        hasilDiv.innerHTML = text; // Hapus highlight setelah selesai
-        return;
+        voices.forEach((voice, index) => {
+          const option = document.createElement("option");
+          option.value = index;
+          option.textContent = `${voice.name} (${voice.lang})`;
+          voiceSelect.appendChild(option);
+        });
       }
 
-      const word = words[currentIndex];
-      const utterance = new SpeechSynthesisUtterance(word);
-      const selectedVoiceIndex = document.getElementById("voiceSelect").value;
-      utterance.voice = voices[selectedVoiceIndex] || null;
+      populateVoices();
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = populateVoices;
+      }
 
-      utterance.onstart = () => {
-        // Highlight kata yang sedang dibaca
-        let highlighted = words
-          .map((w, i) => (i === currentIndex ? `<mark>${w}</mark>` : w))
-          .join(" ");
-        hasilDiv.innerHTML = highlighted;
-      };
-
-      utterance.onend = () => {
-        currentIndex++;
-        speakNextWord();
-      };
-
-      synth.speak(utterance);
-    }
-
-    speakNextWord();
-  }
       
+
+      function populateVoiceList() {
+        voices = synth.getVoices();
+        const voiceSelect = document.getElementById("voiceSelect");
+        voiceSelect.innerHTML = "";
+        voices.forEach((voice, i) => {
+          const option = document.createElement("option");
+          option.textContent = `${voice.name} (${voice.lang})`;
+          option.value = i;
+          voiceSelect.appendChild(option);
+        });
+      }
+
+      populateVoiceList();
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = populateVoiceList;
+      }
+
+      function playTTS() {
+        const hasilText = document.getElementById("hasil").innerText;
+        if (hasilText.trim() === "") return;
+
+        if (synth.speaking) {
+          synth.cancel();
+        }
+
+        const selectedIndex = document.getElementById("voiceSelect").value;
+        const selectedVoice = voices[selectedIndex] || voices[0];
+
+        const utterance = new SpeechSynthesisUtterance(hasilText);
+        utterance.voice = selectedVoice;
+        utterance.rate = 1.1;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+
+        // Highlight kata saat dibaca
+        const hasilElem = document.getElementById("hasil");
+        const words = hasilText.split(/(\s+)/); // termasuk spasi
+        let currentIndex = 0;
+
+        utterance.onboundary = function(event) {
+          if (event.name === 'word') {
+            const charIndex = event.charIndex;
+            while (currentIndex < words.length && charIndex >= words.slice(0, currentIndex + 1).join('').length) {
+              currentIndex++;
+            }
+
+            const highlighted = words.map((word, i) => {
+              if (i === currentIndex) return `<mark>${word}</mark>`;
+              return word;
+            }).join('');
+
+            hasilElem.innerHTML = highlighted;
+          }
+        };
+
+        utterance.onend = function() {
+          hasilElem.innerText = hasilText; // Kembalikan teks semula setelah selesai
+        };
+
+        synth.speak(utterance);
+      }
     </script>
   </body>
 </html>
