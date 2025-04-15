@@ -286,6 +286,9 @@
     </button>
     <select id="voiceSelect" style="margin-top: 10px; display: none"></select>
 
+    <label for="rateControl">Kecepatan TTS:</label>
+    <input type="range" id="rateControl" min="0.5" max="2" value="1.1" step="0.1">
+    <span id="rateValue">1.1</span>
     <div class="toast" id="toast">📋 Hasil disalin ke clipboard!</div>
 
     <div class="history-container">
@@ -580,6 +583,13 @@
         speechSynthesis.onvoiceschanged = populateVoiceList;
       }
 
+      const rateControl = document.getElementById("rateControl");
+      const rateValue = document.getElementById("rateValue");
+
+      rateControl.addEventListener("input", () => {
+        rateValue.textContent = rateControl.value;
+      });
+
       function playTTS() {
         const hasilText = document.getElementById("hasil").innerText;
         if (hasilText.trim() === "") return;
@@ -593,11 +603,10 @@
 
         const utterance = new SpeechSynthesisUtterance(hasilText);
         utterance.voice = selectedVoice;
-        utterance.rate = 1.1;
+        utterance.rate = parseFloat(rateControl.value);
         utterance.pitch = 1;
         utterance.volume = 1;
 
-        // Highlight kata saat dibaca
         const hasilElem = document.getElementById("hasil");
         const words = hasilText.split(/(\s+)/); // termasuk spasi
         let currentIndex = 0;
@@ -619,7 +628,7 @@
         };
 
         utterance.onend = function() {
-          hasilElem.innerText = hasilText; // Kembalikan teks semula setelah selesai
+          hasilElem.innerText = hasilText;
         };
 
         synth.speak(utterance);
