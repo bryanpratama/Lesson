@@ -289,7 +289,12 @@
     <label for="rateControl">Kecepatan TTS:</label>
     <input type="range" id="rateControl" min="0.5" max="2" value="1.1" step="0.1">
     <span id="rateValue">1.1</span>
+    <br>
+    <label for="pitchControl">Pitch TTS:</label>
+    <input type="range" id="pitchControl" min="0" max="2" value="1" step="0.1">
+    <span id="pitchValue">1</span>
     <div class="toast" id="toast">📋 Hasil disalin ke clipboard!</div>
+
 
     <div class="history-container">
       <div class="history-header">
@@ -585,9 +590,15 @@
 
       const rateControl = document.getElementById("rateControl");
       const rateValue = document.getElementById("rateValue");
+      const pitchControl = document.getElementById("pitchControl");
+      const pitchValue = document.getElementById("pitchValue");
 
       rateControl.addEventListener("input", () => {
         rateValue.textContent = rateControl.value;
+      });
+
+      pitchControl.addEventListener("input", () => {
+        pitchValue.textContent = pitchControl.value;
       });
 
       function playTTS() {
@@ -604,7 +615,7 @@
         const utterance = new SpeechSynthesisUtterance(hasilText);
         utterance.voice = selectedVoice;
         utterance.rate = parseFloat(rateControl.value);
-        utterance.pitch = 1;
+        utterance.pitch = parseFloat(pitchControl.value);
         utterance.volume = 1;
 
         const hasilElem = document.getElementById("hasil");
