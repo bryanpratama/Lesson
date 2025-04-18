@@ -609,16 +609,28 @@
       });
 
       function updateEstimate() {
-        const hasilText = document.getElementById("hasil").innerText;
+        const hasilElem = document.getElementById("hasil");
+        if (!hasilElem) return;
+
+        const hasilText = hasilElem.innerText.trim();
         const rate = parseFloat(rateControl.value);
-        const words = hasilText.trim().split(/\s+/).length;
-        const duration = (words / 2.5) / rate; // estimasi 2.5 kata per detik
-        durationEstimate.textContent = `${duration.toFixed(1)} detik`;
+
+        if (hasilText === "") {
+          durationEstimate.textContent = "0 detik";
+          return;
+        }
+
+        const words = hasilText.split(/\s+/).length;
+        const estimatedDuration = (words / 2.5) / rate; // 2.5 kata per detik
+        durationEstimate.textContent = `${estimatedDuration.toFixed(1)} detik`;
       }
 
       function playTTS() {
-        const hasilText = document.getElementById("hasil").innerText;
-        if (hasilText.trim() === "") return;
+        const hasilElem = document.getElementById("hasil");
+        if (!hasilElem) return;
+
+        const hasilText = hasilElem.innerText.trim();
+        if (hasilText === "") return;
 
         if (synth.speaking) {
           synth.cancel();
@@ -634,7 +646,6 @@
         utterance.pitch = parseFloat(pitchControl.value);
         utterance.volume = 1;
 
-        const hasilElem = document.getElementById("hasil");
         const words = hasilText.split(/(\s+)/); // termasuk spasi
         let currentIndex = 0;
 
@@ -659,6 +670,7 @@
         };
 
         synth.speak(utterance);
+        updateEstimate();
       }
     </script>
   </body>
