@@ -296,6 +296,9 @@
     <br>
     <label>Estimasi Durasi Audio:</label>
     <span id="durationEstimate">0 detik</span>
+    <br>
+    <label>Jumlah Kata:</label>
+    <span id="wordCount">0</span>
     
     <div class="toast" id="toast">📋 Hasil disalin ke clipboard!</div>
 
@@ -598,6 +601,7 @@
       const pitchControl = document.getElementById("pitchControl");
       const pitchValue = document.getElementById("pitchValue");
       const durationEstimate = document.getElementById("durationEstimate");
+      const wordCount = document.getElementById("wordCount");
 
       rateControl.addEventListener("input", () => {
         rateValue.textContent = rateControl.value;
@@ -617,12 +621,15 @@
 
         if (hasilText === "") {
           durationEstimate.textContent = "0 detik";
+          wordCount.textContent = "0";
           return;
         }
 
-        const words = hasilText.split(/\s+/).length;
-        const estimatedDuration = (words / 2.5) / rate; // 2.5 kata per detik
+        const words = hasilText.split(/\s+/);
+        const wordTotal = words.length;
+        const estimatedDuration = (wordTotal / 2.5) / rate; // 2.5 kata per detik
         durationEstimate.textContent = `${estimatedDuration.toFixed(1)} detik`;
+        wordCount.textContent = wordTotal;
       }
 
       function playTTS() {
