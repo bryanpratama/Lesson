@@ -55,17 +55,23 @@
       }
 
       input {
-        padding: 10px;
+        padding: 12px 15px;
         font-size: 18px;
         width: 100%;
-        max-width: 300px;
-        border-radius: 5px;
-        border: 1px solid var(--input-border);
+        max-width: 400px;
+        border-radius: 8px;
+        border: 2px solid var(--input-border);
         text-align: right;
         background: var(--input-bg);
         color: var(--text);
+        transition: border-color 0.3s;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
       }
 
+      input:focus {
+        outline: none;
+        border-color: var(--button-bg);
+      }
       .top-buttons {
         position: relative;
         width: 100%;
@@ -77,17 +83,20 @@
 
       button {
         margin-top: 10px;
-        padding: 10px 20px;
+        padding: 12px 20px;
         font-size: 16px;
         background-color: var(--button-bg);
         color: white;
         border: none;
-        border-radius: 5px;
+        border-radius: 8px;
         cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.2s ease, transform 0.1s ease;
       }
 
       button:hover {
         background-color: var(--button-hover);
+        transform: scale(1.02);
       }
 
       #hasil {
@@ -134,11 +143,14 @@
       }
 
       .history-container {
-        margin-top: 30px;
+        margin-top: 40px;
         width: 100%;
         max-width: 600px;
+        background: var(--card-bg);
+        padding: 15px 20px;
+        border-radius: 12px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
       }
-
       .history-header {
         display: flex;
         justify-content: space-between;
@@ -287,21 +299,34 @@
     <select id="voiceSelect" style="margin-top: 10px; display: none"></select>
 
     <label for="rateControl">Kecepatan TTS:</label>
-    <input type="range" id="rateControl" min="0.5" max="2" value="1.1" step="0.1">
+    <input
+      type="range"
+      id="rateControl"
+      min="0.5"
+      max="2"
+      value="1.1"
+      step="0.1"
+    />
     <span id="rateValue">1.1</span>
-    <br>
+    <br />
     <label for="pitchControl">Pitch TTS:</label>
-    <input type="range" id="pitchControl" min="0" max="2" value="1" step="0.1">
+    <input
+      type="range"
+      id="pitchControl"
+      min="0"
+      max="2"
+      value="1"
+      step="0.1"
+    />
     <span id="pitchValue">1</span>
-    <br>
+    <br />
     <label>Estimasi Durasi Audio:</label>
     <span id="durationEstimate">0 detik</span>
-    <br>
+    <br />
     <label>Jumlah Kata:</label>
     <span id="wordCount">0</span>
-    
-    <div class="toast" id="toast">📋 Hasil disalin ke clipboard!</div>
 
+    <div class="toast" id="toast">📋 Hasil disalin ke clipboard!</div>
 
     <div class="history-container">
       <div class="history-header">
@@ -576,8 +601,6 @@
         speechSynthesis.onvoiceschanged = populateVoices;
       }
 
-      
-
       function populateVoiceList() {
         voices = synth.getVoices();
         const voiceSelect = document.getElementById("voiceSelect");
@@ -627,7 +650,7 @@
 
         const words = hasilText.split(/\s+/);
         const wordTotal = words.length;
-        const estimatedDuration = (wordTotal / 2.5) / rate; // 2.5 kata per detik
+        const estimatedDuration = wordTotal / 2.5 / rate; // 2.5 kata per detik
         durationEstimate.textContent = `${estimatedDuration.toFixed(1)} detik`;
         wordCount.textContent = wordTotal;
       }
@@ -656,23 +679,28 @@
         const words = hasilText.split(/(\s+)/); // termasuk spasi
         let currentIndex = 0;
 
-        utterance.onboundary = function(event) {
-          if (event.name === 'word') {
+        utterance.onboundary = function (event) {
+          if (event.name === "word") {
             const charIndex = event.charIndex;
-            while (currentIndex < words.length && charIndex >= words.slice(0, currentIndex + 1).join('').length) {
+            while (
+              currentIndex < words.length &&
+              charIndex >= words.slice(0, currentIndex + 1).join("").length
+            ) {
               currentIndex++;
             }
 
-            const highlighted = words.map((word, i) => {
-              if (i === currentIndex) return `<mark>${word}</mark>`;
-              return word;
-            }).join('');
+            const highlighted = words
+              .map((word, i) => {
+                if (i === currentIndex) return `<mark>${word}</mark>`;
+                return word;
+              })
+              .join("");
 
             hasilElem.innerHTML = highlighted;
           }
         };
 
-        utterance.onend = function() {
+        utterance.onend = function () {
           hasilElem.innerText = hasilText;
         };
 
