@@ -54,6 +54,54 @@
         margin-bottom: 20px;
       }
 
+      .container {
+        width: 100%;
+        max-width: 720px;
+        margin: 0 auto;
+      }
+
+      .card {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .voice-controls {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        row-gap: 8px;
+        column-gap: 10px;
+        align-items: center;
+      }
+
+      .voice-controls label {
+        grid-column: span 2;
+        margin-top: 10px;
+        font-size: 14px;
+      }
+
+      .hasil-box {
+        padding: 15px;
+        background: var(--bg);
+        border: 1px solid var(--input-border);
+        border-radius: 8px;
+        min-height: 60px;
+        text-align: center;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+
       input {
         padding: 12px 15px;
         font-size: 18px;
@@ -223,6 +271,17 @@
       }
 
       @media (max-width: 480px) {
+        .voice-controls {
+          grid-template-columns: 1fr;
+        }
+
+        .button-group {
+          flex-direction: column;
+        }
+
+        .card {
+          padding: 15px;
+        }
         input {
           width: 100%;
           font-size: 16px;
@@ -274,68 +333,79 @@
     </style>
   </head>
   <body>
-    <div class="top-buttons">
-      <button class="lang-toggle" onclick="toggleLang()">🌐 ID / EN</button>
-      <button class="dark-toggle" onclick="toggleDarkMode()">
-        🌙 Dark Mode
-      </button>
-    </div>
-
-    <h1 id="title">Konversi Angka ke Terbilang</h1>
-    <input
-      type="text"
-      id="inputAngka"
-      placeholder="Masukkan angka besar..."
-      oninput="formatAngka(this)"
-    />
-    <button onclick="konversi()" id="convertBtn">Konversi</button>
-    <div id="hasil"></div>
-    <button id="copyButton" onclick="copyHasil()" style="display: none">
-      Copy Hasil
-    </button>
-    <button id="ttsButton" onclick="playTTS()" style="display: none">
-      🔊 Baca Teks
-    </button>
-    <select id="voiceSelect" style="margin-top: 10px; display: none"></select>
-
-    <label for="rateControl">Kecepatan TTS:</label>
-    <input
-      type="range"
-      id="rateControl"
-      min="0.5"
-      max="2"
-      value="1.1"
-      step="0.1"
-    />
-    <span id="rateValue">1.1</span>
-    <br />
-    <label for="pitchControl">Pitch TTS:</label>
-    <input
-      type="range"
-      id="pitchControl"
-      min="0"
-      max="2"
-      value="1"
-      step="0.1"
-    />
-    <span id="pitchValue">1</span>
-    <br />
-    <label>Estimasi Durasi Audio:</label>
-    <span id="durationEstimate">0 detik</span>
-    <br />
-    <label>Jumlah Kata:</label>
-    <span id="wordCount">0</span>
-
-    <div class="toast" id="toast">📋 Hasil disalin ke clipboard!</div>
-
-    <div class="history-container">
-      <div class="history-header">
-        <h2 id="historyTitle">Riwayat Konversi</h2>
-        <button class="clear-btn" onclick="clearRiwayat()" id="clearBtn">
-          Hapus Semua
+    <div class="container">
+      <div class="top-buttons">
+        <button class="lang-toggle" onclick="toggleLang()">🌐 ID / EN</button>
+        <button
+          class="dark-toggle"
+          onclick="toggleDarkMode()"
+          id="darkToggleBtn"
+        >
+          🌙
         </button>
       </div>
-      <div class="history-list" id="historyList"></div>
+
+      <h1 id="title">Konversi Angka ke Terbilang</h1>
+
+      <div class="card">
+        <input
+          type="text"
+          id="inputAngka"
+          placeholder="Masukkan angka besar..."
+          oninput="formatAngka(this)"
+        />
+        <button onclick="konversi()" id="convertBtn">🔄 Konversi</button>
+        <div id="hasil" class="hasil-box"></div>
+        <div class="button-group">
+          <button id="copyButton" onclick="copyHasil()">📋 Copy</button>
+          <button id="ttsButton" onclick="playTTS()">🔊 Baca</button>
+        </div>
+
+        <div class="voice-controls">
+          <label for="voiceSelect">Pilih Suara:</label>
+          <select id="voiceSelect"></select>
+
+          <label for="rateControl">Kecepatan:</label>
+          <input
+            type="range"
+            id="rateControl"
+            min="0.5"
+            max="2"
+            value="1.1"
+            step="0.1"
+          />
+          <span id="rateValue">1.1</span>
+
+          <label for="pitchControl">Pitch:</label>
+          <input
+            type="range"
+            id="pitchControl"
+            min="0"
+            max="2"
+            value="1"
+            step="0.1"
+          />
+          <span id="pitchValue">1</span>
+
+          <label>Estimasi Durasi:</label>
+          <span id="durationEstimate">0 detik</span>
+
+          <label>Jumlah Kata:</label>
+          <span id="wordCount">0</span>
+        </div>
+      </div>
+
+      <div class="toast" id="toast">📋 Hasil disalin ke clipboard!</div>
+
+      <div class="history-container">
+        <div class="history-header">
+          <h2 id="historyTitle">Riwayat Konversi</h2>
+          <button class="clear-btn" onclick="clearRiwayat()" id="clearBtn">
+            🗑️ Hapus Semua
+          </button>
+        </div>
+        <div class="history-list" id="historyList"></div>
+      </div>
     </div>
 
     <script>
