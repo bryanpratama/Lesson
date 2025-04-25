@@ -204,6 +204,12 @@
         transform: translateY(0);
       }
 
+      .error-text {
+        color: red;
+        font-size: 14px;
+        margin-top: 4px;
+      }
+
       .history-container {
         margin-top: 40px;
         max-width: 680px;
@@ -368,6 +374,7 @@
           placeholder="Masukkan angka besar..."
           oninput="formatAngka(this)"
         />
+        <div id="errorMsg" class="error-text"></div>
         <button onclick="konversi()" id="convertBtn">🔄 Konversi</button>
         <div id="hasil" class="hasil-box"></div>
         <div class="button-group">
@@ -460,6 +467,8 @@
         document.getElementById("copyButton").innerText = t.copyBtn;
         document.getElementById("ttsButton").innerText = t.speak;
         document.getElementById("toast").innerText = t.copied;
+        document.getElementById("errorMsg").innerText =
+          langText[currentLang].invalid;
         document.getElementById("historyTitle").innerText = t.history;
         document.getElementById("clearBtn").innerText = t.clear;
       }
@@ -492,6 +501,23 @@
         el.value = formatted;
         let diff = formatted.length - prevLength;
         el.setSelectionRange(cursorPos + diff, cursorPos + diff);
+        document
+          .getElementById("inputAngka")
+          .addEventListener("input", function () {
+            const errorMsg = document.getElementById("errorMsg");
+            let val = this.value.replace(/\./g, "");
+
+            if (val === "") {
+              errorMsg.innerText = "";
+              return;
+            }
+
+            if (!/^\d+$/.test(val)) {
+              errorMsg.innerText = langText[currentLang].invalid;
+            } else {
+              errorMsg.innerText = "";
+            }
+          });
       }
 
       function angkaKeKata(num) {
@@ -572,17 +598,25 @@
       }
 
       function konversi() {
+        const errorMsg = document.getElementById("errorMsg");
+        errorMsg.innerText = ""; // Reset error di awal
+
         let val = document
           .getElementById("inputAngka")
           .value.replace(/\./g, "");
+
         if (!/^\d+$/.test(val)) {
-          alert(langText[currentLang].invalid);
+          errorMsg.innerText = langText[currentLang].invalid;
+          document.getElementById("hasil").innerText = ""; // Kosongkan hasil
+          document.getElementById("copyButton").style.display = "none";
+          document.getElementById("ttsButton").style.display = "none";
           return;
         }
+
         try {
           let bigNum = BigInt(val);
           if (bigNum > 999999999999999999999n) {
-            alert(langText[currentLang].tooBig);
+            errorMsg.innerText = langText[currentLang].tooBig;
             return;
           }
           let hasil = angkaKeKata(bigNum);
@@ -591,7 +625,7 @@
           document.getElementById("ttsButton").style.display = "inline-block";
           saveRiwayat(val, hasil);
         } catch {
-          alert(langText[currentLang].invalid);
+          errorMsg.innerText = langText[currentLang].invalid;
         }
       }
 
