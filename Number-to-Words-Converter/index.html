@@ -825,6 +825,14 @@
         synth.speak(utterance);
         updateEstimate();
       }
+      document
+        .getElementById("inputAngka")
+        .addEventListener("keydown", function (event) {
+          if (event.key === "Enter") {
+            event.preventDefault(); // Biar tidak reload form
+            konversi(); // Panggil fungsi konversi langsung
+          }
+        });
     </script>
   </body>
 </html>
