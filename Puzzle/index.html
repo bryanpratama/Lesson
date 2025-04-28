@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jigsaw Puzzle Game</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: #f0f0f0;
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        margin-bottom: 5px;
+    }
+    #controls {
+        margin-bottom: 10px;
+    }
+    button, select {
+        padding: 8px 16px;
+        margin: 5px;
+        font-size: 16px;
+    }
+    #timer {
+        margin: 10px 0;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    #puzzle {
+        width: 450px;
+        height: 450px;
+        margin: 20px auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 1px;
+        background: #ccc;
+        position: relative;
+    }
+    .piece {
+        background-image: url('image1.jpg');
+        background-size: 450px 450px;
+        cursor: grab;
+    }
+    #originalImage {
+        display: none;
+        margin: 10px auto;
+    }
+</style>
+</head>
+<body>
+
+<h1>Jigsaw Puzzle Game</h1>
+
+<div id="controls">
+    <select id="difficulty">
+        <option value="3">Easy (3x3)</option>
+    </select>
+    <button onclick="startNewGame()">Start New Game</button>
+    <button onclick="toggleOriginalImage()">Show Original Image</button>
+</div>
+
+<div id="timer">Time: 00:00</div>
+
+<div id="puzzle"></div>
+
+<img id="originalImage" src="image1.jpg" width="300">
+
+<script>
+const puzzle = document.getElementById('puzzle');
+const timerDisplay = document.getElementById('timer');
+const originalImage = document.getElementById('originalImage');
+let rows = 3, cols = 3;
+let pieces = [];
+let timerInterval;
+let seconds = 0;
+let gameActive = false;
+
+function startNewGame() {
+    clearInterval(timerInterval);
+    seconds = 0;
+    updateTimer();
+    puzzle.innerHTML = '';
+    pieces = [];
+
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            const piece = document.createElement('div');
+            piece.classList.add('piece');
+            piece.style.backgroundPosition = `${-x * 150}px ${-y * 150}px`;
+            piece.setAttribute('draggable', true);
+            piece.dataset.x = x;
+            piece.dataset.y = y;
+            pieces.push(piece);
+        }
+    }
+
+    shuffleArray(pieces);
+    pieces.forEach(piece => puzzle.appendChild(piece));
+    
+    setupDragAndDrop();
+    
+    gameActive = true;
+    timerInterval = setInterval(() => {
+        seconds++;
+        updateTimer();
+    }, 1000);
+}
+
+function updateTimer() {
+    const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const sec = String(seconds % 60).padStart(2, '0');
+    timerDisplay.textContent = `Time: ${min}:${sec}`;
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function setupDragAndDrop() {
+    let dragged;
+
+    puzzle.querySelectorAll('.piece').forEach(piece => {
+        piece.addEventListener('dragstart', e => {
+            dragged = piece;
+        });
+
+        piece.addEventListener('dragover', e => {
+            e.preventDefault();
+        });
+
+        piece.addEventListener('drop', e => {
+            e.preventDefault();
+            if (dragged === piece) return;
+            
+            const draggedClone = dragged.cloneNode(true);
+            const targetClone = piece.cloneNode(true);
+
+            puzzle.replaceChild(draggedClone, piece);
+            puzzle.replaceChild(targetClone, dragged);
+
+            setupDragAndDrop();
+            checkPuzzleCompletion();
+        });
+    });
+}
+
+function checkPuzzleCompletion() {
+    const currentPieces = Array.from(puzzle.children);
+    const correct = currentPieces.every((piece, index) => {
+        const x = index % cols;
+        const y = Math.floor(index / cols);
+        return piece.dataset.x == x && piece.dataset.y == y;
+    });
+
+    if (correct) {
+        clearInterval(timerInterval);
+        gameActive = false;
+        alert(`Congratulations! You completed the puzzle in ${formatTime(seconds)}.`);
+    }
+}
+
+function formatTime(seconds) {
+    const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const sec = String(seconds % 60).padStart(2, '0');
+    return `${min}:${sec}`;
+}
+
+function toggleOriginalImage() {
+    if (originalImage.style.display === 'block') {
+        originalImage.style.display = 'none';
+    } else {
+        originalImage.style.display = 'block';
+    }
+}
+
+// Start automatically
+startNewGame();
+</script>
+
+</body>
+</html>
