@@ -68,6 +68,41 @@
         background-size: 450px 450px;
         cursor: grab;
       }
+
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background-color: #fff;
+        padding: 20px 30px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+      }
+
+      .modal-content button {
+        margin-top: 15px;
+        padding: 8px 16px;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .hidden {
+        display: none;
+      }
       #originalImage {
         display: none;
         margin: 10px auto;
@@ -87,6 +122,12 @@
 
     <div id="original-image" style="display: none">
       <img src="image1.jpg" alt="Original Image" width="300" />
+    </div>
+    <div id="customModal" class="modal hidden">
+      <div class="modal-content">
+        <p id="modalMessage">Puzzle Completed!</p>
+        <button onclick="closeModal()">OK</button>
+      </div>
     </div>
 
     <script>
@@ -159,6 +200,17 @@
         setTimeout(checkCompletion, 50);
       }
 
+      function showCompletionModal(time) {
+        const modal = document.getElementById("customModal");
+        const message = document.getElementById("modalMessage");
+        message.textContent = `🎉 Puzzle Completed in ${time}!`;
+        modal.classList.remove("hidden");
+      }
+
+      function closeModal() {
+        document.getElementById("customModal").classList.add("hidden");
+      }
+
       function checkCompletion() {
         const currentPieces = [...puzzleContainer.children];
         const correct = currentPieces.every((piece, index) => {
@@ -169,7 +221,10 @@
 
         if (correct) {
           clearInterval(timer);
-          alert(`Puzzle Completed in ${formatTime(seconds)}!`);
+          setTimeout(() => {
+            showCompletionModal(formatTime(seconds));
+
+          }, 100);
         }
       }
 
