@@ -115,13 +115,19 @@
     <div class="controls">
       <button onclick="startGame()">Start New Game</button>
       <button onclick="showOriginal()">Show Original</button>
+      <input type="file" id="imageUpload" accept="image/*" />
       <div id="timer">Time: 00:00</div>
     </div>
 
     <div id="puzzle-container"></div>
 
     <div id="original-image" style="display: none">
-      <img src="image1.jpg" alt="Original Image" width="300" />
+      <img
+        id="originalImagePreview"
+        src="image1.jpg"
+        alt="Original Image"
+        width="300"
+      />
     </div>
     <div id="customModal" class="modal hidden">
       <div class="modal-content">
@@ -135,6 +141,7 @@
       const timerDisplay = document.getElementById("timer");
       const originalImage = document.getElementById("original-image");
 
+      let currentImageUrl = "image1.jpg";
       let pieces = [];
       let timer;
       let seconds = 0;
@@ -147,6 +154,7 @@
           for (let col = 0; col < 3; col++) {
             const piece = document.createElement("div");
             piece.classList.add("puzzle-piece");
+            piece.style.backgroundImage = `url("${currentImageUrl}")`;
             piece.style.backgroundPosition = `-${col * 100}px -${row * 100}px`;
             piece.setAttribute("data-position", `${row}-${col}`);
             piece.draggable = true;
@@ -223,7 +231,6 @@
           clearInterval(timer);
           setTimeout(() => {
             showCompletionModal(formatTime(seconds));
-
           }, 100);
         }
       }
@@ -240,7 +247,23 @@
         }, 1000);
       }
 
+      document
+        .getElementById("imageUpload")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (file && file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              currentImageUrl = event.target.result;
+              startGame(); // otomatis mulai ulang dengan gambar baru
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
       function showOriginal() {
+        const img = document.getElementById("originalImagePreview");
+        img.src = currentImageUrl;
         originalImage.style.display = "block";
       }
 
