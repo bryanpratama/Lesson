@@ -15,6 +15,40 @@
       h1 {
         margin-bottom: 5px;
       }
+
+      body.dark-mode {
+        background-color: #121212;
+        color: #f0f0f0;
+      }
+
+      .dark-mode .puzzle-piece {
+        border-color: #444;
+      }
+
+      .dark-mode button {
+        background-color: #333;
+        color: white;
+        border: 1px solid #666;
+      }
+
+      .dark-mode .swal2-popup {
+        background: #2c2c2c !important;
+        color: #ffffff !important;
+      }
+
+      .dark-mode .swal2-title {
+        color: #ffffff !important;
+      }
+
+      .dark-mode .swal2-content {
+        color: #dddddd !important;
+      }
+
+      .dark-mode .modal-content {
+        background-color: #2c2c2c;
+        color: #ffffff;
+      }
+
       #puzzle-container {
         width: 300px;
         height: 300px;
@@ -121,6 +155,7 @@
         <option value="4">Medium (4x4)</option>
         <option value="5">Hard (5x5)</option>
       </select>
+      <button id="toggleDarkMode">Toggle Dark Mode</button>
       <div id="timer">Time: 00:00</div>
     </div>
 
@@ -270,7 +305,7 @@
             const reader = new FileReader();
             reader.onload = function (event) {
               currentImageUrl = event.target.result;
-              startGame(); // otomatis mulai ulang dengan gambar baru
+              startGame();
             };
             reader.readAsDataURL(file);
           }
@@ -289,6 +324,24 @@
         const sec = (secs % 60).toString().padStart(2, "0");
         return `${min}:${sec}`;
       }
+
+      const toggleButton = document.getElementById("toggleDarkMode");
+
+      toggleButton.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+
+        if (document.body.classList.contains("dark-mode")) {
+          localStorage.setItem("theme", "dark");
+        } else {
+          localStorage.setItem("theme", "light");
+        }
+      });
+
+      window.addEventListener("DOMContentLoaded", () => {
+        if (localStorage.getItem("theme") === "dark") {
+          document.body.classList.add("dark-mode");
+        }
+      });
 
       startGame();
     </script>
