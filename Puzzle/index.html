@@ -49,6 +49,11 @@
         color: #ffffff;
       }
 
+      .highlight-correct {
+        border: 2px solid limegreen !important;
+        box-shadow: 0 0 5px limegreen;
+      }
+
       #puzzle-container {
         width: 300px;
         height: 300px;
@@ -156,6 +161,7 @@
         <option value="5">Hard (5x5)</option>
       </select>
       <button id="toggleDarkMode">Toggle Dark Mode</button>
+      <button id="highlightButton">Highlight Posisi Benar</button>
       <div id="timer">Time: 00:00</div>
     </div>
 
@@ -342,6 +348,27 @@
           document.body.classList.add("dark-mode");
         }
       });
+
+      document.getElementById("highlightButton").addEventListener("click", highlightCorrectPieces);
+
+function highlightCorrectPieces() {
+  const pieces = puzzleContainer.children;
+  const pieceSize = 300 / gridSize;
+
+  for (let i = 0; i < pieces.length; i++) {
+    const piece = pieces[i];
+    const correctRow = Math.floor(i / gridSize);
+    const correctCol = i % gridSize;
+
+    const expectedPosition = `-${correctCol * pieceSize}px -${correctRow * pieceSize}px`;
+
+    if (piece.style.backgroundPosition === expectedPosition) {
+      piece.classList.add("highlight-correct");
+    } else {
+      piece.classList.remove("highlight-correct");
+    }
+  }
+}
 
       startGame();
     </script>
