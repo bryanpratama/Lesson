@@ -351,7 +351,7 @@
 
       document.getElementById("highlightButton").addEventListener("click", highlightCorrectPieces);
 
-function highlightCorrectPieces() {
+      function highlightCorrectPieces() {
   const pieces = puzzleContainer.children;
   const pieceSize = 300 / gridSize;
 
@@ -360,15 +360,23 @@ function highlightCorrectPieces() {
     const correctRow = Math.floor(i / gridSize);
     const correctCol = i % gridSize;
 
-    const expectedPosition = `-${correctCol * pieceSize}px -${correctRow * pieceSize}px`;
+    const expectedX = -correctCol * pieceSize;
+    const expectedY = -correctRow * pieceSize;
 
-    if (piece.style.backgroundPosition === expectedPosition) {
+    // Ambil posisi sekarang dari backgroundPosition
+    const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
+    const currentX = parseFloat(bgPos[0]);
+    const currentY = parseFloat(bgPos[1]);
+
+    // Cek apakah posisi saat ini sama dengan yang diharapkan
+    if (Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1) {
       piece.classList.add("highlight-correct");
     } else {
       piece.classList.remove("highlight-correct");
     }
   }
 }
+
 
       startGame();
     </script>
