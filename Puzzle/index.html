@@ -162,6 +162,7 @@
       </select>
       <button id="toggleDarkMode">Toggle Dark Mode</button>
       <button id="highlightButton">Highlight Posisi Benar</button>
+      <div id="progress" style="margin-top: 10px; font-weight: bold;">Progress: 0%</div>
       <div id="timer">Time: 00:00</div>
     </div>
 
@@ -260,6 +261,7 @@
         toClone.addEventListener("drop", dropPiece);
 
         setTimeout(checkCompletion, 50);
+        updateProgress();
       }
 
       function showCompletionModal(time) {
@@ -377,8 +379,31 @@
   }
 }
 
+function updateProgress() {
+  const pieces = puzzleContainer.children;
+  const pieceSize = 300 / gridSize;
+  let correctCount = 0;
 
+  for (let i = 0; i < pieces.length; i++) {
+    const piece = pieces[i];
+    const correctRow = Math.floor(i / gridSize);
+    const correctCol = i % gridSize;
+    const expectedPosition = `-${correctCol * pieceSize}px -${correctRow * pieceSize}px`;
+
+    if (piece.style.backgroundPosition === expectedPosition) {
+      correctCount++;
+    }
+  }
+
+  const totalPieces = gridSize * gridSize;
+  const progressPercentage = Math.floor((correctCount / totalPieces) * 100);
+  document.getElementById("progress").innerText = `Progress: ${correctCount} / ${totalPieces} pieces in correct position (${progressPercentage}%)`;
+}
+
+
+updateProgress();
       startGame();
+      
     </script>
   </body>
 </html>
