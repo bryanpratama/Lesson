@@ -400,6 +400,76 @@ function updateProgress() {
   document.getElementById("progress").innerText = `Progress: ${correctCount} / ${totalPieces} pieces in correct position (${progressPercentage}%)`;
 }
 
+function checkProgress() {
+  const allPieces = puzzleContainer.children;
+  let correctCount = 0;
+
+  const pieceSize = 300 / gridSize;
+
+  for (let i = 0; i < allPieces.length; i++) {
+    const piece = allPieces[i];
+    const currentRow = Math.floor(i / gridSize);
+    const currentCol = i % gridSize;
+    const expectedPos = `${currentRow}-${currentCol}`;
+    const actualPos = piece.getAttribute("data-position");
+
+    if (expectedPos === actualPos) {
+      piece.classList.add("highlight-correct");
+      correctCount++;
+    } else {
+      piece.classList.remove("highlight-correct");
+    }
+  }
+
+  const totalPieces = gridSize * gridSize;
+  const progressElement = document.getElementById("progress");
+  progressElement.textContent = `Progress: ${correctCount}/${totalPieces} pieces in correct position`;
+}
+
+function isCorrectlyPlaced(piece, index, gridSize) {
+  const pieceSize = 300 / gridSize;
+  const correctRow = Math.floor(index / gridSize);
+  const correctCol = index % gridSize;
+
+  const expectedLeft = correctCol * pieceSize;
+  const expectedTop = correctRow * pieceSize;
+
+  const backgroundPosition = piece.style.backgroundPosition.split(" ");
+  const left = parseFloat(backgroundPosition[0]);
+  const top = parseFloat(backgroundPosition[1]);
+
+  return left === -expectedLeft && top === -expectedTop;
+}
+
+function highlightCorrectPieces() {
+  const pieces = puzzleContainer.children;
+
+  for (let i = 0; i < pieces.length; i++) {
+    const piece = pieces[i];
+    if (isCorrectlyPlaced(piece, i, gridSize)) {
+      piece.classList.add("highlight-correct");
+    } else {
+      piece.classList.remove("highlight-correct");
+    }
+  }
+}
+
+function updateCorrectCount() {
+  const pieces = puzzleContainer.children;
+  let correctCount = 0;
+
+  for (let i = 0; i < pieces.length; i++) {
+    if (isCorrectlyPlaced(pieces[i], i, gridSize)) {
+      correctCount++;
+    }
+  }
+
+  document.getElementById("correctCount").innerText = `${correctCount} / ${pieces.length} pieces in correct position`;
+}
+
+
+
+checkProgress();
 
 updateProgress();
       startGame();
