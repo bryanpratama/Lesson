@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
     <title>Jigsaw Puzzle Game</title>
     <style>
       body {
@@ -154,7 +157,11 @@
     <div class="controls">
       <button onclick="startGame()">Start New Game</button>
       <button onclick="showOriginal()">Show Original</button>
-      <input type="file" id="imageUpload" accept="image/*" />
+      <input
+        type="file"
+        id="imageUpload"
+        accept="image/*"
+      />
       <select id="difficulty">
         <option value="3">Easy (3x3)</option>
         <option value="4">Medium (4x4)</option>
@@ -162,13 +169,21 @@
       </select>
       <button id="toggleDarkMode">Toggle Dark Mode</button>
       <button id="highlightButton">Highlight Posisi Benar</button>
-      <div id="progress" style="margin-top: 10px; font-weight: bold;">Progress: 0%</div>
+      <div
+        id="progress"
+        style="margin-top: 10px; font-weight: bold"
+      >
+        Progress: 0%
+      </div>
       <div id="timer">Time: 00:00</div>
     </div>
 
     <div id="puzzle-container"></div>
 
-    <div id="original-image" style="display: none">
+    <div
+      id="original-image"
+      style="display: none"
+    >
       <img
         id="originalImagePreview"
         src="image1.jpg"
@@ -176,7 +191,10 @@
         width="300"
       />
     </div>
-    <div id="customModal" class="modal hidden">
+    <div
+      id="customModal"
+      class="modal hidden"
+    >
       <div class="modal-content">
         <p id="modalMessage">Puzzle Completed!</p>
         <button onclick="closeModal()">OK</button>
@@ -351,129 +369,77 @@
         }
       });
 
-      document.getElementById("highlightButton").addEventListener("click", highlightCorrectPieces);
+      document
+        .getElementById("highlightButton")
+        .addEventListener("click", highlightCorrectPieces);
 
       function highlightCorrectPieces() {
-  const pieces = puzzleContainer.children;
-  const pieceSize = 300 / gridSize;
+        const pieces = puzzleContainer.children;
+        const pieceSize = 300 / gridSize;
 
-  for (let i = 0; i < pieces.length; i++) {
-    const piece = pieces[i];
-    const correctRow = Math.floor(i / gridSize);
-    const correctCol = i % gridSize;
+        for (let i = 0; i < pieces.length; i++) {
+          const piece = pieces[i];
+          const correctRow = Math.floor(i / gridSize);
+          const correctCol = i % gridSize;
 
-    const expectedX = -correctCol * pieceSize;
-    const expectedY = -correctRow * pieceSize;
+          const expectedX = -correctCol * pieceSize;
+          const expectedY = -correctRow * pieceSize;
 
-    // Ambil posisi sekarang dari backgroundPosition
-    const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
-    const currentX = parseFloat(bgPos[0]);
-    const currentY = parseFloat(bgPos[1]);
+          const bgPos = window
+            .getComputedStyle(piece)
+            .backgroundPosition.split(" ");
+          const currentX = parseFloat(bgPos[0]);
+          const currentY = parseFloat(bgPos[1]);
 
-    // Cek apakah posisi saat ini sama dengan yang diharapkan
-    if (Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1) {
-      piece.classList.add("highlight-correct");
-    } else {
-      piece.classList.remove("highlight-correct");
-    }
-  }
-}
+          if (
+            Math.abs(currentX - expectedX) < 1 &&
+            Math.abs(currentY - expectedY) < 1
+          ) {
+            piece.classList.add("highlight-correct");
+          } else {
+            piece.classList.remove("highlight-correct");
+          }
+        }
+      }
 
-function updateProgress() {
-  const pieces = puzzleContainer.children;
-  const pieceSize = 300 / gridSize;
-  let correctCount = 0;
+      function updateProgress() {
+        const pieces = puzzleContainer.children;
+        const pieceSize = 300 / gridSize;
+        let correctCount = 0;
 
-  for (let i = 0; i < pieces.length; i++) {
-    const piece = pieces[i];
-    const correctRow = Math.floor(i / gridSize);
-    const correctCol = i % gridSize;
-    const expectedPosition = `-${correctCol * pieceSize}px -${correctRow * pieceSize}px`;
+        for (let i = 0; i < pieces.length; i++) {
+          const piece = pieces[i];
+          const correctRow = Math.floor(i / gridSize);
+          const correctCol = i % gridSize;
 
-    if (piece.style.backgroundPosition === expectedPosition) {
-      correctCount++;
-    }
-  }
+          const expectedX = -correctCol * pieceSize;
+          const expectedY = -correctRow * pieceSize;
 
-  const totalPieces = gridSize * gridSize;
-  const progressPercentage = Math.floor((correctCount / totalPieces) * 100);
-  document.getElementById("progress").innerText = `Progress: ${correctCount} / ${totalPieces} pieces in correct position (${progressPercentage}%)`;
-}
+          const bgPos = window
+            .getComputedStyle(piece)
+            .backgroundPosition.split(" ");
+          const currentX = parseFloat(bgPos[0]);
+          const currentY = parseFloat(bgPos[1]);
 
-function checkProgress() {
-  const allPieces = puzzleContainer.children;
-  let correctCount = 0;
+          if (
+            Math.abs(currentX - expectedX) < 1 &&
+            Math.abs(currentY - expectedY) < 1
+          ) {
+            correctCount++;
+          }
+        }
 
-  const pieceSize = 300 / gridSize;
+        const totalPieces = gridSize * gridSize;
+        const progressPercentage = Math.floor(
+          (correctCount / totalPieces) * 100
+        );
+        document.getElementById(
+          "progress"
+        ).innerText = `Progress: ${correctCount} / ${totalPieces} pieces in correct position (${progressPercentage}%)`;
+      }
 
-  for (let i = 0; i < allPieces.length; i++) {
-    const piece = allPieces[i];
-    const currentRow = Math.floor(i / gridSize);
-    const currentCol = i % gridSize;
-    const expectedPos = `${currentRow}-${currentCol}`;
-    const actualPos = piece.getAttribute("data-position");
-
-    if (expectedPos === actualPos) {
-      piece.classList.add("highlight-correct");
-      correctCount++;
-    } else {
-      piece.classList.remove("highlight-correct");
-    }
-  }
-
-  const totalPieces = gridSize * gridSize;
-  const progressElement = document.getElementById("progress");
-  progressElement.textContent = `Progress: ${correctCount}/${totalPieces} pieces in correct position`;
-}
-
-function isCorrectlyPlaced(piece, index, gridSize) {
-  const pieceSize = 300 / gridSize;
-  const correctRow = Math.floor(index / gridSize);
-  const correctCol = index % gridSize;
-
-  const expectedLeft = correctCol * pieceSize;
-  const expectedTop = correctRow * pieceSize;
-
-  const backgroundPosition = piece.style.backgroundPosition.split(" ");
-  const left = parseFloat(backgroundPosition[0]);
-  const top = parseFloat(backgroundPosition[1]);
-
-  return left === -expectedLeft && top === -expectedTop;
-}
-
-function highlightCorrectPieces() {
-  const pieces = puzzleContainer.children;
-
-  for (let i = 0; i < pieces.length; i++) {
-    const piece = pieces[i];
-    if (isCorrectlyPlaced(piece, i, gridSize)) {
-      piece.classList.add("highlight-correct");
-    } else {
-      piece.classList.remove("highlight-correct");
-    }
-  }
-}
-
-function updateCorrectCount() {
-  const pieces = puzzleContainer.children;
-  let correctCount = 0;
-
-  for (let i = 0; i < pieces.length; i++) {
-    if (isCorrectlyPlaced(pieces[i], i, gridSize)) {
-      correctCount++;
-    }
-  }
-
-  document.getElementById("correctCount").innerText = `${correctCount} / ${pieces.length} pieces in correct position`;
-}
-
-
-
-checkProgress();
-
-updateProgress();
+      updateProgress();
       startGame();
-      
     </script>
   </body>
 </html>
