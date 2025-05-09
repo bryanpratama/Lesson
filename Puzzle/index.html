@@ -57,6 +57,22 @@
         box-shadow: 0 0 5px limegreen;
       }
 
+      #progressBarContainer {
+        width: 300px;
+        height: 20px;
+        background-color: #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 10px auto;
+      }
+
+      #progressBarFill {
+        height: 100%;
+        width: 0%;
+        background-color: limegreen;
+        transition: width 0.3s ease-in-out;
+      }
+
       #puzzle-container {
         width: 300px;
         height: 300px;
@@ -174,6 +190,9 @@
         style="margin-top: 10px; font-weight: bold"
       >
         Progress: 0%
+      </div>
+      <div id="progressBarContainer">
+        <div id="progressBarFill"></div>
       </div>
       <div id="timer">Time: 00:00</div>
     </div>
@@ -430,12 +449,13 @@
         }
 
         const totalPieces = gridSize * gridSize;
-        const progressPercentage = Math.floor(
-          (correctCount / totalPieces) * 100
-        );
+        const percent = Math.floor((correctCount / totalPieces) * 100);
+
         document.getElementById(
           "progress"
-        ).innerText = `Progress: ${correctCount} / ${totalPieces} pieces in correct position (${progressPercentage}%)`;
+        ).innerText = `Progress: ${correctCount} / ${totalPieces} pieces in correct position (${percent}%)`;
+
+        document.getElementById("progressBarFill").style.width = `${percent}%`;
       }
 
       updateProgress();
