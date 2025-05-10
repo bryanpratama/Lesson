@@ -2,10 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jigsaw Puzzle Game</title>
     <style>
       body {
@@ -69,8 +66,8 @@
       #progressBarFill {
         height: 100%;
         width: 0%;
-        background-color: limegreen;
-        transition: width 0.3s ease-in-out;
+        background-color: red;
+        transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
       }
 
       #puzzle-container {
@@ -173,11 +170,7 @@
     <div class="controls">
       <button onclick="startGame()">Start New Game</button>
       <button onclick="showOriginal()">Show Original</button>
-      <input
-        type="file"
-        id="imageUpload"
-        accept="image/*"
-      />
+      <input type="file" id="imageUpload" accept="image/*" />
       <select id="difficulty">
         <option value="3">Easy (3x3)</option>
         <option value="4">Medium (4x4)</option>
@@ -185,12 +178,7 @@
       </select>
       <button id="toggleDarkMode">Toggle Dark Mode</button>
       <button id="highlightButton">Highlight Posisi Benar</button>
-      <div
-        id="progress"
-        style="margin-top: 10px; font-weight: bold"
-      >
-        Progress: 0%
-      </div>
+      <div id="progress" style="margin-top: 10px; font-weight: bold">Progress: 0%</div>
       <div id="progressBarContainer">
         <div id="progressBarFill"></div>
       </div>
@@ -199,21 +187,10 @@
 
     <div id="puzzle-container"></div>
 
-    <div
-      id="original-image"
-      style="display: none"
-    >
-      <img
-        id="originalImagePreview"
-        src="image1.jpg"
-        alt="Original Image"
-        width="300"
-      />
+    <div id="original-image" style="display: none">
+      <img id="originalImagePreview" src="image1.jpg" alt="Original Image" width="300" />
     </div>
-    <div
-      id="customModal"
-      class="modal hidden"
-    >
+    <div id="customModal" class="modal hidden">
       <div class="modal-content">
         <p id="modalMessage">Puzzle Completed!</p>
         <button onclick="closeModal()">OK</button>
@@ -243,9 +220,7 @@
             piece.style.width = piece.style.height = `${pieceSize}px`;
             piece.style.backgroundSize = `300px 300px`;
             piece.style.backgroundImage = `url("${currentImageUrl}")`;
-            piece.style.backgroundPosition = `-${col * pieceSize}px -${
-              row * pieceSize
-            }px`;
+            piece.style.backgroundPosition = `-${col * pieceSize}px -${row * pieceSize}px`;
             piece.setAttribute("data-position", `${row}-${col}`);
             piece.draggable = true;
 
@@ -342,19 +317,17 @@
         }, 1000);
       }
 
-      document
-        .getElementById("imageUpload")
-        .addEventListener("change", function (e) {
-          const file = e.target.files[0];
-          if (file && file.type.startsWith("image/")) {
-            const reader = new FileReader();
-            reader.onload = function (event) {
-              currentImageUrl = event.target.result;
-              startGame();
-            };
-            reader.readAsDataURL(file);
-          }
-        });
+      document.getElementById("imageUpload").addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith("image/")) {
+          const reader = new FileReader();
+          reader.onload = function (event) {
+            currentImageUrl = event.target.result;
+            startGame();
+          };
+          reader.readAsDataURL(file);
+        }
+      });
 
       function showOriginal() {
         const img = document.getElementById("originalImagePreview");
@@ -388,9 +361,7 @@
         }
       });
 
-      document
-        .getElementById("highlightButton")
-        .addEventListener("click", highlightCorrectPieces);
+      document.getElementById("highlightButton").addEventListener("click", highlightCorrectPieces);
 
       function highlightCorrectPieces() {
         const pieces = puzzleContainer.children;
@@ -404,16 +375,11 @@
           const expectedX = -correctCol * pieceSize;
           const expectedY = -correctRow * pieceSize;
 
-          const bgPos = window
-            .getComputedStyle(piece)
-            .backgroundPosition.split(" ");
+          const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
           const currentX = parseFloat(bgPos[0]);
           const currentY = parseFloat(bgPos[1]);
 
-          if (
-            Math.abs(currentX - expectedX) < 1 &&
-            Math.abs(currentY - expectedY) < 1
-          ) {
+          if (Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1) {
             piece.classList.add("highlight-correct");
           } else {
             piece.classList.remove("highlight-correct");
@@ -434,16 +400,11 @@
           const expectedX = -correctCol * pieceSize;
           const expectedY = -correctRow * pieceSize;
 
-          const bgPos = window
-            .getComputedStyle(piece)
-            .backgroundPosition.split(" ");
+          const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
           const currentX = parseFloat(bgPos[0]);
           const currentY = parseFloat(bgPos[1]);
 
-          if (
-            Math.abs(currentX - expectedX) < 1 &&
-            Math.abs(currentY - expectedY) < 1
-          ) {
+          if (Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1) {
             correctCount++;
           }
         }
@@ -455,9 +416,17 @@
           "progress"
         ).innerText = `Progress: ${correctCount} / ${totalPieces} pieces in correct position (${percent}%)`;
 
-        document.getElementById("progressBarFill").style.width = `${percent}%`;
-      }
+        const progressBar = document.getElementById("progressBarFill");
+        progressBar.style.width = `${percent}%`;
 
+        if (percent < 40) {
+          progressBar.style.backgroundColor = "red";
+        } else if (percent < 80) {
+          progressBar.style.backgroundColor = "orange";
+        } else {
+          progressBar.style.backgroundColor = "limegreen";
+        }
+      }
       updateProgress();
       startGame();
     </script>
