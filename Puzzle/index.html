@@ -162,6 +162,19 @@
         display: none;
         margin: 10px auto;
       }
+      #pauseOverlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgb(0, 0, 0); /* gelap total */
+        z-index: 9999; /* sangat tinggi agar di atas segalanya */
+        color: white;
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
     </style>
   </head>
   <body>
@@ -182,6 +195,7 @@
       <div id="progressBarContainer">
         <div id="progressBarFill"></div>
       </div>
+      <button id="pauseButton">Pause</button>
       <div id="timer">Time: 00:00</div>
     </div>
 
@@ -195,6 +209,10 @@
         <p id="modalMessage">Puzzle Completed!</p>
         <button onclick="closeModal()">OK</button>
       </div>
+    </div>
+    <div id="pauseOverlay">
+      <div>Game Paused<br />Klik Resume untuk melanjutkan</div>
+      <button id="resumeButton">Resume</button>
     </div>
 
     <script>
@@ -311,6 +329,10 @@
         seconds = 0;
         timerDisplay.textContent = "Time: 00:00";
         clearInterval(timer);
+        isPaused = false;
+        document.getElementById("pauseButton").innerText = "Pause";
+        document.getElementById("pauseOverlay").style.display = "none";
+
         timer = setInterval(() => {
           seconds++;
           timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
@@ -427,6 +449,24 @@
           progressBar.style.backgroundColor = "limegreen";
         }
       }
+
+      let isPaused = false;
+
+      document.getElementById("pauseButton").addEventListener("click", () => {
+        clearInterval(timer);
+        document.getElementById("pauseOverlay").style.display = "flex";
+        isPaused = true;
+      });
+
+      document.getElementById("resumeButton").addEventListener("click", () => {
+        timer = setInterval(() => {
+          seconds++;
+          timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
+        }, 1000);
+        document.getElementById("pauseOverlay").style.display = "none";
+        isPaused = false;
+      });
+
       updateProgress();
       startGame();
     </script>
