@@ -168,8 +168,8 @@
         display: none;
         position: fixed;
         inset: 0;
-        background: rgb(0, 0, 0); /* gelap total */
-        z-index: 9999; /* sangat tinggi agar di atas segalanya */
+        background: rgb(0, 0, 0);
+        z-index: 9999;
         color: white;
         font-size: 24px;
         display: flex;
@@ -186,6 +186,10 @@
       <button onclick="startGame()">Start New Game</button>
       <button onclick="showOriginal()">Show Original</button>
       <input type="file" id="imageUpload" accept="image/*" />
+      <select id="defaultImageSelector">
+        <option value="">Pilih gambar default...</option>
+      </select>
+
       <select id="difficulty">
         <option value="3">Easy (3x3)</option>
         <option value="4">Medium (4x4)</option>
@@ -468,6 +472,41 @@
         document.getElementById("pauseOverlay").style.display = "none";
         isPaused = false;
       });
+
+      const defaultImages = [
+        { name: "Puncak-gunung", url: "image/Puncak-gunung.jpg" },
+        { name: "Meja kerja", url: "image/Meja-kerja.jpg" },
+        { name: "Pegunungan bersalju", url: "image/Pegunungan-bersalju.jpg" },
+        { name: "Gedung apartemen", url: "image/Gedung-apartemen.jpg" },
+        { name: "Kota metropolitan", url: "image/Kota-metropolitan.jpg" },
+      ];
+
+      const defaultImageSelector = document.getElementById("defaultImageSelector");
+
+      defaultImages.forEach((img) => {
+        const option = document.createElement("option");
+        option.value = img.url;
+        option.textContent = img.name;
+        defaultImageSelector.appendChild(option);
+      });
+
+      defaultImageSelector.addEventListener("change", (e) => {
+        const imageUrl = e.target.value;
+        if (imageUrl) {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.onload = () => {
+            originalImage.src = imageUrl;
+            startGameWithImage(img);
+          };
+          img.src = imageUrl;
+        }
+      });
+
+      function startGameWithImage(image) {
+        currentImageUrl = image.src;
+        startGame();
+      }
 
       updateProgress();
       startGame();
