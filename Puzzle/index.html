@@ -100,10 +100,48 @@
       }
       button,
       select {
-        padding: 8px 16px;
+        padding: 10px 20px;
         margin: 5px;
         font-size: 16px;
+        font-weight: 500;
+        border: 2px;
+        border-radius: 8px;
+        background: #f4f4f4;
+        color: black;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
       }
+
+      button:hover,
+      select:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+
+      .dark-mode button,
+      .dark-mode select {
+        background: #222;
+        color: #f0f0f0;
+        border: 1px solid #666;
+      }
+
+      select {
+        background-color: #f0f0f0;
+        color: #000;
+      }
+
+      .dark-mode select {
+        background-color: #222;
+        color: #fff;
+        border: 1px solid #555;
+      }
+
+      .dark-mode select option {
+        background-color: #111;
+        color: #fff;
+      }
+
       #timer {
         margin: 10px 0;
         font-size: 18px;
