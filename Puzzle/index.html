@@ -274,6 +274,10 @@
       <div id="progressBarContainer">
         <div id="progressBarFill"></div>
       </div>
+      <label>
+        <input type="checkbox" id="rotationMode" />
+        Mode Rotasi
+      </label>
       <button id="undoButton">Undo</button>
 
       <button id="pauseButton">Pause</button>
@@ -324,6 +328,19 @@
             piece.setAttribute("data-position", `${row}-${col}`);
             piece.draggable = true;
 
+            if (document.getElementById("rotationMode").checked) {
+          const angle = [0, 90, 180, 270][Math.floor(Math.random() * 4)];
+          piece.style.transform = `rotate(${angle}deg)`;
+          piece.setAttribute("data-rotation", angle);
+        } else {
+          piece.setAttribute("data-rotation", 0);
+        }
+
+        piece.addEventListener("contextmenu", (e) => {
+          e.preventDefault();
+          rotatePiece(piece);
+        });
+
             piece.addEventListener("dragstart", dragStart);
             piece.addEventListener("dragover", dragOver);
             piece.addEventListener("drop", dropPiece);
@@ -335,6 +352,7 @@
         shufflePieces();
         puzzleContainer.style.width = puzzleContainer.style.height = `${300}px`;
         puzzleContainer.style.flexWrap = "wrap";
+        
       }
 
       function shufflePieces() {
@@ -475,6 +493,9 @@
       function highlightCorrectPieces() {
         const pieces = puzzleContainer.children;
         const pieceSize = 300 / gridSize;
+        const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
+const isCorrectRotation = currentRotation === 0;
+
 
         for (let i = 0; i < pieces.length; i++) {
           const piece = pieces[i];
@@ -493,6 +514,12 @@
           } else {
             piece.classList.remove("highlight-correct");
           }
+          if (piece.style.backgroundPosition === expectedPosition && isCorrectRotation) {
+  piece.classList.add("highlight-correct");
+} else {
+  piece.classList.remove("highlight-correct");
+}
+
         }
       }
 
@@ -613,6 +640,13 @@
         updateProgress();
         highlightCorrectPieces();
       });
+
+      function rotatePiece(piece) {
+        const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
+        const newRotation = (currentRotation + 90) % 360;
+        piece.style.transform = `rotate(${newRotation}deg)`;
+        piece.setAttribute("data-rotation", newRotation);
+      }
 
       updateProgress();
       startGame();
