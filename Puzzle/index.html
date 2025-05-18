@@ -329,21 +329,23 @@
             piece.draggable = true;
 
             if (document.getElementById("rotationMode").checked) {
-          const angle = [0, 90, 180, 270][Math.floor(Math.random() * 4)];
-          piece.style.transform = `rotate(${angle}deg)`;
-          piece.setAttribute("data-rotation", angle);
-        } else {
-          piece.setAttribute("data-rotation", 0);
-        }
-
-        piece.addEventListener("contextmenu", (e) => {
-          e.preventDefault();
-          rotatePiece(piece);
-        });
+              const angle = [0, 90, 180, 270][Math.floor(Math.random() * 4)];
+              piece.style.transform = `rotate(${angle}deg)`;
+              piece.setAttribute("data-rotation", angle);
+            } else {
+              piece.setAttribute("data-rotation", 0);
+            }
 
             piece.addEventListener("dragstart", dragStart);
             piece.addEventListener("dragover", dragOver);
             piece.addEventListener("drop", dropPiece);
+
+            document.addEventListener("contextmenu", (e) => {
+              if (e.target.classList.contains("puzzle-piece")) {
+                e.preventDefault();
+                rotatePiece(e.target);
+              }
+            });
 
             pieces.push(piece);
           }
@@ -352,7 +354,6 @@
         shufflePieces();
         puzzleContainer.style.width = puzzleContainer.style.height = `${300}px`;
         puzzleContainer.style.flexWrap = "wrap";
-        
       }
 
       function shufflePieces() {
@@ -494,8 +495,7 @@
         const pieces = puzzleContainer.children;
         const pieceSize = 300 / gridSize;
         const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
-const isCorrectRotation = currentRotation === 0;
-
+        const isCorrectRotation = currentRotation === 0;
 
         for (let i = 0; i < pieces.length; i++) {
           const piece = pieces[i];
@@ -515,11 +515,10 @@ const isCorrectRotation = currentRotation === 0;
             piece.classList.remove("highlight-correct");
           }
           if (piece.style.backgroundPosition === expectedPosition && isCorrectRotation) {
-  piece.classList.add("highlight-correct");
-} else {
-  piece.classList.remove("highlight-correct");
-}
-
+            piece.classList.add("highlight-correct");
+          } else {
+            piece.classList.remove("highlight-correct");
+          }
         }
       }
 
