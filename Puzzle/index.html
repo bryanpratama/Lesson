@@ -340,12 +340,7 @@
             piece.addEventListener("dragover", dragOver);
             piece.addEventListener("drop", dropPiece);
 
-            document.addEventListener("contextmenu", (e) => {
-              if (e.target.classList.contains("puzzle-piece")) {
-                e.preventDefault();
-                rotatePiece(e.target);
-              }
-            });
+            
 
             pieces.push(piece);
           }
@@ -646,6 +641,13 @@
         piece.style.transform = `rotate(${newRotation}deg)`;
         piece.setAttribute("data-rotation", newRotation);
       }
+
+      document.addEventListener("contextmenu", (e) => {
+              if (e.target.classList.contains("puzzle-piece")) {
+                e.preventDefault();
+                rotatePiece(e.target);
+              }
+            });
 
       updateProgress();
       startGame();
