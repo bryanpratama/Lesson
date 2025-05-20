@@ -643,11 +643,15 @@
       }
 
       document.addEventListener("contextmenu", (e) => {
-              if (e.target.classList.contains("puzzle-piece")) {
-                e.preventDefault();
-                rotatePiece(e.target);
-              }
-            });
+  if (
+    e.target.classList.contains("puzzle-piece") &&
+    document.getElementById("rotationMode").checked
+  ) {
+    e.preventDefault();
+    rotatePiece(e.target);
+  }
+});
+
 
       updateProgress();
       startGame();
