@@ -490,35 +490,39 @@
       document.getElementById("highlightButton").addEventListener("click", highlightCorrectPieces);
 
       function highlightCorrectPieces() {
-        const pieces = puzzleContainer.children;
-        const pieceSize = 300 / gridSize;
-        const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
-        const isCorrectRotation = currentRotation === 0;
+  const pieces = puzzleContainer.children;
+  const pieceSize = 300 / gridSize;
 
-        for (let i = 0; i < pieces.length; i++) {
-          const piece = pieces[i];
-          const correctRow = Math.floor(i / gridSize);
-          const correctCol = i % gridSize;
+  for (let i = 0; i < pieces.length; i++) {
+    const piece = pieces[i];
+    const correctRow = Math.floor(i / gridSize);
+    const correctCol = i % gridSize;
 
-          const expectedX = -correctCol * pieceSize;
-          const expectedY = -correctRow * pieceSize;
+    const expectedX = -correctCol * pieceSize;
+    const expectedY = -correctRow * pieceSize;
+    const expectedPosition = `-${correctCol * pieceSize}px -${correctRow * pieceSize}px`;
 
-          const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
-          const currentX = parseFloat(bgPos[0]);
-          const currentY = parseFloat(bgPos[1]);
+    const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
+    const currentX = parseFloat(bgPos[0]);
+    const currentY = parseFloat(bgPos[1]);
 
-          if (Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1) {
-            piece.classList.add("highlight-correct");
-          } else {
-            piece.classList.remove("highlight-correct");
-          }
-          if (piece.style.backgroundPosition === expectedPosition && isCorrectRotation) {
-            piece.classList.add("highlight-correct");
-          } else {
-            piece.classList.remove("highlight-correct");
-          }
-        }
-      }
+    const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
+    const isCorrectRotation = currentRotation === 0;
+
+    const isCorrectPosition =
+      Math.abs(currentX - expectedX) < 1 &&
+      Math.abs(currentY - expectedY) < 1;
+
+    const isCorrectBackground = piece.style.backgroundPosition === expectedPosition;
+
+    if (isCorrectPosition && isCorrectBackground && isCorrectRotation) {
+      piece.classList.add("highlight-correct");
+    } else {
+      piece.classList.remove("highlight-correct");
+    }
+  }
+}
+
 
       function updateProgress() {
         const pieces = puzzleContainer.children;
