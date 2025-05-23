@@ -500,7 +500,6 @@
 
     const expectedX = -correctCol * pieceSize;
     const expectedY = -correctRow * pieceSize;
-    const expectedPosition = `-${correctCol * pieceSize}px -${correctRow * pieceSize}px`;
 
     const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
     const currentX = parseFloat(bgPos[0]);
@@ -513,15 +512,14 @@
       Math.abs(currentX - expectedX) < 1 &&
       Math.abs(currentY - expectedY) < 1;
 
-    const isCorrectBackground = piece.style.backgroundPosition === expectedPosition;
-
-    if (isCorrectPosition && isCorrectBackground && isCorrectRotation) {
+    if (isCorrectPosition && isCorrectRotation) {
       piece.classList.add("highlight-correct");
     } else {
       piece.classList.remove("highlight-correct");
     }
   }
 }
+
 
 
       function updateProgress() {
