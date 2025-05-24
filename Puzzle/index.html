@@ -410,20 +410,38 @@
       }
 
       function checkCompletion() {
-        const currentPieces = [...puzzleContainer.children];
-        const correct = currentPieces.every((piece, index) => {
-          const row = Math.floor(index / gridSize);
-          const col = index % gridSize;
-          return piece.getAttribute("data-position") === `${row}-${col}`;
-        });
+  const currentPieces = [...puzzleContainer.children];
+  const pieceSize = 300 / gridSize;
 
-        if (correct) {
-          clearInterval(timer);
-          setTimeout(() => {
-            showCompletionModal(formatTime(seconds));
-          }, 100);
-        }
-      }
+  const allCorrect = currentPieces.every((piece, index) => {
+    const correctRow = Math.floor(index / gridSize);
+    const correctCol = index % gridSize;
+
+    const expectedX = -correctCol * pieceSize;
+    const expectedY = -correctRow * pieceSize;
+
+    const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
+    const currentX = parseFloat(bgPos[0]);
+    const currentY = parseFloat(bgPos[1]);
+    const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
+
+    const isCorrectPosition =
+      Math.abs(currentX - expectedX) < 1 &&
+      Math.abs(currentY - expectedY) < 1;
+
+    const isCorrectRotation = currentRotation === 0;
+
+    return isCorrectPosition && isCorrectRotation;
+  });
+
+  if (allCorrect) {
+    clearInterval(timer);
+    setTimeout(() => {
+      showCompletionModal(formatTime(seconds));
+    }, 100);
+  }
+}
+
 
       function startGame() {
         const selectedDifficulty = document.getElementById("difficulty").value;
@@ -645,6 +663,8 @@
         const newRotation = (currentRotation + 90) % 360;
         piece.style.transform = `rotate(${newRotation}deg)`;
         piece.setAttribute("data-rotation", newRotation);
+
+        checkCompletion();
       }
 
       document.addEventListener("contextmenu", (e) => {
