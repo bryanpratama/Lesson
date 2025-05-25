@@ -142,6 +142,36 @@
         color: #fff;
       }
 
+      input[type="file"] {
+        display: none;
+      }
+
+      .custom-file-upload {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 500;
+        color: white;
+        background-color: #007bff;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin: 5px;
+      }
+
+      .custom-file-upload:hover {
+        background-color: #0056b3;
+      }
+
+      .dark-mode .custom-file-upload {
+        background-color: #444;
+        color: #f0f0f0;
+      }
+
+      .dark-mode .custom-file-upload:hover {
+        background-color: #666;
+      }
+
       #timer {
         margin: 10px 0;
         font-size: 18px;
@@ -258,6 +288,7 @@
     <div class="controls">
       <button onclick="startGame()">Start New Game</button>
       <button onclick="showOriginal()">Show Original</button>
+      <label for="imageUpload" class="custom-file-upload">Upload Gambar</label>
       <input type="file" id="imageUpload" accept="image/*" />
       <select id="defaultImageSelector">
         <option value="">Pilih gambar default...</option>
@@ -268,8 +299,8 @@
         <option value="4">Medium (4x4)</option>
         <option value="5">Hard (5x5)</option>
         <option value="6">Extreme (6x6)</option>
-  <option value="7">Insane (7x7)</option>
-  <option value="8">Godlike (8x8)</option>
+        <option value="7">Insane (7x7)</option>
+        <option value="8">Godlike (8x8)</option>
       </select>
       <button id="toggleDarkMode">Toggle Dark Mode</button>
       <button id="highlightButton">Highlight Posisi Benar</button>
@@ -343,8 +374,6 @@
             piece.addEventListener("dragover", dragOver);
             piece.addEventListener("drop", dropPiece);
 
-            
-
             pieces.push(piece);
           }
         }
@@ -410,38 +439,35 @@
       }
 
       function checkCompletion() {
-  const currentPieces = [...puzzleContainer.children];
-  const pieceSize = 300 / gridSize;
+        const currentPieces = [...puzzleContainer.children];
+        const pieceSize = 300 / gridSize;
 
-  const allCorrect = currentPieces.every((piece, index) => {
-    const correctRow = Math.floor(index / gridSize);
-    const correctCol = index % gridSize;
+        const allCorrect = currentPieces.every((piece, index) => {
+          const correctRow = Math.floor(index / gridSize);
+          const correctCol = index % gridSize;
 
-    const expectedX = -correctCol * pieceSize;
-    const expectedY = -correctRow * pieceSize;
+          const expectedX = -correctCol * pieceSize;
+          const expectedY = -correctRow * pieceSize;
 
-    const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
-    const currentX = parseFloat(bgPos[0]);
-    const currentY = parseFloat(bgPos[1]);
-    const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
+          const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
+          const currentX = parseFloat(bgPos[0]);
+          const currentY = parseFloat(bgPos[1]);
+          const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
 
-    const isCorrectPosition =
-      Math.abs(currentX - expectedX) < 1 &&
-      Math.abs(currentY - expectedY) < 1;
+          const isCorrectPosition = Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1;
 
-    const isCorrectRotation = currentRotation === 0;
+          const isCorrectRotation = currentRotation === 0;
 
-    return isCorrectPosition && isCorrectRotation;
-  });
+          return isCorrectPosition && isCorrectRotation;
+        });
 
-  if (allCorrect) {
-    clearInterval(timer);
-    setTimeout(() => {
-      showCompletionModal(formatTime(seconds));
-    }, 100);
-  }
-}
-
+        if (allCorrect) {
+          clearInterval(timer);
+          setTimeout(() => {
+            showCompletionModal(formatTime(seconds));
+          }, 100);
+        }
+      }
 
       function startGame() {
         const selectedDifficulty = document.getElementById("difficulty").value;
@@ -508,37 +534,33 @@
       document.getElementById("highlightButton").addEventListener("click", highlightCorrectPieces);
 
       function highlightCorrectPieces() {
-  const pieces = puzzleContainer.children;
-  const pieceSize = 300 / gridSize;
+        const pieces = puzzleContainer.children;
+        const pieceSize = 300 / gridSize;
 
-  for (let i = 0; i < pieces.length; i++) {
-    const piece = pieces[i];
-    const correctRow = Math.floor(i / gridSize);
-    const correctCol = i % gridSize;
+        for (let i = 0; i < pieces.length; i++) {
+          const piece = pieces[i];
+          const correctRow = Math.floor(i / gridSize);
+          const correctCol = i % gridSize;
 
-    const expectedX = -correctCol * pieceSize;
-    const expectedY = -correctRow * pieceSize;
+          const expectedX = -correctCol * pieceSize;
+          const expectedY = -correctRow * pieceSize;
 
-    const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
-    const currentX = parseFloat(bgPos[0]);
-    const currentY = parseFloat(bgPos[1]);
+          const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
+          const currentX = parseFloat(bgPos[0]);
+          const currentY = parseFloat(bgPos[1]);
 
-    const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
-    const isCorrectRotation = currentRotation === 0;
+          const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
+          const isCorrectRotation = currentRotation === 0;
 
-    const isCorrectPosition =
-      Math.abs(currentX - expectedX) < 1 &&
-      Math.abs(currentY - expectedY) < 1;
+          const isCorrectPosition = Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1;
 
-    if (isCorrectPosition && isCorrectRotation) {
-      piece.classList.add("highlight-correct");
-    } else {
-      piece.classList.remove("highlight-correct");
-    }
-  }
-}
-
-
+          if (isCorrectPosition && isCorrectRotation) {
+            piece.classList.add("highlight-correct");
+          } else {
+            piece.classList.remove("highlight-correct");
+          }
+        }
+      }
 
       function updateProgress() {
         const pieces = puzzleContainer.children;
@@ -668,15 +690,11 @@
       }
 
       document.addEventListener("contextmenu", (e) => {
-  if (
-    e.target.classList.contains("puzzle-piece") &&
-    document.getElementById("rotationMode").checked
-  ) {
-    e.preventDefault();
-    rotatePiece(e.target);
-  }
-});
-
+        if (e.target.classList.contains("puzzle-piece") && document.getElementById("rotationMode").checked) {
+          e.preventDefault();
+          rotatePiece(e.target);
+        }
+      });
 
       updateProgress();
       startGame();
