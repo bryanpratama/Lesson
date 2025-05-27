@@ -160,7 +160,6 @@
         margin: 5px;
         border: 2px;
         border-radius: 8px;
-
       }
 
       .custom-file-upload:hover {
@@ -172,7 +171,6 @@
         background-color: #222;
         color: #f0f0f0;
         border: 1px solid #666;
-
       }
 
       .dark-mode .custom-file-upload:hover {
@@ -570,6 +568,12 @@
         }
       }
 
+      function getProgressColor(percentage) {
+        if (percentage < 33) return "red";
+        if (percentage < 66) return "orange";
+        return "limegreen";
+      }
+
       function updateProgress() {
         const pieces = puzzleContainer.children;
         const pieceSize = 300 / gridSize;
@@ -587,28 +591,25 @@
           const currentX = parseFloat(bgPos[0]);
           const currentY = parseFloat(bgPos[1]);
 
-          if (Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1) {
+          const isCorrectPosition = Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1;
+
+          const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
+          const isCorrectRotation = currentRotation === 0;
+
+          if (isCorrectPosition && isCorrectRotation) {
             correctCount++;
           }
         }
 
-        const totalPieces = gridSize * gridSize;
-        const percent = Math.floor((correctCount / totalPieces) * 100);
+        const total = gridSize * gridSize;
+        const percentage = Math.round((correctCount / total) * 100);
 
         document.getElementById(
           "progress"
-        ).innerText = `Progress: ${correctCount} / ${totalPieces} pieces in correct position (${percent}%)`;
+        ).textContent = `Progress: ${correctCount} / ${total} pieces in correct position (${percentage}%)`;
 
-        const progressBar = document.getElementById("progressBarFill");
-        progressBar.style.width = `${percent}%`;
-
-        if (percent < 40) {
-          progressBar.style.backgroundColor = "red";
-        } else if (percent < 80) {
-          progressBar.style.backgroundColor = "orange";
-        } else {
-          progressBar.style.backgroundColor = "limegreen";
-        }
+        document.getElementById("progressBarFill").style.width = `${percentage}%`;
+        document.getElementById("progressBarFill").style.backgroundColor = getProgressColor(percentage);
       }
 
       let isPaused = false;
@@ -695,6 +696,7 @@
         piece.setAttribute("data-rotation", newRotation);
 
         checkCompletion();
+        updateProgress();
       }
 
       document.addEventListener("contextmenu", (e) => {
