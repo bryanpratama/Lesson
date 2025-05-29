@@ -178,6 +178,11 @@
         transform: translateY(-1px);
       }
 
+      .puzzle-piece.selected {
+  outline: 2px solid yellow;
+}
+
+
       #timer {
         margin: 10px 0;
         font-size: 18px;
@@ -318,9 +323,12 @@
         <input type="checkbox" id="rotationMode" />
         Mode Rotasi
       </label>
+      <button id="rotateSelected">🔄 Rotate</button>
+
       <button id="undoButton">Undo</button>
 
       <button id="pauseButton">Pause</button>
+
       <div id="timer">Time: 00:00</div>
     </div>
 
@@ -379,6 +387,14 @@
             piece.addEventListener("dragstart", dragStart);
             piece.addEventListener("dragover", dragOver);
             piece.addEventListener("drop", dropPiece);
+
+            piece.addEventListener("click", () => {
+  if (!document.getElementById("rotationMode").checked) return;
+
+  document.querySelectorAll(".puzzle-piece").forEach(p => p.classList.remove("selected"));
+  piece.classList.add("selected");
+});
+
 
             pieces.push(piece);
           }
@@ -705,6 +721,16 @@
           rotatePiece(e.target);
         }
       });
+
+      document.getElementById("rotateSelected").addEventListener("click", () => {
+  if (!document.getElementById("rotationMode").checked) return;
+
+  const selected = document.querySelector(".puzzle-piece.selected");
+  if (!selected) return;
+
+  rotatePiece(selected);
+});
+
 
       updateProgress();
       startGame();
