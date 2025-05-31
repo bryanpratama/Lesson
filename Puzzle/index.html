@@ -179,9 +179,8 @@
       }
 
       .puzzle-piece.selected {
-  outline: 2px solid yellow;
-}
-
+        outline: 2px solid yellow;
+      }
 
       #timer {
         margin: 10px 0;
@@ -430,13 +429,12 @@
         puzzleContainer.replaceChild(fromClone, to);
         puzzleContainer.replaceChild(toClone, from);
 
-        fromClone.addEventListener("dragstart", dragStart);
-        fromClone.addEventListener("dragover", dragOver);
-        fromClone.addEventListener("drop", dropPiece);
-
-        toClone.addEventListener("dragstart", dragStart);
-        toClone.addEventListener("dragover", dragOver);
-        toClone.addEventListener("drop", dropPiece);
+        [fromClone, toClone].forEach((clone) => {
+          clone.addEventListener("dragstart", dragStart);
+          clone.addEventListener("dragover", dragOver);
+          clone.addEventListener("drop", dropPiece);
+          addClickToPiece(clone); // ✅ tambahkan listener klik untuk selected
+        });
 
         setTimeout(checkCompletion, 50);
         updateProgress();
@@ -691,6 +689,7 @@
           clone.addEventListener("dragstart", dragStart);
           clone.addEventListener("dragover", dragOver);
           clone.addEventListener("drop", dropPiece);
+          addClickToPiece(clone);
         });
 
         addPieceClickListeners();
@@ -717,27 +716,34 @@
       });
 
       document.getElementById("rotateSelected").addEventListener("click", () => {
-  if (!document.getElementById("rotationMode").checked) return;
+        if (!document.getElementById("rotationMode").checked) return;
 
-  const selected = document.querySelector(".puzzle-piece.selected");
-  if (!selected) return;
+        const selected = document.querySelector(".puzzle-piece.selected");
+        if (!selected) return;
 
-  rotatePiece(selected);
-});
+        rotatePiece(selected);
+      });
 
-function addPieceClickListeners() {
-  const pieces = document.querySelectorAll(".puzzle-piece");
-  pieces.forEach(piece => {
-    piece.addEventListener("click", () => {
-      if (!document.getElementById("rotationMode").checked) return;
+      function addClickToPiece(piece) {
+        piece.addEventListener("click", () => {
+          if (!document.getElementById("rotationMode").checked) return;
 
-      document.querySelectorAll(".puzzle-piece").forEach(p => p.classList.remove("selected"));
-      piece.classList.add("selected");
-    });
-  });
-}
+          document.querySelectorAll(".puzzle-piece").forEach((p) => p.classList.remove("selected"));
+          piece.classList.add("selected");
+        });
+      }
 
+      function addPieceClickListeners() {
+        const pieces = document.querySelectorAll(".puzzle-piece");
+        pieces.forEach((piece) => {
+          piece.addEventListener("click", () => {
+            if (!document.getElementById("rotationMode").checked) return;
 
+            document.querySelectorAll(".puzzle-piece").forEach((p) => p.classList.remove("selected"));
+            piece.classList.add("selected");
+          });
+        });
+      }
 
       updateProgress();
       startGame();
