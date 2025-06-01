@@ -269,6 +269,16 @@
         padding: 10px 15px;
       }
 
+      body.dark-mode #pauseOverlay {
+        background-color: rgba(0, 0, 0);
+        color: #fff;
+      }
+
+      body:not(.dark-mode) #pauseOverlay {
+        background-color: #f0f0f0;
+        color: #000;
+      }
+
       @media (max-width: 500px) {
         #controls {
           flex-direction: column;
