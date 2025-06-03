@@ -118,7 +118,6 @@
         opacity: 0.9;
         transform: translateY(-1px);
         box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
-
       }
 
       .dark-mode button,
@@ -153,7 +152,6 @@
         opacity: 0.9;
         transform: translateY(-1px);
         box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
-
       }
 
       .custom-file-upload {
@@ -188,7 +186,51 @@
         opacity: 0.9;
         transform: translateY(-1px);
         box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
+      }
 
+      .custom-checkbox {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        font-weight: 500;
+        margin: 5px;
+      }
+
+      .custom-checkbox input[type="checkbox"] {
+        display: none;
+      }
+
+      .custom-checkbox .checkmark {
+        height: 18px;
+        width: 18px;
+        border-radius: 4px;
+        background-color: #f4f4f4;
+        border: 2px solid #666;
+        margin-right: 10px;
+        transition: all 0.2s ease;
+        position: relative;
+      }
+
+      .custom-checkbox input[type="checkbox"]:checked + .checkmark::after {
+        content: "";
+        position: absolute;
+        left: 4px;
+        top: 0px;
+        width: 5px;
+        height: 10px;
+        border: solid #333;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+
+      .dark-mode .custom-checkbox .checkmark {
+        background-color: #222;
+        border-color: #888;
+      }
+
+      .dark-mode .custom-checkbox input[type="checkbox"]:checked + .checkmark::after {
+        border-color: #fff;
       }
 
       .puzzle-piece.selected {
@@ -341,10 +383,12 @@
       <div id="progressBarContainer">
         <div id="progressBarFill"></div>
       </div>
-      <label>
+      <label class="custom-checkbox">
         <input type="checkbox" id="rotationMode" />
+        <span class="checkmark"></span>
         Mode Rotasi
       </label>
+
       <button id="rotateSelected">🔄 Rotate</button>
 
       <button id="undoButton">Undo</button>
