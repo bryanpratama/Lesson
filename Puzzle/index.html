@@ -334,6 +334,50 @@
         color: #000;
       }
 
+      .custom-checkbox-button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        background: #f4f4f4;
+        color: #000;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        user-select: none;
+      }
+
+      .custom-checkbox-button:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
+      }
+
+      .custom-checkbox-button input[type="checkbox"] {
+        display: none;
+      }
+
+      .custom-checkbox-button.active {
+        background-color: #ccc;
+        border-color: #333;
+      }
+
+      .dark-mode .custom-checkbox-button {
+        background: #222;
+        color: #fff;
+        border: 1px solid #666;
+      }
+
+      .dark-mode .custom-checkbox-button:hover {
+        box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
+      }
+
+      .dark-mode .custom-checkbox-button.active {
+        background-color: #444;
+      }
+
       @media (max-width: 500px) {
         #controls {
           flex-direction: column;
@@ -383,9 +427,8 @@
       <div id="progressBarContainer">
         <div id="progressBarFill"></div>
       </div>
-      <label class="custom-checkbox">
+      <label id="rotationModeButton" class="custom-checkbox-button">
         <input type="checkbox" id="rotationMode" />
-        <span class="checkmark"></span>
         Mode Rotasi
       </label>
 
@@ -811,6 +854,13 @@
           });
         });
       }
+
+      const rotationCheckbox = document.getElementById("rotationMode");
+      const rotationLabel = document.getElementById("rotationModeButton");
+
+      rotationCheckbox.addEventListener("change", () => {
+        rotationLabel.classList.toggle("active", rotationCheckbox.checked);
+      });
 
       updateProgress();
       startGame();
