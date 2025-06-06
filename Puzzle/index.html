@@ -25,6 +25,18 @@
         border-color: #444;
       }
 
+      button.original-shown {
+        background-color: #ff6666;
+        color: white;
+        border-color: #cc0000;
+      }
+
+      .dark-mode button.original-shown {
+        background-color: #cc4444;
+        color: white;
+        border-color: #990000;
+      }
+
       .dark-mode button {
         background-color: #333;
         color: white;
@@ -626,6 +638,12 @@
         const img = document.getElementById("originalImagePreview");
         img.src = currentImageUrl;
         originalImage.style.display = "block";
+
+        const button = document.querySelector('button[onclick="showOriginal()"]');
+        if (button) {
+          button.classList.add("original-shown");
+          button.disabled = true;
+        }
       }
 
       function formatTime(secs) {
