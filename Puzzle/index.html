@@ -620,6 +620,12 @@
           seconds++;
           timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
         }, 1000);
+
+        const showOriginalBtn = document.querySelector('button[onclick="showOriginal()"]');
+        if (showOriginalBtn) {
+          showOriginalBtn.classList.remove("original-shown");
+          showOriginalBtn.disabled = false;
+        }
       }
 
       document.getElementById("imageUpload").addEventListener("change", function (e) {
