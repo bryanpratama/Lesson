@@ -418,7 +418,7 @@
 
     <div class="controls">
       <button onclick="startGame()">Start New Game</button>
-      <button onclick="showOriginal()">Show Original</button>
+      <button onclick="showOriginal()" id="showOriginal">Show Original</button>
       <label for="imageUpload" class="custom-file-upload">Upload Gambar</label>
       <input type="file" id="imageUpload" accept="image/*" />
       <select id="defaultImageSelector">
@@ -625,6 +625,7 @@
         if (showOriginalBtn) {
           showOriginalBtn.classList.remove("original-shown");
           showOriginalBtn.disabled = false;
+          originalImage.style.display = "none";
         }
       }
 
@@ -645,11 +646,9 @@
         img.src = currentImageUrl;
         originalImage.style.display = "block";
 
-        const button = document.querySelector('button[onclick="showOriginal()"]');
-        if (button) {
-          button.classList.add("original-shown");
-          button.disabled = true;
-        }
+        const button = document.getElementById("showOriginal");
+        button.classList.add("original-shown");
+        button.disabled = true;
       }
 
       function formatTime(secs) {
