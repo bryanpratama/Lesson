@@ -390,6 +390,18 @@
         background-color: #079c07;
       }
 
+      .hint-highlight {
+  animation: pulse 1s ease-in-out infinite;
+  outline: 3px dashed orange !important;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+
       @media (max-width: 500px) {
         #controls {
           flex-direction: column;
@@ -447,6 +459,8 @@
       <button id="rotateSelected">🔄 Rotate</button>
 
       <button id="undoButton">Undo</button>
+
+      <button id="hintButton">🔍 Hint</button>
 
       <button id="pauseButton">Pause</button>
 
@@ -884,6 +898,45 @@
       rotationCheckbox.addEventListener("change", () => {
         rotationLabel.classList.toggle("active", rotationCheckbox.checked);
       });
+
+      document.getElementById("hintButton").addEventListener("click", showHint);
+
+function showHint() {
+  const pieces = puzzleContainer.children;
+  const pieceSize = 300 / gridSize;
+
+  for (let i = 0; i < pieces.length; i++) {
+    const piece = pieces[i];
+    const correctRow = Math.floor(i / gridSize);
+    const correctCol = i % gridSize;
+
+    const expectedX = -correctCol * pieceSize;
+    const expectedY = -correctRow * pieceSize;
+
+    const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
+    const currentX = parseFloat(bgPos[0]);
+    const currentY = parseFloat(bgPos[1]);
+    const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
+
+    const isCorrectPosition = Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1;
+    const isCorrectRotation = currentRotation === 0;
+
+    if (!isCorrectPosition || !isCorrectRotation) {
+      // Hapus highlight sebelumnya
+      document.querySelectorAll(".puzzle-piece").forEach(p => p.classList.remove("hint-highlight"));
+
+      // Tambahkan class untuk highlight
+      piece.classList.add("hint-highlight");
+
+      // Hilangkan highlight setelah beberapa detik
+      setTimeout(() => {
+        piece.classList.remove("hint-highlight");
+      }, 3000);
+      break;
+    }
+  }
+}
+
 
       updateProgress();
       startGame();
