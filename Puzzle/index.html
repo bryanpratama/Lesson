@@ -574,6 +574,8 @@
 
         setTimeout(checkCompletion, 50);
         updateProgress();
+        document.querySelectorAll(".puzzle-piece").forEach(p => p.classList.remove("hint-highlight"));
+
       }
 
       function showCompletionModal(time) {
@@ -843,6 +845,8 @@
         lastSwapped = null;
         updateProgress();
         highlightCorrectPieces();
+        document.querySelectorAll(".puzzle-piece").forEach(p => p.classList.remove("hint-highlight"));
+
       });
 
       function rotatePiece(piece) {
