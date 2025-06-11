@@ -391,16 +391,21 @@
       }
 
       .hint-highlight {
-  animation: pulse 1s ease-in-out infinite;
-  outline: 3px dashed orange !important;
-}
+        animation: pulse 1s ease-in-out infinite;
+        outline: 3px dashed orange !important;
+      }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
 
       @media (max-width: 500px) {
         #controls {
@@ -465,6 +470,8 @@
       <button id="pauseButton">Pause</button>
 
       <div id="timer">Time: 00:00</div>
+
+      <div id="hintCountDisplay">Hint used: 0</div>
     </div>
 
     <div id="puzzle-container"></div>
@@ -494,6 +501,7 @@
       let seconds = 0;
       let gridSize = 3;
       let lastSwapped = null;
+      let hintCount = 0;
 
       function createPieces() {
         pieces = [];
@@ -569,13 +577,12 @@
           clone.addEventListener("dragstart", dragStart);
           clone.addEventListener("dragover", dragOver);
           clone.addEventListener("drop", dropPiece);
-          addClickToPiece(clone); // ✅ tambahkan listener klik untuk selected
+          addClickToPiece(clone);
         });
 
         setTimeout(checkCompletion, 50);
         updateProgress();
-        document.querySelectorAll(".puzzle-piece").forEach(p => p.classList.remove("hint-highlight"));
-
+        document.querySelectorAll(".puzzle-piece").forEach((p) => p.classList.remove("hint-highlight"));
       }
 
       function showCompletionModal(time) {
@@ -643,6 +650,9 @@
           showOriginalBtn.disabled = false;
           originalImage.style.display = "none";
         }
+
+        hintCount = 0;
+        updateHintDisplay();
       }
 
       document.getElementById("imageUpload").addEventListener("change", function (e) {
@@ -845,8 +855,7 @@
         lastSwapped = null;
         updateProgress();
         highlightCorrectPieces();
-        document.querySelectorAll(".puzzle-piece").forEach(p => p.classList.remove("hint-highlight"));
-
+        document.querySelectorAll(".puzzle-piece").forEach((p) => p.classList.remove("hint-highlight"));
       });
 
       function rotatePiece(piece) {
@@ -905,42 +914,43 @@
 
       document.getElementById("hintButton").addEventListener("click", showHint);
 
-function showHint() {
-  const pieces = puzzleContainer.children;
-  const pieceSize = 300 / gridSize;
+      function showHint() {
+        const pieces = puzzleContainer.children;
+        const pieceSize = 300 / gridSize;
 
-  for (let i = 0; i < pieces.length; i++) {
-    const piece = pieces[i];
-    const correctRow = Math.floor(i / gridSize);
-    const correctCol = i % gridSize;
+        for (let i = 0; i < pieces.length; i++) {
+          const piece = pieces[i];
+          const correctRow = Math.floor(i / gridSize);
+          const correctCol = i % gridSize;
 
-    const expectedX = -correctCol * pieceSize;
-    const expectedY = -correctRow * pieceSize;
+          const expectedX = -correctCol * pieceSize;
+          const expectedY = -correctRow * pieceSize;
 
-    const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
-    const currentX = parseFloat(bgPos[0]);
-    const currentY = parseFloat(bgPos[1]);
-    const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
+          const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
+          const currentX = parseFloat(bgPos[0]);
+          const currentY = parseFloat(bgPos[1]);
+          const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
 
-    const isCorrectPosition = Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1;
-    const isCorrectRotation = currentRotation === 0;
+          const isCorrectPosition = Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1;
+          const isCorrectRotation = currentRotation === 0;
 
-    if (!isCorrectPosition || !isCorrectRotation) {
-      // Hapus highlight sebelumnya
-      document.querySelectorAll(".puzzle-piece").forEach(p => p.classList.remove("hint-highlight"));
+          if (!isCorrectPosition || !isCorrectRotation) {
+            hintCount++;
+            updateHintDisplay();
 
-      // Tambahkan class untuk highlight
-      piece.classList.add("hint-highlight");
+            document.querySelectorAll(".puzzle-piece").forEach((p) => p.classList.remove("hint-highlight"));
+            piece.classList.add("hint-highlight");
+            setTimeout(() => {
+              piece.classList.remove("hint-highlight");
+            }, 3000);
+            break;
+          }
+        }
+      }
 
-      // Hilangkan highlight setelah beberapa detik
-      setTimeout(() => {
-        piece.classList.remove("hint-highlight");
-      }, 3000);
-      break;
-    }
-  }
-}
-
+      function updateHintDisplay() {
+        document.getElementById("hintCountDisplay").textContent = `Hint used: ${hintCount}`;
+      }
 
       updateProgress();
       startGame();
