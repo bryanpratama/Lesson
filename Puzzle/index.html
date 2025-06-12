@@ -502,6 +502,8 @@
       let gridSize = 3;
       let lastSwapped = null;
       let hintCount = 0;
+      let stepCount = 0;
+      let score = 0;
 
       function createPieces() {
         pieces = [];
@@ -581,6 +583,8 @@
         });
 
         setTimeout(checkCompletion, 50);
+        stepCount++;
+
         updateProgress();
         document.querySelectorAll(".puzzle-piece").forEach((p) => p.classList.remove("hint-highlight"));
       }
@@ -589,6 +593,18 @@
         const modal = document.getElementById("customModal");
         const message = document.getElementById("modalMessage");
         message.textContent = `🎉 Puzzle Completed in ${time}!`;
+        modal.classList.remove("hidden");
+
+        score = Math.max(0, 1000 - (seconds * 2 + hintCount * 50 + stepCount * 10));
+
+        message.innerHTML = `
+          🎉 Puzzle Completed!<br><br>
+          ⏱ Time: ${time}<br>
+          🔁 Steps: ${stepCount}<br>
+          💡 Hints used: ${hintCount}<br>
+          🧮 Score: <strong>${score}</strong>
+        `;
+
         modal.classList.remove("hidden");
       }
 
@@ -652,6 +668,9 @@
         }
 
         hintCount = 0;
+        stepCount = 0;
+        score = 0;
+
         updateHintDisplay();
       }
 
