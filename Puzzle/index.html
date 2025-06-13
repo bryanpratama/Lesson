@@ -302,6 +302,25 @@
         cursor: pointer;
       }
 
+      .completion-stats {
+        text-align: left;
+        font-size: 16px;
+        line-height: 1.6;
+        padding: 0 10px;
+      }
+
+      .completion-stats .title {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .completion-stats .score {
+        font-weight: bold;
+        color: gold;
+      }
+
       .hidden {
         display: none;
       }
@@ -598,12 +617,14 @@
         score = Math.max(0, 1000 - (seconds * 2 + hintCount * 50 + stepCount * 10));
 
         message.innerHTML = `
-          🎉 Puzzle Completed!<br><br>
-          ⏱ Time: ${time}<br>
-          🔁 Steps: ${stepCount}<br>
-          💡 Hints used: ${hintCount}<br>
-          🧮 Score: <strong>${score}</strong>
-        `;
+  <div class="completion-stats">
+    <div class="title">🎉 Puzzle Completed!</div>
+    <div>⏱ <strong>Time:</strong> ${time}</div>
+    <div>🔁 <strong>Steps:</strong> ${stepCount}</div>
+    <div>💡 <strong>Hints used:</strong> ${hintCount}</div>
+    <div>🧮 <strong>Score:</strong> <span class="score">${score}</span></div>
+  </div>
+`;
 
         modal.classList.remove("hidden");
       }
