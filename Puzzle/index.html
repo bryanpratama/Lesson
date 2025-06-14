@@ -321,6 +321,23 @@
         color: gold;
       }
 
+      .completion-stats .gold {
+        color: gold;
+        font-weight: bold;
+      }
+      .completion-stats .silver {
+        color: silver;
+        font-weight: bold;
+      }
+      .completion-stats .bronze {
+        color: peru;
+        font-weight: bold;
+      }
+      .completion-stats .fail {
+        color: red;
+        font-weight: bold;
+      }
+
       .hidden {
         display: none;
       }
@@ -611,20 +628,30 @@
       function showCompletionModal(time) {
         const modal = document.getElementById("customModal");
         const message = document.getElementById("modalMessage");
-        message.textContent = `🎉 Puzzle Completed in ${time}!`;
-        modal.classList.remove("hidden");
-
+        
         score = Math.max(0, 1000 - (seconds * 2 + hintCount * 50 + stepCount * 10));
 
+        let medal = "";
+        if (score >= 800) {
+          medal = "🥇 Gold Medal";
+        } else if (score >= 500) {
+          medal = "🥈 Silver Medal";
+        } else if (score >= 200) {
+          medal = "🥉 Bronze Medal";
+        } else {
+          medal = "🤡 No Medal";
+        }
+
         message.innerHTML = `
-  <div class="completion-stats">
-    <div class="title">🎉 Puzzle Completed!</div>
-    <div>⏱ <strong>Time:</strong> ${time}</div>
-    <div>🔁 <strong>Steps:</strong> ${stepCount}</div>
-    <div>💡 <strong>Hints used:</strong> ${hintCount}</div>
-    <div>🧮 <strong>Score:</strong> <span class="score">${score}</span></div>
-  </div>
-`;
+    <div class="completion-stats">
+      <div class="title">🎉 Puzzle Completed!</div>
+      <div>⏱ <strong>Time:</strong> ${time}</div>
+      <div>🔁 <strong>Steps:</strong> ${stepCount}</div>
+      <div>💡 <strong>Hints used:</strong> ${hintCount}</div>
+      <div>🧮 <strong>Score:</strong> <span class="score">${score}</span></div>
+      <div>🏅 <strong>Rank:</strong> ${medal}</div>
+    </div>
+  `;
 
         modal.classList.remove("hidden");
       }
