@@ -303,10 +303,13 @@
       }
 
       .completion-stats {
-        text-align: left;
         font-size: 16px;
-        line-height: 1.6;
+        line-height: 1.8;
         padding: 0 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        text-align: left;
       }
 
       .completion-stats .title {
@@ -336,6 +339,40 @@
       .completion-stats .fail {
         color: red;
         font-weight: bold;
+      }
+
+      .stat-row {
+        display: grid;
+        grid-template-columns: 130px 1fr;
+        align-items: center;
+      }
+
+      .stat-row .label {
+        font-weight: 500;
+      }
+
+      .stat-row .value {
+        font-weight: bold;
+      }
+
+      .stat-row .score {
+        color: gold;
+      }
+
+      .stat-row .gold {
+        color: gold;
+      }
+
+      .stat-row .silver {
+        color: silver;
+      }
+
+      .stat-row .bronze {
+        color: peru;
+      }
+
+      .stat-row .fail {
+        color: red;
       }
 
       .hidden {
@@ -628,28 +665,34 @@
       function showCompletionModal(time) {
         const modal = document.getElementById("customModal");
         const message = document.getElementById("modalMessage");
-        
+
         score = Math.max(0, 1000 - (seconds * 2 + hintCount * 50 + stepCount * 10));
 
         let medal = "";
+        let rankClass = "";
+
         if (score >= 800) {
           medal = "🥇 Gold Medal";
+          rankClass = "gold";
         } else if (score >= 500) {
           medal = "🥈 Silver Medal";
+          rankClass = "silver";
         } else if (score >= 200) {
           medal = "🥉 Bronze Medal";
+          rankClass = "bronze";
         } else {
           medal = "🤡 No Medal";
+          rankClass = "fail";
         }
 
         message.innerHTML = `
     <div class="completion-stats">
       <div class="title">🎉 Puzzle Completed!</div>
-      <div>⏱ <strong>Time:</strong> ${time}</div>
-      <div>🔁 <strong>Steps:</strong> ${stepCount}</div>
-      <div>💡 <strong>Hints used:</strong> ${hintCount}</div>
-      <div>🧮 <strong>Score:</strong> <span class="score">${score}</span></div>
-      <div>🏅 <strong>Rank:</strong> ${medal}</div>
+      <div class="stat-row"><span class="label">⏱ Time</span><span class="value">${time}</span></div>
+      <div class="stat-row"><span class="label">🔁 Steps</span><span class="value">${stepCount}</span></div>
+      <div class="stat-row"><span class="label">💡 Hints used</span><span class="value">${hintCount}</span></div>
+      <div class="stat-row"><span class="label">🧮 Score</span><span class="value score">${score}</span></div>
+      <div class="stat-row"><span class="label">🏅 Rank</span><span class="value ${rankClass}">${medal}</span></div>
     </div>
   `;
 
