@@ -341,6 +341,46 @@
         font-weight: bold;
       }
 
+      .leaderboard {
+        font-size: 16px;
+        text-align: left;
+        padding: 0 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .leaderboard .title {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .board-block {
+        border-top: 1px solid #666;
+        padding-top: 10px;
+      }
+
+      .diff-row {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .stat-row {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 5px;
+      }
+
+      .stat-row .label {
+        font-weight: 500;
+      }
+
+      .stat-row .value {
+        font-weight: bold;
+      }
+
       .stat-row {
         display: grid;
         grid-template-columns: 130px 1fr;
@@ -1087,10 +1127,15 @@
 
         for (const diff in data) {
           const entry = data[diff];
-          html += `🧩 ${diff}x${diff}<br>
-      Score: <strong>${entry.score}</strong><br>
-      Time: ${entry.time}<br>
-      Steps: ${entry.steps}, Hints: ${entry.hints}<br><br>`;
+          html += `
+      <div class="board-block">
+        <div class="diff-row">🧩 ${diff}x${diff}</div>
+        <div class="stat-row"><span class="label">Score</span><span class="value">${entry.score}</span></div>
+        <div class="stat-row"><span class="label">Time</span><span class="value">${entry.time}</span></div>
+        <div class="stat-row"><span class="label">Steps</span><span class="value">${entry.steps}</span></div>
+        <div class="stat-row"><span class="label">Hints</span><span class="value">${entry.hints}</span></div>
+      </div>
+    `;
         }
 
         html += `</div>`;
