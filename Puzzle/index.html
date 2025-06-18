@@ -302,6 +302,37 @@
         cursor: pointer;
       }
 
+      .reset-container {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.reset-btn {
+  background-color: #ff4444;
+  color: white;
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reset-btn:hover {
+  background-color: #cc0000;
+}
+
+.dark-mode .reset-btn {
+  background-color: #aa2222;
+  color: #fff;
+}
+
+.dark-mode .reset-btn:hover {
+  background-color: #880000;
+}
+
+
+
       .completion-stats {
         font-size: 16px;
         line-height: 1.8;
@@ -1128,14 +1159,19 @@
         for (const diff in data) {
           const entry = data[diff];
           html += `
-      <div class="board-block">
+
+           <div class="board-block">
         <div class="diff-row">🧩 ${diff}x${diff}</div>
         <div class="stat-row"><span class="label">Score</span><span class="value">${entry.score}</span></div>
         <div class="stat-row"><span class="label">Time</span><span class="value">${entry.time}</span></div>
         <div class="stat-row"><span class="label">Steps</span><span class="value">${entry.steps}</span></div>
         <div class="stat-row"><span class="label">Hints</span><span class="value">${entry.hints}</span></div>
       </div>
-    `;
+  <div class="reset-container">
+    <button onclick="clearLeaderboard()" class="reset-btn">🗑️ Reset Leaderboard</button>
+  </div>
+</div>`;
+
         }
 
         html += `</div>`;
