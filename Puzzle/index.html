@@ -370,6 +370,10 @@
         font-weight: bold;
       }
 
+      .custom-checkbox input[type="checkbox"] {
+        margin-right: 10px;
+      }
+
       .leaderboard {
         font-size: 16px;
         text-align: left;
@@ -603,6 +607,12 @@
         Mode Rotasi
       </label>
 
+      <label class="custom-checkbox">
+        <input type="checkbox" id="challengeMode" />
+        <span class="checkmark"></span>
+        Mode Tantangan (2 menit)
+      </label>
+
       <button onclick="showLeaderboard()">🏆 Leaderboard</button>
 
       <button id="rotateSelected">🔄 Rotate</button>
@@ -649,6 +659,9 @@
       let hintCount = 0;
       let stepCount = 0;
       let score = 0;
+      let isChallengeMode = false;
+      let challengeTimeLeft = 120;
+      let challengeTimer = null;
 
       function createPieces() {
         pieces = [];
@@ -802,6 +815,10 @@
           return isCorrectPosition && isCorrectRotation;
         });
 
+        if (isChallengeMode) {
+          clearInterval(challengeTimer);
+        }
+
         if (allCorrect) {
           clearInterval(timer);
           setTimeout(() => {
@@ -832,6 +849,35 @@
           showOriginalBtn.classList.remove("original-shown");
           showOriginalBtn.disabled = false;
           originalImage.style.display = "none";
+        }
+
+        isChallengeMode = document.getElementById("challengeMode").checked;
+
+        if (isChallengeMode) {
+          //setTimer
+          challengeTimeLeft = 120;
+          timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
+
+          clearInterval(challengeTimer);
+          challengeTimer = setInterval(() => {
+            challengeTimeLeft--;
+            timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
+
+            if (challengeTimeLeft <= 0) {
+              clearInterval(challengeTimer);
+              clearInterval(timer); 
+              alert("⏱️ Waktu habis! Kamu gagal menyelesaikan puzzle.");
+            }
+          }, 1000);
+        } else {
+          
+          clearInterval(timer);
+          seconds = 0;
+          timerDisplay.textContent = "Time: 00:00";
+          timer = setInterval(() => {
+            seconds++;
+            timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
+          }, 1000);
         }
 
         hintCount = 0;
