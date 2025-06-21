@@ -370,6 +370,12 @@
         font-weight: bold;
       }
 
+      #challengeModeSelect {
+  margin-left: 10px;
+  padding: 4px;
+}
+
+
       .custom-checkbox input[type="checkbox"] {
         margin-right: 10px;
       }
@@ -607,11 +613,16 @@
         Mode Rotasi
       </label>
 
-      <label class="custom-checkbox">
-        <input type="checkbox" id="challengeMode" />
-        <span class="checkmark"></span>
-        Mode Tantangan (2 menit)
-      </label>
+      <label>
+  Mode Tantangan:
+  <select id="challengeModeSelect">
+    <option value="0">Nonaktif</option>
+    <option value="60">1 Menit</option>
+    <option value="120" selected>2 Menit</option>
+    <option value="300">5 Menit</option>
+  </select>
+</label>
+
 
       <button onclick="showLeaderboard()">🏆 Leaderboard</button>
 
@@ -815,6 +826,8 @@
           return isCorrectPosition && isCorrectRotation;
         });
 
+        if (isChallengeMode) clearInterval(challengeTimer);
+
         if (isChallengeMode) {
           clearInterval(challengeTimer);
         }
@@ -851,34 +864,36 @@
           originalImage.style.display = "none";
         }
 
-        isChallengeMode = document.getElementById("challengeMode").checked;
 
-        if (isChallengeMode) {
-          //setTimer
-          challengeTimeLeft = 120;
-          timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
+        clearInterval(timer);
+clearInterval(challengeTimer);
+seconds = 0;
+challengeTimeLeft = 0;
 
-          clearInterval(challengeTimer);
-          challengeTimer = setInterval(() => {
-            challengeTimeLeft--;
-            timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
+const challengeValue = parseInt(document.getElementById("challengeModeSelect").value);
+isChallengeMode = challengeValue > 0;
 
-            if (challengeTimeLeft <= 0) {
-              clearInterval(challengeTimer);
-              clearInterval(timer); 
-              alert("⏱️ Waktu habis! Kamu gagal menyelesaikan puzzle.");
-            }
-          }, 1000);
-        } else {
-          
-          clearInterval(timer);
-          seconds = 0;
-          timerDisplay.textContent = "Time: 00:00";
-          timer = setInterval(() => {
-            seconds++;
-            timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
-          }, 1000);
-        }
+if (isChallengeMode) {
+  challengeTimeLeft = challengeValue;
+  timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
+
+  challengeTimer = setInterval(() => {
+    challengeTimeLeft--;
+    timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
+    if (challengeTimeLeft <= 0) {
+      clearInterval(challengeTimer);
+      alert("⏱️ Waktu habis! Kamu gagal menyelesaikan puzzle.");
+    }
+  }, 1000);
+} else {
+  timerDisplay.textContent = "Time: 00:00";
+  timer = setInterval(() => {
+    seconds++;
+    timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
+  }, 1000);
+}
+
+
 
         hintCount = 0;
         stepCount = 0;
