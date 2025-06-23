@@ -371,10 +371,9 @@
       }
 
       #challengeModeSelect {
-  margin-left: 10px;
-  padding: 4px;
-}
-
+        margin-left: 10px;
+        padding: 4px;
+      }
 
       .custom-checkbox input[type="checkbox"] {
         margin-right: 10px;
@@ -452,6 +451,20 @@
 
       .stat-row .fail {
         color: red;
+      }
+
+      .highlight-preview {
+        outline: 4px dashed orange;
+        animation: pulseBorder 0.5s ease-in-out infinite alternate;
+      }
+
+      @keyframes pulseBorder {
+        from {
+          outline-offset: 0px;
+        }
+        to {
+          outline-offset: 4px;
+        }
       }
 
       .hidden {
@@ -614,21 +627,22 @@
       </label>
 
       <label>
-  Mode Tantangan:
-  <select id="challengeModeSelect">
-    <option value="0" selected>Nonaktif</option>
-    <option value="60">1 Menit</option>
-    <option value="120" >2 Menit</option>
-    <option value="300">5 Menit</option>
-  </select>
-</label>
-
+        Mode Tantangan:
+        <select id="challengeModeSelect">
+          <option value="0" selected>Nonaktif</option>
+          <option value="60">1 Menit</option>
+          <option value="120">2 Menit</option>
+          <option value="300">5 Menit</option>
+        </select>
+      </label>
 
       <button onclick="showLeaderboard()">🏆 Leaderboard</button>
 
       <button id="rotateSelected">🔄 Rotate</button>
 
       <button id="undoButton">Undo</button>
+
+      <button onclick="previewLastSwap()">👀 Lihat Langkah Terakhir</button>
 
       <button id="hintButton">🔍 Hint</button>
 
@@ -673,6 +687,7 @@
       let isChallengeMode = false;
       let challengeTimeLeft = 120;
       let challengeTimer = null;
+      let lastSwap = null;
 
       function createPieces() {
         pieces = [];
@@ -750,6 +765,9 @@
           clone.addEventListener("drop", dropPiece);
           addClickToPiece(clone);
         });
+
+        lastSwap = [fromClone, toClone];
+
 
         setTimeout(checkCompletion, 50);
         stepCount++;
@@ -864,36 +882,33 @@
           originalImage.style.display = "none";
         }
 
-
         clearInterval(timer);
-clearInterval(challengeTimer);
-seconds = 0;
-challengeTimeLeft = 0;
+        clearInterval(challengeTimer);
+        seconds = 0;
+        challengeTimeLeft = 0;
 
-const challengeValue = parseInt(document.getElementById("challengeModeSelect").value);
-isChallengeMode = challengeValue > 0;
+        const challengeValue = parseInt(document.getElementById("challengeModeSelect").value);
+        isChallengeMode = challengeValue > 0;
 
-if (isChallengeMode) {
-  challengeTimeLeft = challengeValue;
-  timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
+        if (isChallengeMode) {
+          challengeTimeLeft = challengeValue;
+          timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
 
-  challengeTimer = setInterval(() => {
-    challengeTimeLeft--;
-    timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
-    if (challengeTimeLeft <= 0) {
-      clearInterval(challengeTimer);
-      alert("⏱️ Waktu habis! Kamu gagal menyelesaikan puzzle.");
-    }
-  }, 1000);
-} else {
-  timerDisplay.textContent = "Time: 00:00";
-  timer = setInterval(() => {
-    seconds++;
-    timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
-  }, 1000);
-}
-
-
+          challengeTimer = setInterval(() => {
+            challengeTimeLeft--;
+            timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
+            if (challengeTimeLeft <= 0) {
+              clearInterval(challengeTimer);
+              alert("⏱️ Waktu habis! Kamu gagal menyelesaikan puzzle.");
+            }
+          }, 1000);
+        } else {
+          timerDisplay.textContent = "Time: 00:00";
+          timer = setInterval(() => {
+            seconds++;
+            timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
+          }, 1000);
+        }
 
         hintCount = 0;
         stepCount = 0;
@@ -1243,6 +1258,20 @@ if (isChallengeMode) {
       function clearLeaderboard() {
         localStorage.removeItem(LEADERBOARD_KEY);
         alert("Leaderboard cleared.");
+      }
+
+      function previewLastSwap() {
+        if (!lastSwap) return;
+
+        lastSwap.forEach((piece) => {
+          piece.classList.add("highlight-preview");
+        });
+
+        setTimeout(() => {
+          lastSwap.forEach((piece) => {
+            piece.classList.remove("highlight-preview");
+          });
+        }, 3000);
       }
 
       updateProgress();
