@@ -768,7 +768,6 @@
 
         lastSwap = [fromClone, toClone];
 
-
         setTimeout(checkCompletion, 50);
         stepCount++;
 
@@ -1261,6 +1260,10 @@
       }
 
       function previewLastSwap() {
+        document.querySelectorAll(".highlight-preview").forEach((p) => {
+          p.classList.remove("highlight-preview");
+        });
+
         if (!lastSwap) return;
 
         lastSwap.forEach((piece) => {
@@ -1268,7 +1271,7 @@
         });
 
         setTimeout(() => {
-          lastSwap.forEach((piece) => {
+          lastSwap?.forEach((piece) => {
             piece.classList.remove("highlight-preview");
           });
         }, 3000);
