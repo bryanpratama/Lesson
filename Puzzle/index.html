@@ -395,6 +395,35 @@
         margin-bottom: 10px;
       }
 
+      .lifetime-stats {
+        font-size: 16px;
+        text-align: left;
+        padding: 0 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .lifetime-stats .title {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .lifetime-stats .stat-row {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+      }
+
+      .lifetime-stats .label {
+        font-weight: 500;
+      }
+
+      .lifetime-stats .value {
+        font-weight: bold;
+      }
+
       .board-block {
         border-top: 1px solid #666;
         padding-top: 10px;
@@ -638,6 +667,8 @@
 
       <button onclick="showLeaderboard()">🏆 Leaderboard</button>
 
+      <button onclick="showStats()">📊 Statistik</button>
+
       <button id="rotateSelected">🔄 Rotate</button>
 
       <button id="undoButton">Undo</button>
@@ -688,6 +719,7 @@
       let challengeTimeLeft = 120;
       let challengeTimer = null;
       let lastSwap = null;
+      const STATS_KEY = "jigsawStats";
 
       function createPieces() {
         pieces = [];
@@ -848,6 +880,8 @@
         if (isChallengeMode) {
           clearInterval(challengeTimer);
         }
+
+        updateLifetimeStats(score, seconds, hintCount);
 
         if (allCorrect) {
           clearInterval(timer);
@@ -1275,6 +1309,52 @@
             piece.classList.remove("highlight-preview");
           });
         }, 3000);
+      }
+
+      function updateLifetimeStats(score, time, hints) {
+        const stats = JSON.parse(localStorage.getItem(STATS_KEY)) || {
+          totalGames: 0,
+          totalTime: 0,
+          totalScore: 0,
+          totalHints: 0,
+        };
+
+        stats.totalGames += 1;
+        stats.totalTime += time;
+        stats.totalScore += score;
+        stats.totalHints += hints;
+
+        localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+      }
+
+      function showStats() {
+        const stats = JSON.parse(localStorage.getItem(STATS_KEY)) || {
+          totalGames: 0,
+          totalTime: 0,
+          totalScore: 0,
+          totalHints: 0,
+        };
+
+        const avgScore = stats.totalGames > 0 ? Math.round(stats.totalScore / stats.totalGames) : 0;
+
+        const html = `
+    <div class="lifetime-stats">
+      <div class="title">📊 Statistik Lifetime</div>
+      <div class="stat-row"><span class="label">🧩 Total Puzzle</span><span class="value">${
+        stats.totalGames
+      }</span></div>
+      <div class="stat-row"><span class="label">⏱️ Total Waktu</span><span class="value">${formatTime(
+        stats.totalTime
+      )}</span></div>
+      <div class="stat-row"><span class="label">🎯 Rata-rata Skor</span><span class="value">${avgScore}</span></div>
+      <div class="stat-row"><span class="label">💡 Total Hint</span><span class="value">${stats.totalHints}</span></div>
+    </div>
+  `;
+
+        const modal = document.getElementById("customModal");
+        const message = document.getElementById("modalMessage");
+        message.innerHTML = html;
+        modal.classList.remove("hidden");
       }
 
       updateProgress();
