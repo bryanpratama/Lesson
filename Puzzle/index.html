@@ -875,16 +875,12 @@
           return isCorrectPosition && isCorrectRotation;
         });
 
-        if (isChallengeMode) clearInterval(challengeTimer);
-
-        if (isChallengeMode) {
-          clearInterval(challengeTimer);
-        }
-
-        updateLifetimeStats(score, seconds, hintCount);
-
         if (allCorrect) {
+          if (isChallengeMode) clearInterval(challengeTimer);
+
           clearInterval(timer);
+          updateLifetimeStats(score, seconds, hintCount);
+
           setTimeout(() => {
             showCompletionModal(formatTime(seconds));
           }, 100);
