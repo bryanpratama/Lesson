@@ -1052,6 +1052,8 @@
       }
 
       function updateProgress() {
+        document.querySelectorAll(".puzzle-piece").forEach((p) => p.classList.remove("highlight-correct"));
+
         const pieces = puzzleContainer.children;
         const pieceSize = 300 / gridSize;
         let correctCount = 0;
