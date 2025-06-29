@@ -900,6 +900,7 @@
 
           clearInterval(timer);
           updateLifetimeStats(score, seconds, hintCount);
+          disablePuzzleInteraction();
 
           setTimeout(() => {
             showCompletionModal(formatTime(seconds));
@@ -1386,6 +1387,18 @@
           alert("Statistik lifetime telah direset.");
           showStats(); // tampilkan lagi statistik yang kosong
         }
+      }
+
+      function disablePuzzleInteraction() {
+        const pieces = document.querySelectorAll(".puzzle-piece");
+        pieces.forEach((piece) => {
+          piece.setAttribute("draggable", "false");
+          piece.style.cursor = "default";
+          piece.removeEventListener("click", rotatePiece);
+          piece.removeEventListener("dragstart", dragStart);
+          piece.removeEventListener("dragover", dragOver);
+          piece.removeEventListener("drop", dropPiece);
+        });
       }
 
       updateProgress();
