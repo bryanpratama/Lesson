@@ -656,6 +656,16 @@
         <option value="">Pilih gambar default...</option>
       </select>
 
+      <div id="previewContainer" style="text-align: center">
+        <p style="margin: 0">Preview Gambar:</p>
+        <img
+          id="previewImage"
+          src=""
+          alt="Preview"
+          style="max-width: 200px; border: 2px solid #888; border-radius: 6px; margin-top: 5px"
+        />
+      </div>
+
       <select id="difficulty">
         <option value="3">Easy (3x3)</option>
         <option value="4">Medium (4x4)</option>
@@ -740,6 +750,12 @@
       let challengeTimer = null;
       let lastSwap = null;
       const STATS_KEY = "jigsawStats";
+
+      function updatePreviewImage(url) {
+        const preview = document.getElementById("previewImage");
+        preview.src = url;
+        preview.style.display = "block";
+      }
 
       function createPieces() {
         pieces = [];
@@ -909,6 +925,8 @@
       }
 
       function startGame() {
+        document.getElementById("previewImage").style.display = "none";
+
         const selectedDifficulty = document.getElementById("difficulty").value;
         gridSize = parseInt(selectedDifficulty);
         createPieces();
@@ -973,7 +991,7 @@
           const reader = new FileReader();
           reader.onload = function (event) {
             currentImageUrl = event.target.result;
-            startGame();
+            updatePreviewImage(currentImageUrl);
           };
           reader.readAsDataURL(file);
         }
@@ -1013,6 +1031,8 @@
         if (localStorage.getItem("theme") === "dark") {
           document.body.classList.add("dark-mode");
         }
+
+        updatePreviewImage(currentImageUrl);
       });
 
       document.getElementById("highlightButton").addEventListener("click", highlightCorrectPieces);
@@ -1129,13 +1149,8 @@
       defaultImageSelector.addEventListener("change", (e) => {
         const imageUrl = e.target.value;
         if (imageUrl) {
-          const img = new Image();
-          img.crossOrigin = "anonymous";
-          img.onload = () => {
-            originalImage.src = imageUrl;
-            startGameWithImage(img);
-          };
-          img.src = imageUrl;
+          currentImageUrl = imageUrl;
+          updatePreviewImage(imageUrl); // ✅ hanya update preview
         }
       });
 
