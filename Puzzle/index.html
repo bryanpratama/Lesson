@@ -609,6 +609,24 @@
         outline: 3px dashed orange !important;
       }
 
+      #previewContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      #previewContainer p {
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      #previewImage {
+        max-width: 200px;
+        border: 2px solid #888;
+        border-radius: 6px;
+      }
+
       @keyframes pulse {
         0% {
           transform: scale(1);
@@ -656,14 +674,9 @@
         <option value="">Pilih gambar default...</option>
       </select>
 
-      <div id="previewContainer" style="text-align: center">
-        <p style="margin: 0">Preview Gambar:</p>
-        <img
-          id="previewImage"
-          src=""
-          alt="Preview"
-          style="max-width: 200px; border: 2px solid #888; border-radius: 6px; margin-top: 5px"
-        />
+      <div id="previewContainer">
+        <p>Preview Gambar:</p>
+        <img id="previewImage" src="" alt="Preview" />
       </div>
 
       <select id="difficulty">
