@@ -627,6 +627,15 @@
         border-radius: 6px;
       }
 
+      button.end-game {
+        background-color: #cc0000;
+        color: white;
+      }
+
+      button.end-game:hover {
+        background-color: #a00000;
+      }
+
       @keyframes pulse {
         0% {
           transform: scale(1);
@@ -725,6 +734,8 @@
       <div id="timer">Time: 00:00</div>
 
       <div id="hintCountDisplay">Hint used: 0</div>
+
+      <button class="end-game" onclick="endGame()">🛑 End Game</button>
     </div>
 
     <div id="puzzle-container"></div>
@@ -935,6 +946,32 @@
             showCompletionModal(formatTime(seconds));
           }, 100);
         }
+      }
+
+      function endGame() {
+        if (!document.querySelector(".puzzle-piece")) return;
+
+        clearInterval(timer);
+        if (isChallengeMode) clearInterval(challengeTimer);
+
+        disablePuzzleInteraction();
+
+        showEndModal();
+      }
+
+      function showEndModal() {
+        const modal = document.getElementById("customModal");
+        const message = document.getElementById("modalMessage");
+
+        message.innerHTML = `
+    <div style="text-align:center">
+      <h3>😓 Puzzle Tidak Diselesaikan</h3>
+      <p>Kamu menyerah. Puzzle belum selesai.</p>
+      <p>Ingin coba lagi?</p>
+    </div>
+  `;
+
+        modal.classList.remove("hidden");
       }
 
       function startGame() {
@@ -1163,7 +1200,7 @@
         const imageUrl = e.target.value;
         if (imageUrl) {
           currentImageUrl = imageUrl;
-          updatePreviewImage(imageUrl); // ✅ hanya update preview
+          updatePreviewImage(imageUrl);
         }
       });
 
@@ -1413,7 +1450,7 @@
         if (confirm("Yakin ingin menghapus semua statistik lifetime?")) {
           localStorage.removeItem(STATS_KEY);
           alert("Statistik lifetime telah direset.");
-          showStats(); // tampilkan lagi statistik yang kosong
+          showStats();
         }
       }
 
