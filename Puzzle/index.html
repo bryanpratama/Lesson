@@ -676,7 +676,6 @@
 
     <div class="controls">
       <button onclick="startGame()">Start New Game</button>
-      <button onclick="showOriginal()" id="showOriginal">Show Original</button>
       <label for="imageUpload" class="custom-file-upload">Upload Gambar</label>
       <input type="file" id="imageUpload" accept="image/*" />
       <select id="defaultImageSelector">
@@ -697,11 +696,8 @@
         <option value="8">Godlike (8x8)</option>
       </select>
       <button id="toggleDarkMode">Toggle Dark Mode</button>
-      <button id="highlightButton">Highlight Posisi Benar</button>
-      <div id="progress" style="margin-top: 10px; font-weight: bold">Progress: 0%</div>
-      <div id="progressBarContainer">
-        <div id="progressBarFill"></div>
-      </div>
+      
+
       <label id="rotationModeButton" class="custom-checkbox-button">
         <input type="checkbox" id="rotationMode" />
         Mode Rotasi
@@ -720,6 +716,15 @@
       <button onclick="showLeaderboard()">🏆 Leaderboard</button>
 
       <button onclick="showStats()">📊 Statistik</button>
+
+      <div id="progress" style="margin-top: 10px; font-weight: bold">Progress: 0%</div>
+      <div id="progressBarContainer">
+        <div id="progressBarFill"></div>
+      </div>
+
+      <button onclick="showOriginal()" id="showOriginal">Show Original</button>
+
+      <button id="highlightButton">Highlight Posisi Benar</button>
 
       <button id="rotateSelected">🔄 Rotate</button>
 
