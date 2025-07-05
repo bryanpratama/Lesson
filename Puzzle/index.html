@@ -604,6 +604,22 @@
         background-color: #079c07;
       }
 
+      .custom-select {
+        padding: 6px 12px;
+        font-size: 14px;
+        border: 1px solid #555;
+        border-radius: 6px;
+        background-color: #111;
+        color: #fff;
+        cursor: pointer;
+        margin: 5px;
+      }
+
+      .custom-select:focus {
+        outline: none;
+        border-color: #888;
+      }
+
       .hint-highlight {
         animation: pulse 1s ease-in-out infinite;
         outline: 3px dashed orange !important;
@@ -696,22 +712,18 @@
         <option value="8">Godlike (8x8)</option>
       </select>
       <button id="toggleDarkMode">Toggle Dark Mode</button>
-      
 
       <label id="rotationModeButton" class="custom-checkbox-button">
         <input type="checkbox" id="rotationMode" />
         Mode Rotasi
       </label>
 
-      <label>
-        Mode Tantangan:
-        <select id="challengeModeSelect">
-          <option value="0" selected>Nonaktif</option>
-          <option value="60">1 Menit</option>
-          <option value="120">2 Menit</option>
-          <option value="300">5 Menit</option>
-        </select>
-      </label>
+      <select id="challengeModeSelect" class="custom-select">
+        <option value="0" selected>Nonaktif</option>
+        <option value="60">1 Menit</option>
+        <option value="120">2 Menit</option>
+        <option value="300">5 Menit</option>
+      </select>
 
       <button onclick="showLeaderboard()">🏆 Leaderboard</button>
 
