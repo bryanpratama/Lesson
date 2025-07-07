@@ -97,7 +97,7 @@
       .puzzle-piece {
         width: 100px;
         height: 100px;
-        background-image: url("image1.jpg");
+        background-image: url("image/image1.jpg");
         background-size: 300px 300px;
         box-sizing: border-box;
         border: 1px solid #ccc;
@@ -266,7 +266,7 @@
         position: relative;
       }
       .piece {
-        background-image: url("image1.jpg");
+        background-image: url("image/image1.jpg");
         background-size: 450px 450px;
         cursor: grab;
       }
@@ -774,7 +774,7 @@
     <div id="puzzle-container"></div>
 
     <div id="original-image" style="display: none">
-      <img id="originalImagePreview" src="image1.jpg" alt="Original Image" width="300" />
+      <img id="originalImagePreview" src="image/image1.jpg" alt="Original Image" width="300" />
     </div>
     <div id="customModal" class="modal hidden">
       <div class="modal-content">
@@ -793,7 +793,7 @@
       const originalImage = document.getElementById("original-image");
       const LEADERBOARD_KEY = "jigsawLeaderboard";
 
-      let currentImageUrl = "image1.jpg";
+      let currentImageUrl = "image/image1.jpg";
       let pieces = [];
       let timer;
       let seconds = 0;
