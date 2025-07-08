@@ -636,6 +636,31 @@
         border-color: #888;
       }
 
+      .select-button select {
+        appearance: none;
+        background-color: #111;
+        color: white;
+        padding: 6px 16px;
+        font-size: 14px;
+        font-weight: 500;
+        border: 1px solid #555;
+        border-radius: 6px;
+        height: 36px;
+        cursor: pointer;
+        margin: 5px;
+      }
+
+      .select-button select:focus {
+        outline: none;
+        border-color: #888;
+      }
+
+      .dark-mode .select-button select {
+        background-color: #222;
+        color: #eee;
+        border-color: #777;
+      }
+
       .hint-highlight {
         animation: pulse 1s ease-in-out infinite;
         outline: 3px dashed orange !important;
@@ -734,12 +759,14 @@
         Mode Rotasi
       </label>
 
-      <select id="challengeModeSelect" class="custom-select">
-        <option value="0" selected>Nonaktif</option>
-        <option value="60">1 Menit</option>
-        <option value="120">2 Menit</option>
-        <option value="300">5 Menit</option>
-      </select>
+      <div class="select-button">
+        <select id="challengeModeSelect">
+          <option value="0">🎯 Mode Tantangan: Nonaktif</option>
+          <option value="60">🎯 Mode Tantangan: 1 Menit</option>
+          <option value="120">🎯 Mode Tantangan: 2 Menit</option>
+          <option value="300">🎯 Mode Tantangan: 5 Menit</option>
+        </select>
+      </div>
 
       <button onclick="showLeaderboard()">🏆 Leaderboard</button>
 
