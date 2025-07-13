@@ -21,26 +21,52 @@
         color: #f0f0f0;
       }
 
+      .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 500;
+        border: none;
+        border-radius: 8px;
+        background: #f4f4f4;
+        color: black;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        margin: 5px;
+      }
+
+      .btn:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
+      }
+
+      .dark-mode .btn {
+        background: #222;
+        color: #f0f0f0;
+        border: 1px solid #666;
+      }
+
+      .dark-mode .btn:hover {
+        box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
+      }
+
+      .btn-danger {
+        background-color: #cc0000;
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background-color: #a00000;
+      }
+
+      .dark-mode .btn-danger {
+        background-color: #880000;
+        color: #fff;
+      }
+
       .dark-mode .puzzle-piece {
         border-color: #444;
-      }
-
-      button.original-shown {
-        background-color: #ff6666;
-        color: white;
-        border-color: #cc0000;
-      }
-
-      .dark-mode button.original-shown {
-        background-color: #cc4444;
-        color: white;
-        border-color: #990000;
-      }
-
-      .dark-mode button {
-        background-color: #333;
-        color: white;
-        border: 1px solid #666;
       }
 
       .dark-mode .swal2-popup {
@@ -108,40 +134,6 @@
         margin-bottom: 20px;
       }
 
-      button,
-      select {
-        padding: 10px 20px;
-        margin: 5px;
-        font-size: 16px;
-        font-weight: 500;
-        border: 2px;
-        border-radius: 8px;
-        background: #f4f4f4;
-        color: black;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-      }
-
-      button:hover,
-      select:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
-      }
-
-      .dark-mode button,
-      .dark-mode select {
-        background: #222;
-        color: #f0f0f0;
-        border: 1px solid #666;
-      }
-
-      select {
-        background-color: #f0f0f0;
-        color: #000;
-      }
-
       .dark-mode select {
         background-color: #222;
         color: #fff;
@@ -155,13 +147,6 @@
 
       input[type="file"] {
         display: none;
-      }
-
-      .dark-mode button:hover,
-      .dark-mode select:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-        box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
       }
 
       .custom-file-upload {
@@ -229,40 +214,6 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
       }
 
-      .modal-content button {
-        margin-top: 15px;
-        padding: 8px 16px;
-        border: none;
-        background-color: #007bff;
-        color: #fff;
-        border-radius: 6px;
-        cursor: pointer;
-      }
-
-      .reset-btn {
-        background-color: #ff4444;
-        color: white;
-        padding: 8px 16px;
-        font-size: 14px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-
-      .reset-btn:hover {
-        background-color: #cc0000;
-      }
-
-      .dark-mode .reset-btn {
-        background-color: #aa2222;
-        color: #fff;
-      }
-
-      .dark-mode .reset-btn:hover {
-        background-color: #880000;
-      }
-
       .completion-stats {
         font-size: 16px;
         line-height: 1.8;
@@ -300,26 +251,6 @@
       .completion-stats .fail {
         color: red;
         font-weight: bold;
-      }
-
-      #challengeModeSelect {
-        margin: 5px;
-        padding: 10px 20px;
-        height: 41px;
-        font-size: 16px;
-        font-weight: 500;
-        border: 2px;
-        border-radius: 8px;
-        background: #f4f4f4;
-        color: black;
-        cursor: pointer;
-        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-      }
-
-      .dark-mode #challengeModeSelect {
-        background: #222;
-        color: #f0f0f0;
-        border: 1px solid #666;
       }
 
       .leaderboard {
@@ -546,15 +477,6 @@
         border-radius: 6px;
       }
 
-      button.end-game {
-        background-color: #cc0000;
-        color: white;
-      }
-
-      button.end-game:hover {
-        background-color: #a00000;
-      }
-
       @keyframes pulse {
         0% {
           transform: scale(1);
@@ -583,10 +505,11 @@
     <h1>Jigsaw Puzzle Game</h1>
 
     <div class="controls">
-      <button onclick="startGame()">Start New Game</button>
+      <button class="btn" onclick="startGame()">Start New Game</button>
       <label for="imageUpload" class="custom-file-upload">Upload Gambar</label>
       <input type="file" id="imageUpload" accept="image/*" />
-      <select id="defaultImageSelector">
+
+      <select id="defaultImageSelector" class="custom-select">
         <option value="">Pilih gambar default...</option>
       </select>
 
@@ -595,7 +518,7 @@
         <img id="previewImage" src="" alt="Preview" />
       </div>
 
-      <select id="difficulty">
+      <select id="difficulty" class="custom-select">
         <option value="3">Easy (3x3)</option>
         <option value="4">Medium (4x4)</option>
         <option value="5">Hard (5x5)</option>
@@ -603,7 +526,7 @@
         <option value="7">Insane (7x7)</option>
         <option value="8">Godlike (8x8)</option>
       </select>
-      <button id="toggleDarkMode">Toggle Dark Mode</button>
+      <button class="btn" id="toggleDarkMode">Toggle Dark Mode</button>
 
       <label id="rotationModeButton" class="custom-checkbox-button">
         <input type="checkbox" id="rotationMode" />
@@ -611,40 +534,33 @@
       </label>
 
       <select id="challengeModeSelect" class="custom-select">
-        <option value="0">🎯 Mode Tantangan: Nonaktif</option>
+        <option value="0" selected>🎯 Mode Tantangan: Nonaktif</option>
         <option value="60">🎯 Mode Tantangan: 1 Menit</option>
         <option value="120">🎯 Mode Tantangan: 2 Menit</option>
         <option value="300">🎯 Mode Tantangan: 5 Menit</option>
       </select>
 
-      <button onclick="showLeaderboard()">🏆 Leaderboard</button>
-
-      <button onclick="showStats()">📊 Statistik</button>
+      <button class="btn" onclick="showLeaderboard()">🏆 Leaderboard</button>
+      <button class="btn" onclick="showStats()">📊 Statistik</button>
 
       <div id="progress" style="margin-top: 10px; font-weight: bold">Progress: 0%</div>
       <div id="progressBarContainer">
         <div id="progressBarFill"></div>
       </div>
 
-      <button onclick="showOriginal()" id="showOriginal">Show Original</button>
-
-      <button id="highlightButton">Highlight Posisi Benar</button>
-
-      <button id="rotateSelected">🔄 Rotate</button>
-
-      <button id="undoButton">Undo</button>
-
-      <button onclick="previewLastSwap()">👀 Lihat Langkah Terakhir</button>
-
-      <button id="hintButton">🔍 Hint</button>
-
-      <button id="pauseButton">Pause</button>
+      <button class="btn" onclick="showOriginal()" id="showOriginal">Show Original</button>
+      <button class="btn" id="highlightButton">Highlight Posisi Benar</button>
+      <button class="btn" id="rotateSelected">🔄 Rotate</button>
+      <button class="btn" id="undoButton">Undo</button>
+      <button class="btn" onclick="previewLastSwap()">👀 Lihat Langkah Terakhir</button>
+      <button class="btn" id="hintButton">🔍 Hint</button>
+      <button class="btn" id="pauseButton">Pause</button>
 
       <div id="timer">Time: 00:00</div>
 
       <div id="hintCountDisplay">Hint used: 0</div>
 
-      <button class="end-game" onclick="endGame()">🛑 End Game</button>
+      <button class="btn btn-danger" onclick="endGame()">🛑 End Game</button>
     </div>
 
     <div id="puzzle-container"></div>
@@ -660,7 +576,7 @@
     </div>
     <div id="pauseOverlay">
       <div>Game Paused<br />Klik Resume untuk melanjutkan</div>
-      <button id="resumeButton">Resume</button>
+      <button class="btn" id="resumeButton">Resume</button>
     </div>
 
     <script>
@@ -1271,7 +1187,8 @@
 
         html += `
     <div class="reset-container">
-      <button onclick="clearLeaderboard()" class="reset-btn">🗑️ Reset Leaderboard</button>
+      <button onclick="clearLeaderboard()" class="btn btn-danger">🗑️ Reset Leaderboard</button>
+
     </div>
   </div>`;
 
@@ -1343,7 +1260,7 @@
       <div class="stat-row"><span class="label">💡 Total Hint</span><span class="value">${stats.totalHints}</span></div>
     
     <div class="reset-container">
-        <button onclick="resetStats()" class="reset-btn">🗑️ Reset Statistik</button>
+        <button onclick="resetStats()" class="btn btn-danger">🗑️ Reset Statistik</button>
       </div>
     
     </div>
