@@ -536,45 +536,56 @@
   <body>
     <h1>Jigsaw Puzzle Game</h1>
 
-<div class="controls" id="preGameControls">
-  <button class="btn" onclick="startGame()">Start New Game</button>
-  <label for="imageUpload" class="custom-file-upload">Upload Gambar</label>
-  <input type="file" id="imageUpload" accept="image/*" />
-  <select id="defaultImageSelector" class="custom-select">
-    <option value="">Pilih gambar default...</option>
-  </select>
-  <div id="previewContainer">
-    <p>Preview Gambar:</p>
-    <img id="previewImage" src="" alt="Preview" />
-  </div>
-  <select id="difficulty" class="custom-select"> ... </select>
-  <button class="btn" id="toggleDarkMode">Toggle Dark Mode</button>
-  <label id="rotationModeButton" class="custom-checkbox-button">
-    <input type="checkbox" id="rotationMode" />
-    Mode Rotasi
-  </label>
-  <select id="challengeModeSelect" class="custom-select"> ... </select>
-  <button class="btn" onclick="showLeaderboard()">🏆 Leaderboard</button>
-  <button class="btn" onclick="showStats()">📊 Statistik</button>
-</div>
+    <div class="controls" id="preGameControls">
+      <button class="btn" onclick="startGame()">Start New Game</button>
+      <label for="imageUpload" class="custom-file-upload">Upload Gambar</label>
+      <input type="file" id="imageUpload" accept="image/*" />
+      <select id="defaultImageSelector" class="custom-select">
+        <option value="">Pilih gambar default...</option>
+      </select>
+      <div id="previewContainer">
+        <p>Preview Gambar:</p>
+        <img id="previewImage" src="" alt="Preview" />
+      </div>
+      <select id="difficulty" class="custom-select">
+        <option value="3">Easy (3x3)</option>
+        <option value="4">Medium (4x4)</option>
+        <option value="5">Hard (5x5)</option>
+        <option value="6">Extreme (6x6)</option>
+        <option value="7">Insane (7x7)</option>
+        <option value="8">Godlike (8x8)</option>
+      </select>
+      <button class="btn" id="toggleDarkMode">Toggle Dark Mode</button>
+      <label id="rotationModeButton" class="custom-checkbox-button">
+        <input type="checkbox" id="rotationMode" />
+        Mode Rotasi
+      </label>
+      <select id="challengeModeSelect" class="custom-select">
+        <option value="0" selected>🎯 Mode Tantangan: Nonaktif</option>
+        <option value="60">🎯 Mode Tantangan: 1 Menit</option>
+        <option value="120">🎯 Mode Tantangan: 2 Menit</option>
+        <option value="300">🎯 Mode Tantangan: 5 Menit</option>
+      </select>
+      <button class="btn" onclick="showLeaderboard()">🏆 Leaderboard</button>
+      <button class="btn" onclick="showStats()">📊 Statistik</button>
+    </div>
 
-<div class="controls" id="inGameControls" style="display: none;">
-  <div id="progress" style="margin-top: 10px; font-weight: bold">Progress: 0%</div>
-  <div id="progressBarContainer"><div id="progressBarFill"></div></div>
+    <div class="controls" id="inGameControls" style="display: none">
+      <div id="progress" style="margin-top: 10px; font-weight: bold">Progress: 0%</div>
+      <div id="progressBarContainer"><div id="progressBarFill"></div></div>
 
-  <button class="btn" onclick="showOriginal()" id="showOriginal">Show Original</button>
-  <button class="btn" id="highlightButton">Highlight Posisi Benar</button>
-  <button class="btn" id="rotateSelected">🔄 Rotate</button>
-  <button class="btn" id="undoButton">Undo</button>
-  <button class="btn" onclick="previewLastSwap()">👀 Lihat Langkah Terakhir</button>
-  <button class="btn" id="hintButton">🔍 Hint</button>
-  <button class="btn" id="pauseButton">Pause</button>
+      <button class="btn" onclick="showOriginal()" id="showOriginal">Show Original</button>
+      <button class="btn" id="highlightButton">Highlight Posisi Benar</button>
+      <button class="btn" id="rotateSelected">🔄 Rotate</button>
+      <button class="btn" id="undoButton">Undo</button>
+      <button class="btn" onclick="previewLastSwap()">👀 Lihat Langkah Terakhir</button>
+      <button class="btn" id="hintButton">🔍 Hint</button>
+      <button class="btn" id="pauseButton">Pause</button>
 
-  <div id="timer">Time: 00:00</div>
-  <div id="hintCountDisplay">Hint used: 0</div>
-  <button class="btn btn-danger" onclick="endGame()">🛑 End Game</button>
-</div>
-
+      <div id="timer">Time: 00:00</div>
+      <div id="hintCountDisplay">Hint used: 0</div>
+      <button class="btn btn-danger" onclick="endGame()">🛑 End Game</button>
+    </div>
 
     <div id="puzzle-container"></div>
 
@@ -815,6 +826,7 @@
   `;
 
         modal.classList.remove("hidden");
+        document.getElementById("previewImage").style.display = "block";
       }
 
       function startGame() {
@@ -1312,10 +1324,9 @@
       }
 
       function toggleControls(isPlaying) {
-  document.getElementById("preGameControls").style.display = isPlaying ? "none" : "block";
-  document.getElementById("inGameControls").style.display = isPlaying ? "block" : "none";
-}
-
+        document.getElementById("preGameControls").style.display = isPlaying ? "none" : "block";
+        document.getElementById("inGameControls").style.display = isPlaying ? "block" : "none";
+      }
 
       updateProgress();
       // startGame();
