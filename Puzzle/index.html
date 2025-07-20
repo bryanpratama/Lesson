@@ -509,6 +509,14 @@
         border-color: #666;
       }
 
+      #darkModeControl {
+        margin-bottom: 10px;
+      }
+
+      .controls {
+        margin-bottom: 15px;
+      }
+
       @keyframes pulse {
         0% {
           transform: scale(1);
@@ -536,6 +544,10 @@
   <body>
     <h1>Jigsaw Puzzle Game</h1>
 
+    <div class="controls always-visible" id="darkModeControl">
+      <button class="btn" id="toggleDarkMode">Toggle Dark Mode</button>
+    </div>
+
     <div class="controls" id="preGameControls">
       <button class="btn" onclick="startGame()">Start New Game</button>
       <label for="imageUpload" class="custom-file-upload">Upload Gambar</label>
@@ -555,7 +567,6 @@
         <option value="7">Insane (7x7)</option>
         <option value="8">Godlike (8x8)</option>
       </select>
-      <button class="btn" id="toggleDarkMode">Toggle Dark Mode</button>
       <label id="rotationModeButton" class="custom-checkbox-button">
         <input type="checkbox" id="rotationMode" />
         Mode Rotasi
