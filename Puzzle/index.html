@@ -517,6 +517,18 @@
         margin-bottom: 15px;
       }
 
+      .horizontal-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .horizontal-buttons .btn {
+        flex: 1;
+        min-width: 120px;
+      }
+
       @keyframes pulse {
         0% {
           transform: scale(1);
@@ -606,9 +618,10 @@
     <div id="customModal" class="modal hidden">
       <div class="modal-content">
         <p id="modalMessage">Puzzle Completed!</p>
-        <button class="btn" onclick="closeModal()">OK</button>
+        <div id="modalButtons"></div>
       </div>
     </div>
+
     <div id="pauseOverlay">
       <div>Game Paused<br />Klik Resume untuk melanjutkan</div>
       <button class="btn" id="resumeButton">Resume</button>
@@ -770,6 +783,7 @@
 
       function closeModal() {
         document.getElementById("customModal").classList.add("hidden");
+        document.getElementById("modalButtons").innerHTML = "";
 
         const showOriginalBtn = document.getElementById("showOriginal");
         showOriginalBtn.classList.remove("active");
@@ -1228,10 +1242,11 @@
         }
 
         html += `
-    <div class="reset-container">
-      <button onclick="clearLeaderboard()" class="btn btn-danger">🗑️ Reset Leaderboard</button>
+    <div class="reset-container horizontal-buttons">
+  <button onclick="resetStats()" class="btn btn-danger">🗑️ Reset Statistik</button>
+  <button class="btn close-modal-button" onclick="closeModal()">OK</button>
+</div>
 
-    </div>
   </div>`;
 
         const modal = document.getElementById("customModal");
@@ -1301,9 +1316,10 @@
       <div class="stat-row"><span class="label">🎯 Rata-rata Skor</span><span class="value">${avgScore}</span></div>
       <div class="stat-row"><span class="label">💡 Total Hint</span><span class="value">${stats.totalHints}</span></div>
     
-    <div class="reset-container">
-        <button onclick="resetStats()" class="btn btn-danger">🗑️ Reset Statistik</button>
-      </div>
+    <div class="reset-container horizontal-buttons">
+  <button onclick="resetStats()" class="btn btn-danger">🗑️ Reset Statistik</button>
+  <button class="btn close-modal-button" onclick="closeModal()">OK</button>
+</div>
     
     </div>
   `;
@@ -1337,6 +1353,30 @@
       function toggleControls(isPlaying) {
         document.getElementById("preGameControls").style.display = isPlaying ? "none" : "block";
         document.getElementById("inGameControls").style.display = isPlaying ? "block" : "none";
+      }
+
+      function showPuzzleCompletedModal(time, steps, hints, score, rank) {
+        const message = document.getElementById("modalMessage");
+        const buttons = document.getElementById("modalButtons");
+
+        message.innerHTML = `
+    <span style="font-size: 1.3em;">🎉 Puzzle Completed!</span><br><br>
+    <div style="text-align:left; margin: 0 auto; width: fit-content;">
+      <p>🕒 <strong>Time</strong> <span style="float:right;">${time}</span></p>
+      <p>🔁 <strong>Steps</strong> <span style="float:right;">${steps}</span></p>
+      <p>💡 <strong>Hints used</strong> <span style="float:right;">${hints}</span></p>
+      <p>📊 <strong>Score</strong> <span style="float:right; color: gold;">${score}</span></p>
+      <p>🏅 <strong>Rank</strong> <span style="float:right;">${rank}</span></p>
+    </div>
+  `;
+
+        buttons.innerHTML = `
+    <div class="reset-container horizontal-buttons">
+      <button class="btn close-modal-button" onclick="closeModal()">OK</button>
+    </div>
+  `;
+
+        document.getElementById("customModal").classList.remove("hidden");
       }
 
       updateProgress();
