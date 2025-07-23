@@ -608,6 +608,7 @@
       <div id="timer">Time: 00:00</div>
       <div id="hintCountDisplay">Hint used: 0</div>
       <button class="btn btn-danger" onclick="endGame()">🛑 End Game</button>
+      <button class="btn" id="playAgainButton" style="display: none">Main lagi?</button>
     </div>
 
     <div id="puzzle-container"></div>
@@ -827,9 +828,10 @@
           updateLifetimeStats(score, seconds, hintCount);
           disablePuzzleInteraction();
 
-          setTimeout(() => {
-            showCompletionModal(formatTime(seconds));
-          }, 100);
+          document.getElementById("endGameButton").style.display = "none";
+  document.getElementById("playAgainButton").style.display = "inline-block";
+
+          showCompletionModal(formatTime(seconds));
         }
       }
 
@@ -841,8 +843,10 @@
 
         disablePuzzleInteraction();
 
+          document.getElementById("endGameButton").style.display = "none";
+  document.getElementById("playAgainButton").style.display = "inline-block";
+
         showEndModal();
-        toggleControls(false);
       }
 
       function showEndModal() {
@@ -928,6 +932,9 @@
 
         updateHintDisplay();
         toggleControls(true);
+
+        document.getElementById("endGameButton").style.display = "inline-block";
+  document.getElementById("playAgainButton").style.display = "none";
       }
 
       document.getElementById("imageUpload").addEventListener("change", function (e) {
@@ -1392,6 +1399,12 @@
 
         document.getElementById("customModal").classList.remove("hidden");
       }
+
+      function playAgain() {
+  document.getElementById("inGameControls").style.display = "none";
+  document.getElementById("preGameControls").style.display = "block";
+  puzzleContainer.innerHTML = "";
+}
 
       updateProgress();
       // startGame();
