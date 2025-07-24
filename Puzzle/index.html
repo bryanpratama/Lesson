@@ -608,7 +608,6 @@
       <div id="timer">Time: 00:00</div>
       <div id="hintCountDisplay">Hint used: 0</div>
       <button class="btn btn-danger" onclick="endGame()">🛑 End Game</button>
-      <button class="btn" id="playAgainButton" style="display: none">Main lagi?</button>
     </div>
 
     <div id="puzzle-container"></div>
@@ -828,10 +827,9 @@
           updateLifetimeStats(score, seconds, hintCount);
           disablePuzzleInteraction();
 
-          document.getElementById("endGameButton").style.display = "none";
-  document.getElementById("playAgainButton").style.display = "inline-block";
-
-          showCompletionModal(formatTime(seconds));
+          setTimeout(() => {
+            showCompletionModal(formatTime(seconds));
+          }, 100);
         }
       }
 
@@ -843,10 +841,8 @@
 
         disablePuzzleInteraction();
 
-          document.getElementById("endGameButton").style.display = "none";
-  document.getElementById("playAgainButton").style.display = "inline-block";
-
         showEndModal();
+        toggleControls(false);
       }
 
       function showEndModal() {
@@ -932,9 +928,6 @@
 
         updateHintDisplay();
         toggleControls(true);
-
-        document.getElementById("endGameButton").style.display = "inline-block";
-  document.getElementById("playAgainButton").style.display = "none";
       }
 
       document.getElementById("imageUpload").addEventListener("change", function (e) {
@@ -1106,11 +1099,6 @@
         }
       });
 
-      function startGameWithImage(image) {
-        currentImageUrl = image.src;
-        startGame();
-      }
-
       document.getElementById("undoButton").addEventListener("click", () => {
         if (!lastSwapped) return;
 
@@ -1276,11 +1264,6 @@
         modal.classList.remove("hidden");
       }
 
-      function clearLeaderboard() {
-        localStorage.removeItem(LEADERBOARD_KEY);
-        alert("Leaderboard cleared.");
-      }
-
       function previewLastSwap() {
         document.querySelectorAll(".highlight-preview").forEach((p) => {
           p.classList.remove("highlight-preview");
@@ -1375,36 +1358,6 @@
         document.getElementById("preGameControls").style.display = isPlaying ? "none" : "block";
         document.getElementById("inGameControls").style.display = isPlaying ? "block" : "none";
       }
-
-      function showPuzzleCompletedModal(time, steps, hints, score, rank) {
-        const message = document.getElementById("modalMessage");
-        const buttons = document.getElementById("modalButtons");
-
-        message.innerHTML = `
-    <span style="font-size: 1.3em;">🎉 Puzzle Completed!</span><br><br>
-    <div style="text-align:left; margin: 0 auto; width: fit-content;">
-      <p>🕒 <strong>Time</strong> <span style="float:right;">${time}</span></p>
-      <p>🔁 <strong>Steps</strong> <span style="float:right;">${steps}</span></p>
-      <p>💡 <strong>Hints used</strong> <span style="float:right;">${hints}</span></p>
-      <p>📊 <strong>Score</strong> <span style="float:right; color: gold;">${score}</span></p>
-      <p>🏅 <strong>Rank</strong> <span style="float:right;">${rank}</span></p>
-    </div>
-  `;
-
-        buttons.innerHTML = `
-    <div class="reset-container horizontal-buttons">
-      <button class="btn close-modal-button" onclick="closeModal()">OK</button>
-    </div>
-  `;
-
-        document.getElementById("customModal").classList.remove("hidden");
-      }
-
-      function playAgain() {
-  document.getElementById("inGameControls").style.display = "none";
-  document.getElementById("preGameControls").style.display = "block";
-  puzzleContainer.innerHTML = "";
-}
 
       updateProgress();
       // startGame();
