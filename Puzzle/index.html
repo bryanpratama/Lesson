@@ -687,7 +687,7 @@
         }
 
         shufflePieces();
-        addPieceClickListeners();
+        document.querySelectorAll(".puzzle-piece").forEach(addClickToPiece);
         puzzleContainer.style.width = puzzleContainer.style.height = `${300}px`;
         puzzleContainer.style.flexWrap = "wrap";
       }
@@ -1120,7 +1120,7 @@
           addClickToPiece(clone);
         });
 
-        addPieceClickListeners();
+        document.querySelectorAll(".puzzle-piece").forEach(addClickToPiece);
         lastSwapped = null;
         updateProgress();
         highlightCorrectPieces();
@@ -1159,18 +1159,6 @@
 
           document.querySelectorAll(".puzzle-piece").forEach((p) => p.classList.remove("selected"));
           piece.classList.add("selected");
-        });
-      }
-
-      function addPieceClickListeners() {
-        const pieces = document.querySelectorAll(".puzzle-piece");
-        pieces.forEach((piece) => {
-          piece.addEventListener("click", () => {
-            if (!document.getElementById("rotationMode").checked) return;
-
-            document.querySelectorAll(".puzzle-piece").forEach((p) => p.classList.remove("selected"));
-            piece.classList.add("selected");
-          });
         });
       }
 
