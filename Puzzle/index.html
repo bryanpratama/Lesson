@@ -690,6 +690,7 @@
         document.querySelectorAll(".puzzle-piece").forEach(addClickToPiece);
         puzzleContainer.style.width = puzzleContainer.style.height = `${300}px`;
         puzzleContainer.style.flexWrap = "wrap";
+        updateProgress();
       }
 
       function shufflePieces() {
