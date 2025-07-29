@@ -607,8 +607,13 @@
 
       <div id="timer">Time: 00:00</div>
       <div id="hintCountDisplay">Hint used: 0</div>
-      <button class="btn btn-danger" onclick="endGame()">🛑 End Game</button>
+  
+      <div id="toggleEndButton" style="display: none">
+    <button class="btn btn-danger" id="endGameButton" onclick="endGame()">🛑 End Game</button>
+
+      </div>
       <div id="toggleShowButton" style="display: none">
+      
         <button class="btn active" id="closeButton" onclick="closeGame()">Close Game</button>
       </div>
     </div>
@@ -1363,6 +1368,7 @@
 
       function toggleShowButton(isPlaying) {
         document.getElementById("toggleShowButton").style.display = isPlaying ? "block" : "none";
+        document.getElementById("toggleEndButton").style.display = isPlaying ? "none" : "block";
       }
       updateProgress();
       // startGame();
