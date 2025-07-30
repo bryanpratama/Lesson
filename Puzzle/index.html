@@ -872,7 +872,6 @@
         <div style="text-align:center">
             <h3>😓 Puzzle Tidak Diselesaikan</h3>
             <p>Kamu menyerah. Puzzle belum selesai.</p>
-            <p>Ingin coba lagi?</p>
         </div>
     `;
 
@@ -929,6 +928,8 @@
             timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
             if (challengeTimeLeft <= 0) {
               clearInterval(challengeTimer);
+              clearInterval(timer);
+              disablePuzzleInteraction();
               alert("⏱️ Waktu habis! Kamu gagal menyelesaikan puzzle.");
             }
           }, 1000);
