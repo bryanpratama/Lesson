@@ -599,7 +599,12 @@
 
       <button class="btn" onclick="showOriginal()" id="showOriginal">Show Original</button>
       <button class="btn" id="highlightButton">Highlight Posisi Benar</button>
+
+      <div id="toggleRotateButton" style="display: none;">
       <button class="btn" id="rotateSelected">🔄 Rotate</button>
+      </div>
+
+
       <button class="btn" id="undoButton">Undo</button>
       <button class="btn" onclick="previewLastSwap()">👀 Lihat Langkah Terakhir</button>
       <button class="btn" id="hintButton">🔍 Hint</button>
@@ -948,6 +953,8 @@
         updateHintDisplay();
         toggleShowButton(false);
         toggleControls(true);
+        toggleShowRotate(document.getElementById("rotationMode").checked);
+
       }
 
       document.getElementById("imageUpload").addEventListener("change", function (e) {
@@ -1187,6 +1194,8 @@
 
       rotationCheckbox.addEventListener("change", () => {
         rotationLabel.classList.toggle("active", rotationCheckbox.checked);
+        toggleShowRotate(rotationCheckbox.checked);
+
       });
 
       document.getElementById("hintButton").addEventListener("click", showHint);
@@ -1371,6 +1380,11 @@
         document.getElementById("toggleShowButton").style.display = isPlaying ? "block" : "none";
         document.getElementById("toggleEndButton").style.display = isPlaying ? "none" : "block";
       }
+
+      function toggleShowRotate(isRotationMode) {
+  document.getElementById("toggleRotateButton").style.display = isRotationMode ? "block" : "none";
+}
+
       updateProgress();
       // startGame();
     </script>
