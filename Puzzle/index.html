@@ -556,10 +556,6 @@
   <body>
     <h1>Jigsaw Puzzle Game</h1>
 
-    <div class="controls always-visible" id="darkModeControl">
-      <button class="btn" id="toggleDarkMode">Toggle Dark Mode</button>
-    </div>
-
     <div class="controls" id="preGameControls">
       <button class="btn" onclick="startGame()">Start New Game</button>
       <label for="imageUpload" class="custom-file-upload">Upload Gambar</label>
@@ -567,6 +563,7 @@
       <select id="defaultImageSelector" class="custom-select">
         <option value="">Pilih gambar default...</option>
       </select>
+      <button class="btn" id="toggleDarkMode">Dark Mode</button>
       <div id="previewContainer">
         <p>Preview Gambar:</p>
         <img id="previewImage" src="" alt="Preview" />
@@ -598,12 +595,12 @@
       <div id="progressBarContainer"><div id="progressBarFill"></div></div>
 
       <button class="btn" onclick="showOriginal()" id="showOriginal">Show Original</button>
+      <button class="btn" id="toggleDarkModeInGame">Dark Mode</button>
       <button class="btn" id="highlightButton">Highlight Posisi Benar</button>
 
-      <div id="toggleRotateButton" style="display: none;">
-      <button class="btn" id="rotateSelected">🔄 Rotate</button>
+      <div id="toggleRotateButton" style="display: none">
+        <button class="btn" id="rotateSelected">🔄 Rotate</button>
       </div>
-
 
       <button class="btn" id="undoButton">Undo</button>
       <button class="btn" onclick="previewLastSwap()">👀 Lihat Langkah Terakhir</button>
@@ -612,13 +609,11 @@
 
       <div id="timer">Time: 00:00</div>
       <div id="hintCountDisplay">Hint used: 0</div>
-  
-      <div id="toggleEndButton" style="display: none">
-    <button class="btn btn-danger" id="endGameButton" onclick="endGame()">🛑 End Game</button>
 
+      <div id="toggleEndButton" style="display: none">
+        <button class="btn btn-danger" id="endGameButton" onclick="endGame()">🛑 End Game</button>
       </div>
       <div id="toggleShowButton" style="display: none">
-      
         <button class="btn active" id="closeButton" onclick="closeGame()">Close Game</button>
       </div>
     </div>
@@ -954,7 +949,6 @@
         toggleShowButton(false);
         toggleControls(true);
         toggleShowRotate(document.getElementById("rotationMode").checked);
-
       }
 
       document.getElementById("imageUpload").addEventListener("change", function (e) {
@@ -988,6 +982,13 @@
       }
 
       const toggleButton = document.getElementById("toggleDarkMode");
+      document.getElementById("toggleDarkModeInGame").addEventListener("click", toggleTheme);
+
+      function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+        const isDark = document.body.classList.contains("dark-mode");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+      }
 
       toggleButton.addEventListener("click", () => {
         document.body.classList.toggle("dark-mode");
@@ -1195,7 +1196,6 @@
       rotationCheckbox.addEventListener("change", () => {
         rotationLabel.classList.toggle("active", rotationCheckbox.checked);
         toggleShowRotate(rotationCheckbox.checked);
-
       });
 
       document.getElementById("hintButton").addEventListener("click", showHint);
@@ -1382,8 +1382,8 @@
       }
 
       function toggleShowRotate(isRotationMode) {
-  document.getElementById("toggleRotateButton").style.display = isRotationMode ? "block" : "none";
-}
+        document.getElementById("toggleRotateButton").style.display = isRotationMode ? "block" : "none";
+      }
 
       updateProgress();
       // startGame();
