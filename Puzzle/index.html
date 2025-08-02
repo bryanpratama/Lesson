@@ -1201,7 +1201,7 @@
       document.getElementById("hintButton").addEventListener("click", showHint);
 
       function showHint() {
-        const pieces = puzzleContainer.children;
+        const pieces = Array.from(puzzleContainer.children);
         const pieceSize = 300 / gridSize;
 
         for (let i = 0; i < pieces.length; i++) {
@@ -1221,15 +1221,38 @@
           const isCorrectRotation = currentRotation === 0;
 
           if (!isCorrectPosition || !isCorrectRotation) {
-            hintCount++;
-            updateHintDisplay();
+            const correctPiece = pieces.find((p) => {
+              const bg = window.getComputedStyle(p).backgroundPosition.split(" ");
+              const bx = parseFloat(bg[0]);
+              const by = parseFloat(bg[1]);
+              return Math.abs(bx - expectedX) < 1 && Math.abs(by - expectedY) < 1;
+            });
 
-            document.querySelectorAll(".puzzle-piece").forEach((p) => p.classList.remove("hint-highlight"));
-            piece.classList.add("hint-highlight");
-            setTimeout(() => {
-              piece.classList.remove("hint-highlight");
-            }, 3000);
-            break;
+            if (correctPiece && correctPiece !== piece) {
+              const tempPos = piece.style.backgroundPosition;
+              piece.style.backgroundPosition = correctPiece.style.backgroundPosition;
+              correctPiece.style.backgroundPosition = tempPos;
+
+              const rotA = piece.getAttribute("data-rotation") || "0";
+              const rotB = correctPiece.getAttribute("data-rotation") || "0";
+
+              piece.setAttribute("data-rotation", rotB);
+              correctPiece.setAttribute("data-rotation", rotA);
+
+              piece.style.transform = `rotate(${rotB}deg)`;
+              correctPiece.style.transform = `rotate(${rotA}deg)`;
+
+              correctPiece.classList.add("hint-highlight");
+              setTimeout(() => {
+                correctPiece.classList.remove("hint-highlight");
+              }, 1000);
+
+              hintCount++;
+              updateHintDisplay();
+
+              updateProgress();
+              break;
+            }
           }
         }
       }
