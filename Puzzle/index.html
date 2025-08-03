@@ -776,7 +776,9 @@
         }
 
         const difficulty = document.getElementById("difficulty").value;
-        const isNewHigh = saveScoreToLeaderboard(difficulty, score, time, stepCount, hintCount);
+        const isRotationEnabled = document.getElementById("rotationMode").checked;
+        const challengeTime = document.getElementById("challengeModeSelect").value;
+        const isNewHigh = saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, score, time, stepCount, hintCount);
 
         message.innerHTML = `
         <div class="completion-stats">
@@ -1261,12 +1263,13 @@
         document.getElementById("hintCountDisplay").textContent = `Hint used: ${hintCount}`;
       }
 
-      function saveScoreToLeaderboard(difficulty, score, time, steps, hints) {
+      function saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, score, time, steps, hints) {
         const data = JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || {};
-        const currentBest = data[difficulty];
+        const key = `${difficulty}-${isRotationEnabled}-${challengeTime}`;
+        const currentBest = data[key];
 
         if (!currentBest || score > currentBest.score) {
-          data[difficulty] = { score, time, steps, hints };
+          data[key] = { score, time, steps, hints, isRotationEnabled, challengeTime, difficulty };
           localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(data));
           return true;
         }
@@ -1275,28 +1278,31 @@
 
       function showLeaderboard() {
         const data = JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || {};
-        let html = `<div style="text-align:left;"><strong>🏆 Best Scores:</strong><br><br>`;
+        let html = `<div class="leaderboard"><div class="title">🏆 Best Scores:</div>`;
 
-        for (const diff in data) {
-          const entry = data[diff];
+        for (const key in data) {
+          const entry = data[key];
+          const rotationText = entry.isRotationEnabled ? "🔄 Aktif" : "❌ Nonaktif";
+          const challengeText = entry.challengeTime > 0 ? `${entry.challengeTime / 60} Menit` : "❌ Nonaktif";
           html += `
-      <div class="board-block">
-        <div class="diff-row">🧩 ${diff}x${diff}</div>
-        <div class="stat-row"><span class="label">Score</span><span class="value">${entry.score}</span></div>
-        <div class="stat-row"><span class="label">Time</span><span class="value">${entry.time}</span></div>
-        <div class="stat-row"><span class="label">Steps</span><span class="value">${entry.steps}</span></div>
-        <div class="stat-row"><span class="label">Hints</span><span class="value">${entry.hints}</span></div>
-      </div>
-    `;
+            <div class="board-block">
+              <div class="diff-row">🧩 ${entry.difficulty}x${entry.difficulty}</div>
+              <div class="stat-row"><span class="label">Mode Rotasi</span><span class="value">${rotationText}</span></div>
+              <div class="stat-row"><span class="label">Mode Tantangan</span><span class="value">${challengeText}</span></div>
+              <div class="stat-row"><span class="label">Skor</span><span class="value">${entry.score}</span></div>
+              <div class="stat-row"><span class="label">Waktu</span><span class="value">${entry.time}</span></div>
+              <div class="stat-row"><span class="label">Langkah</span><span class="value">${entry.steps}</span></div>
+              <div class="stat-row"><span class="label">Hint</span><span class="value">${entry.hints}</span></div>
+            </div>
+          `;
         }
 
         html += `
-    <div class="reset-container horizontal-buttons">
-  <button onclick="resetStats()" class="btn btn-danger">🗑️ Reset Statistik</button>
-  <button class="btn close-modal-button" onclick="closeModal()">OK</button>
-</div>
-
-  </div>`;
+          <div class="reset-container horizontal-buttons">
+            <button onclick="resetLeaderboard()" class="btn btn-danger">🗑️ Reset Leaderboard</button>
+            <button class="btn close-modal-button" onclick="closeModal()">OK</button>
+          </div>
+        </div>`;
 
         const modal = document.getElementById("customModal");
         const message = document.getElementById("modalMessage");
@@ -1379,6 +1385,14 @@
           localStorage.removeItem(STATS_KEY);
           alert("Statistik lifetime telah direset.");
           showStats();
+        }
+      }
+
+      function resetLeaderboard() {
+        if (confirm("Yakin ingin menghapus semua data leaderboard?")) {
+          localStorage.removeItem(LEADERBOARD_KEY);
+          alert("Leaderboard telah direset.");
+          showLeaderboard();
         }
       }
 
