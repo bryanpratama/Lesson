@@ -652,6 +652,7 @@
       let score = 0;
       let isChallengeMode = false;
       let challengeTimeLeft = 120;
+      let challengeTimeInitial = 0;
       let challengeTimer = null;
       let lastSwap = null;
       const STATS_KEY = "jigsawStats";
@@ -756,7 +757,9 @@
 
         toggleShowButton(true);
 
-        score = Math.max(0, 1000 - (seconds * 2 + hintCount * 50 + stepCount * 10));
+        let timeSpent = isChallengeMode ? challengeTimeInitial - challengeTimeLeft : seconds;
+
+        score = Math.max(0, 1000 - (timeSpent * 2 + hintCount * 50 + stepCount * 10));
 
         let medal = "";
         let rankClass = "";
@@ -778,13 +781,13 @@
         const difficulty = document.getElementById("difficulty").value;
         const isRotationEnabled = document.getElementById("rotationMode").checked;
         const challengeTime = document.getElementById("challengeModeSelect").value;
-        const isNewHigh = saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, score, time, stepCount, hintCount);
+        const isNewHigh = saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, score, formatTime(timeSpent), stepCount, hintCount);
 
         message.innerHTML = `
         <div class="completion-stats">
             <div class="title">🎉 Puzzle Completed!</div>
             ${isNewHigh ? `<div style="color: limegreen; font-weight: bold;">🔥 New High Score!</div>` : ""}
-            <div class="stat-row"><span class="label">⏱ Time</span><span class="value">${time}</span></div>
+            <div class="stat-row"><span class="label">⏱ Time</span><span class="value">${formatTime(timeSpent)}</span></div>
             <div class="stat-row"><span class="label">🔁 Steps</span><span class="value">${stepCount}</span></div>
             <div class="stat-row"><span class="label">💡 Hints used</span><span class="value">${hintCount}</span></div>
             <div class="stat-row"><span class="label">🧮 Score</span><span class="value score">${score}</span></div>
@@ -917,12 +920,14 @@
         clearInterval(challengeTimer);
         seconds = 0;
         challengeTimeLeft = 0;
+        challengeTimeInitial = 0;
 
         const challengeValue = parseInt(document.getElementById("challengeModeSelect").value);
         isChallengeMode = challengeValue > 0;
 
         if (isChallengeMode) {
           challengeTimeLeft = challengeValue;
+          challengeTimeInitial = challengeValue;
           timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
 
           challengeTimer = setInterval(() => {
