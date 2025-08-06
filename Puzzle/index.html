@@ -604,7 +604,10 @@
         <button class="btn" id="rotateSelected">🔄 Rotate</button>
       </div>
 
-      <button class="btn" id="undoButton">Undo</button>
+      <div id="undoButtonHidden" style="display: none">
+              <button class="btn" id="undoButton">Undo</button>
+      </div>
+
       <button class="btn" onclick="previewLastSwap()">👀 Lihat Langkah Terakhir</button>
       <button class="btn" id="hintButton">🔍 Hint</button>
       <button class="btn" id="pauseButton">Pause</button>
@@ -1423,6 +1426,7 @@
       function toggleShowButton(isPlaying) {
         document.getElementById("toggleShowButton").style.display = isPlaying ? "block" : "none";
         document.getElementById("toggleEndButton").style.display = isPlaying ? "none" : "block";
+        document.getElementById("undoButtonHidden").style.display = isPlaying ? "none" : "block";
       }
 
       function toggleShowRotate(isRotationMode) {
