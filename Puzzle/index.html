@@ -596,21 +596,21 @@
       <div id="progress" style="margin-top: 10px; font-weight: bold">Progress: 0%</div>
       <div id="progressBarContainer"><div id="progressBarFill"></div></div>
 
-      <button class="btn" onclick="showOriginal()" id="showOriginal">Show Original</button>
-      <button class="btn" id="toggleDarkModeInGame">Dark Mode</button>
-      <button class="btn" id="highlightButton">Highlight Posisi Benar</button>
-
-      <div id="toggleRotateButton" style="display: none">
-        <button class="btn" id="rotateSelected">🔄 Rotate</button>
-      </div>
-
       <div id="undoButtonHidden" style="display: none">
-              <button class="btn" id="undoButton">Undo</button>
-      </div>
+        <button class="btn" onclick="showOriginal()" id="showOriginal">Show Original</button>
+        <button class="btn" id="toggleDarkModeInGame">Dark Mode</button>
+        <button class="btn" id="highlightButton">Highlight Posisi Benar</button>
 
-      <button class="btn" onclick="previewLastSwap()">👀 Lihat Langkah Terakhir</button>
-      <button class="btn" id="hintButton">🔍 Hint</button>
-      <button class="btn" id="pauseButton">Pause</button>
+        <div id="toggleRotateButton" style="display: none">
+          <button class="btn" id="rotateSelected">🔄 Rotate</button>
+        </div>
+
+        <button class="btn" id="undoButton">Undo</button>
+
+        <button class="btn" onclick="previewLastSwap()">👀 Lihat Langkah Terakhir</button>
+        <button class="btn" id="hintButton">🔍 Hint</button>
+        <button class="btn" id="pauseButton">Pause</button>
+      </div>
 
       <div id="timer">Time: 00:00</div>
       <div id="hintCountDisplay">Hint used: 0</div>
@@ -786,13 +786,23 @@
         const difficulty = document.getElementById("difficulty").value;
         const isRotationEnabled = document.getElementById("rotationMode").checked;
         const challengeTime = document.getElementById("challengeModeSelect").value;
-        const isNewHigh = saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, score, formatTime(timeSpent), stepCount, hintCount);
+        const isNewHigh = saveScoreToLeaderboard(
+          difficulty,
+          isRotationEnabled,
+          challengeTime,
+          score,
+          formatTime(timeSpent),
+          stepCount,
+          hintCount
+        );
 
         message.innerHTML = `
         <div class="completion-stats">
             <div class="title">🎉 Puzzle Completed!</div>
             ${isNewHigh ? `<div style="color: limegreen; font-weight: bold;">🔥 New High Score!</div>` : ""}
-            <div class="stat-row"><span class="label">⏱ Time</span><span class="value">${formatTime(timeSpent)}</span></div>
+            <div class="stat-row"><span class="label">⏱ Time</span><span class="value">${formatTime(
+              timeSpent
+            )}</span></div>
             <div class="stat-row"><span class="label">🔁 Steps</span><span class="value">${stepCount}</span></div>
             <div class="stat-row"><span class="label">💡 Hints used</span><span class="value">${hintCount}</span></div>
             <div class="stat-row"><span class="label">🧮 Score</span><span class="value score">${score}</span></div>
