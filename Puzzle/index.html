@@ -560,10 +560,10 @@
 
     <div class="controls" id="preGameControls">
       <button class="btn" onclick="startGame()">Start New Game</button>
-      <label for="imageUpload" class="custom-file-upload">Upload Gambar</label>
       <input type="file" id="imageUpload" accept="image/*" />
       <select id="defaultImageSelector" class="custom-select">
         <option value="">Pilih gambar default...</option>
+        <option value="__upload__">📁 Upload Gambar...</option>
       </select>
       <button class="btn" id="toggleDarkMode">Dark Mode</button>
       <div id="previewContainer">
@@ -1143,7 +1143,11 @@
 
       defaultImageSelector.addEventListener("change", (e) => {
         const imageUrl = e.target.value;
-        if (imageUrl) {
+
+        if (imageUrl === "__upload__") {
+          document.getElementById("imageUpload").click();
+          e.target.value = "";
+        } else if (imageUrl) {
           currentImageUrl = imageUrl;
           updatePreviewImage(imageUrl);
         }
