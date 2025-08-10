@@ -1023,6 +1023,7 @@
       });
 
       window.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("puzzle-container").style.display = "none";
         if (localStorage.getItem("theme") === "dark") {
           document.body.classList.add("dark-mode");
         }
@@ -1436,6 +1437,8 @@
       function toggleControls(isPlaying) {
         document.getElementById("preGameControls").style.display = isPlaying ? "none" : "block";
         document.getElementById("inGameControls").style.display = isPlaying ? "block" : "none";
+        document.getElementById("puzzle-container").style.display = isPlaying ? "flex" : "none";
+
       }
 
       function toggleShowButton(isPlaying) {
