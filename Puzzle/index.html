@@ -537,6 +537,18 @@
         min-width: 120px;
       }
 
+      .custom-select.active {
+        background-color: #64ec64;
+        border-color: #333;
+        color: rgb(0, 0, 0);
+      }
+
+      .dark-mode .custom-select.active {
+        background-color: #079c07;
+        border-color: #666;
+        color: #fff;
+      }
+
       @keyframes pulse {
         0% {
           transform: scale(1);
@@ -1231,6 +1243,16 @@
         toggleShowRotate(rotationCheckbox.checked);
       });
 
+      const challengeModeSelect = document.getElementById("challengeModeSelect");
+
+      challengeModeSelect.addEventListener("change", () => {
+        if (challengeModeSelect.value !== "0") {
+          challengeModeSelect.classList.add("active");
+        } else {
+          challengeModeSelect.classList.remove("active");
+        }
+      });
+
       document.getElementById("hintButton").addEventListener("click", showHint);
 
       function showHint() {
@@ -1444,7 +1466,6 @@
         document.getElementById("preGameControls").style.display = isPlaying ? "none" : "block";
         document.getElementById("inGameControls").style.display = isPlaying ? "block" : "none";
         document.getElementById("puzzle-container").style.display = isPlaying ? "flex" : "none";
-
       }
 
       function toggleShowButton(isPlaying) {
