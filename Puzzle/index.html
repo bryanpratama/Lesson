@@ -1334,21 +1334,26 @@
         const data = JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || {};
         let html = `<div class="leaderboard"><div class="title">🏆 Best Scores:</div>`;
 
-        for (const key in data) {
-          const entry = data[key];
-          const rotationText = entry.isRotationEnabled ? "🔄 Aktif" : "❌ Nonaktif";
-          const challengeText = entry.challengeTime > 0 ? `${entry.challengeTime / 60} Menit` : "❌ Nonaktif";
-          html += `
-            <div class="board-block">
-              <div class="diff-row">🧩 ${entry.difficulty}x${entry.difficulty}</div>
-              <div class="stat-row"><span class="label">Mode Rotasi</span><span class="value">${rotationText}</span></div>
-              <div class="stat-row"><span class="label">Mode Tantangan</span><span class="value">${challengeText}</span></div>
-              <div class="stat-row"><span class="label">Skor</span><span class="value">${entry.score}</span></div>
-              <div class="stat-row"><span class="label">Waktu</span><span class="value">${entry.time}</span></div>
-              <div class="stat-row"><span class="label">Langkah</span><span class="value">${entry.steps}</span></div>
-              <div class="stat-row"><span class="label">Hint</span><span class="value">${entry.hints}</span></div>
-            </div>
-          `;
+        const keys = Object.keys(data);
+        if (keys.length === 0) {
+          html += `<div style="text-align:center; color:gray; font-style:italic;">Belum ada skor</div>`;
+        } else {
+          for (const key of keys) {
+            const entry = data[key];
+            const rotationText = entry.isRotationEnabled ? "🔄 Aktif" : "❌ Nonaktif";
+            const challengeText = entry.challengeTime > 0 ? `${entry.challengeTime / 60} Menit` : "❌ Nonaktif";
+            html += `
+        <div class="board-block">
+          <div class="diff-row">🧩 ${entry.difficulty}x${entry.difficulty}</div>
+          <div class="stat-row"><span class="label">Mode Rotasi</span><span class="value">${rotationText}</span></div>
+          <div class="stat-row"><span class="label">Mode Tantangan</span><span class="value">${challengeText}</span></div>
+          <div class="stat-row"><span class="label">Skor</span><span class="value">${entry.score}</span></div>
+          <div class="stat-row"><span class="label">Waktu</span><span class="value">${entry.time}</span></div>
+          <div class="stat-row"><span class="label">Langkah</span><span class="value">${entry.steps}</span></div>
+          <div class="stat-row"><span class="label">Hint</span><span class="value">${entry.hints}</span></div>
+        </div>
+      `;
+          }
         }
 
         html += `
