@@ -21,6 +21,37 @@
         color: #f0f0f0;
       }
 
+      .btn,
+      .custom-file-upload,
+      .custom-select,
+      .custom-checkbox-button {
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn:hover,
+      .custom-file-upload:hover,
+      .custom-select:hover,
+      .custom-checkbox-button:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
+      }
+
+      .dark-mode .btn,
+      .dark-mode .custom-file-upload,
+      .dark-mode .custom-select,
+      .dark-mode .custom-checkbox-button {
+        background: #222;
+        color: #f0f0f0;
+        border: 1px solid #666;
+      }
+
       .btn {
         padding: 10px 20px;
         font-size: 16px;
@@ -153,40 +184,6 @@
 
       input[type="file"] {
         display: none;
-      }
-
-      .custom-file-upload {
-        display: inline-block;
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: 500;
-        color: #000;
-        background-color: #f4f4f4;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-        margin: 5px;
-        border: 2px;
-        border-radius: 8px;
-      }
-
-      .custom-file-upload:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
-      }
-
-      .dark-mode .custom-file-upload {
-        background-color: #222;
-        color: #f0f0f0;
-        border: 1px solid #666;
-      }
-
-      .dark-mode .custom-file-upload:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-        box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
       }
 
       .puzzle-piece.selected {
@@ -446,40 +443,8 @@
       }
 
       .custom-select {
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: 500;
         border: 1px solid #ccc;
-        border-radius: 8px;
         background-color: #f4f4f4;
-        color: #000;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-        height: 41px;
-      }
-
-      .custom-select:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
-      }
-
-      .dark-mode .custom-select {
-        background-color: #222;
-        color: #f0f0f0;
-        border: 1px solid #666;
-      }
-
-      .dark-mode .custom-select option {
-        background-color: #111;
-        color: #fff;
-      }
-
-      .dark-mode .custom-select:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-        box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
       }
 
       .hint-highlight {
