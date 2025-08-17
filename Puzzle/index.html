@@ -21,10 +21,7 @@
         color: #f0f0f0;
       }
 
-      .btn,
-      .custom-file-upload,
-      .custom-select,
-      .custom-checkbox-button {
+      .button-base {
         padding: 10px 20px;
         font-size: 16px;
         font-weight: 500;
@@ -34,48 +31,64 @@
         box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
       }
 
-      .btn:hover,
-      .custom-file-upload:hover,
-      .custom-select:hover,
-      .custom-checkbox-button:hover {
+      .button-base:hover {
         opacity: 0.9;
         transform: translateY(-1px);
         box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
       }
 
-      .dark-mode .btn,
-      .dark-mode .custom-file-upload,
-      .dark-mode .custom-select,
-      .dark-mode .custom-checkbox-button {
+      .dark-mode .button-base {
         background: #222;
         color: #f0f0f0;
         border: 1px solid #666;
+      }
+      .dark-mode .button-base:hover {
+        box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
       }
 
       .btn {
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: 500;
-        border: none;
-        border-radius: 8px;
         background: #f4f4f4;
         color: black;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        border: none;
         margin: 5px;
       }
-
-      .btn:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
+      .btn-danger {
+        background-color: #cc0000;
+        color: white;
+      }
+      .btn-danger:hover {
+        background-color: #a00000;
+      }
+      .dark-mode .btn-danger {
+        background-color: #880000;
       }
 
-      .dark-mode .btn {
-        background: #222;
-        color: #f0f0f0;
-        border: 1px solid #666;
+      .custom-checkbox-button {
+        border: 1px solid #ccc;
+        background: #f4f4f4;
+        color: #000;
+        user-select: none;
+      }
+      .custom-checkbox-button.active {
+        background-color: #64ec64;
+        border-color: #333;
+      }
+      .dark-mode .custom-checkbox-button.active {
+        background-color: #079c07;
+      }
+
+      .custom-select {
+        border: 1px solid #ccc;
+        background-color: #f4f4f4;
+      }
+      .custom-select.active {
+        background-color: #64ec64;
+        border-color: #333;
+        color: #000;
+      }
+      .dark-mode .custom-select.active {
+        background-color: #079c07;
+        color: #fff;
       }
 
       .dark-mode .btn:hover {
@@ -542,17 +555,17 @@
     <h1>Jigsaw Puzzle Game</h1>
 
     <div class="controls" id="preGameControls">
-      <button class="btn" onclick="startGame()">Start New Game</button>
+      <button class="btn button-base" onclick="startGame()">Start New Game</button>
       <input type="file" id="imageUpload" accept="image/*" />
-      <select id="defaultImageSelector" class="custom-select">
+      <select id="defaultImageSelector" class="custom-select button-base">
         <option value="__upload__">📁 Upload Gambar...</option>
       </select>
-      <button class="btn" id="toggleDarkMode">Dark Mode</button>
+      <button class="btn button-base" id="toggleDarkMode">Dark Mode</button>
       <div id="previewContainer">
         <p>Preview Gambar:</p>
         <img id="previewImage" src="" alt="Preview" />
       </div>
-      <select id="difficulty" class="custom-select">
+      <select id="difficulty" class="custom-select button-base">
         <option value="3">Easy (3x3)</option>
         <option value="4">Medium (4x4)</option>
         <option value="5">Hard (5x5)</option>
@@ -560,18 +573,18 @@
         <option value="7">Insane (7x7)</option>
         <option value="8">Godlike (8x8)</option>
       </select>
-      <label id="rotationModeButton" class="custom-checkbox-button">
+      <label id="rotationModeButton" class="custom-checkbox-button button-base">
         <input type="checkbox" id="rotationMode" />
         Mode Rotasi
       </label>
-      <select id="challengeModeSelect" class="custom-select">
+      <select id="challengeModeSelect" class="custom-select button-base">
         <option value="0" selected>🎯 Mode Tantangan: Nonaktif</option>
         <option value="60">🎯 Mode Tantangan: 1 Menit</option>
         <option value="120">🎯 Mode Tantangan: 2 Menit</option>
         <option value="300">🎯 Mode Tantangan: 5 Menit</option>
       </select>
-      <button class="btn" onclick="showLeaderboard()">🏆 Leaderboard</button>
-      <button class="btn" onclick="showStats()">📊 Statistik</button>
+      <button class="btn button-base" onclick="showLeaderboard()">🏆 Leaderboard</button>
+      <button class="btn button-base" onclick="showStats()">📊 Statistik</button>
     </div>
 
     <div class="controls" id="inGameControls" style="display: none">
@@ -579,29 +592,29 @@
       <div id="progressBarContainer"><div id="progressBarFill"></div></div>
 
       <div id="undoButtonHidden" style="display: none">
-        <button class="btn" onclick="showOriginal()" id="showOriginal">Show Original</button>
-        <button class="btn" id="toggleDarkModeInGame">Dark Mode</button>
-        <button class="btn" id="highlightButton">Highlight Posisi Benar</button>
+        <button class="btn button-base" onclick="showOriginal()" id="showOriginal">Show Original</button>
+        <button class="btn button-base" id="toggleDarkModeInGame">Dark Mode</button>
+        <button class="btn button-base" id="highlightButton">Highlight Posisi Benar</button>
 
         <div id="toggleRotateButton" style="display: none">
           <button class="btn" id="rotateSelected">🔄 Rotate</button>
         </div>
 
-        <button class="btn" id="undoButton">Undo</button>
+        <button class="btn button-base" id="undoButton">Undo</button>
 
-        <button class="btn" onclick="previewLastSwap()">👀 Lihat Langkah Terakhir</button>
-        <button class="btn" id="hintButton">🔍 Hint</button>
-        <button class="btn" id="pauseButton">Pause</button>
+        <button class="btn button-base" onclick="previewLastSwap()">👀 Lihat Langkah Terakhir</button>
+        <button class="btn button-base" id="hintButton">🔍 Hint</button>
+        <button class="btn button-base" id="pauseButton">Pause</button>
       </div>
 
       <div id="timer">Time: 00:00</div>
       <div id="hintCountDisplay">Hint used: 0</div>
 
       <div id="toggleEndButton" style="display: none">
-        <button class="btn btn-danger" id="endGameButton" onclick="endGame()">🛑 End Game</button>
+        <button class="btn btn-danger button-base" id="endGameButton" onclick="endGame()">🛑 End Game</button>
       </div>
       <div id="toggleShowButton" style="display: none">
-        <button class="btn active" id="closeButton" onclick="closeGame()">Close Game</button>
+        <button class="btn active button-base" id="closeButton" onclick="closeGame()">Close Game</button>
       </div>
     </div>
 
@@ -619,7 +632,7 @@
 
     <div id="pauseOverlay">
       <div>Game Paused<br />Klik Resume untuk melanjutkan</div>
-      <button class="btn" id="resumeButton">Resume</button>
+      <button class="btn button-base" id="resumeButton">Resume</button>
     </div>
 
     <script>
@@ -879,7 +892,7 @@
 
         buttons.innerHTML = `
         <div class="reset-container horizontal-buttons">
-            <button class="btn close-modal-button" onclick="closeModal()">OK</button>
+            <button class="btn button-base" onclick="closeModal()">OK</button>
         </div>
     `;
 
@@ -1323,8 +1336,8 @@
 
         html += `
           <div class="reset-container horizontal-buttons">
-            <button onclick="resetLeaderboard()" class="btn btn-danger">🗑️ Reset Leaderboard</button>
-            <button class="btn close-modal-button" onclick="closeModal()">OK</button>
+            <button onclick="resetLeaderboard()" class="btn btn-danger button-base">🗑️ Reset Leaderboard</button>
+            <button class="btn close-modal-button button-base" onclick="closeModal()">OK</button>
           </div>
         </div>`;
 
@@ -1391,8 +1404,8 @@
       <div class="stat-row"><span class="label">💡 Total Hint</span><span class="value">${stats.totalHints}</span></div>
     
     <div class="reset-container horizontal-buttons">
-  <button onclick="resetStats()" class="btn btn-danger">🗑️ Reset Statistik</button>
-  <button class="btn close-modal-button" onclick="closeModal()">OK</button>
+  <button onclick="resetStats()" class="btn btn-danger button-base">🗑️ Reset Statistik</button>
+  <button class="btn close-modal-button button-base" onclick="closeModal()">OK</button>
 </div>
     
     </div>
