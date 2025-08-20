@@ -1445,6 +1445,24 @@
         });
       }
 
+      document.getElementById("imageUpload").addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith("image/")) {
+          const reader = new FileReader();
+          reader.onload = function (event) {
+            currentImageUrl = event.target.result;
+            updatePreviewImage(currentImageUrl);
+
+            const opt = document.createElement("option");
+            opt.value = currentImageUrl;
+            opt.textContent = "📂 " + file.name;
+            defaultImageSelector.appendChild(opt);
+            defaultImageSelector.value = currentImageUrl;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
       function toggleControls(isPlaying) {
         document.getElementById("preGameControls").style.display = isPlaying ? "none" : "block";
         document.getElementById("inGameControls").style.display = isPlaying ? "block" : "none";
