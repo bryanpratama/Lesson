@@ -557,9 +557,7 @@
     <div class="controls" id="preGameControls">
       <button class="btn button-base" onclick="startGame()">Start New Game</button>
       <input type="file" id="imageUpload" accept="image/*" />
-      <select id="defaultImageSelector" class="custom-select button-base">
-        <option value="__upload__">📁 Upload Gambar...</option>
-      </select>
+      <select id="defaultImageSelector" class="custom-select button-base"></select>
       <button class="btn button-base" id="toggleDarkMode">Dark Mode</button>
       <div id="previewContainer">
         <p>Preview Gambar:</p>
@@ -1121,7 +1119,7 @@
       });
 
       const defaultImages = [
-        { name: "Pilih gambar default...", url: "image/image1.jpg" },
+        { name: "Gambar default...", url: "image/image1.jpg" },
         { name: "Puncak-gunung", url: "image/Puncak-gunung.jpg" },
         { name: "Meja kerja", url: "image/Meja-kerja.jpg" },
         { name: "Pegunungan bersalju", url: "image/Pegunungan-bersalju.jpg" },
@@ -1137,6 +1135,11 @@
         option.textContent = img.name;
         defaultImageSelector.appendChild(option);
       });
+
+      const uploadOption = document.createElement("option");
+      uploadOption.value = "__upload__";
+      uploadOption.textContent = "📁 Upload Gambar...";
+      defaultImageSelector.appendChild(uploadOption);
 
       defaultImageSelector.addEventListener("change", (e) => {
         const imageUrl = e.target.value;
