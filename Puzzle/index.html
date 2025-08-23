@@ -665,82 +665,71 @@
         preview.style.display = "block";
       }
 
-function createPieces() {
-  pieces = [];
-  puzzleContainer.innerHTML = "";
-  const pieceSize = 300 / gridSize;
+      function createPieces() {
+        pieces = [];
+        puzzleContainer.innerHTML = "";
+        const pieceSize = 300 / gridSize;
 
-  const img = new Image();
-  img.src = currentImageUrl;
-  img.onload = () => {
+        const img = new Image();
+        img.src = currentImageUrl;
+        img.onload = () => {
+          const cropSize = Math.min(img.width, img.height);
+          const offsetX = (img.width - cropSize) / 2;
+          const offsetY = (img.height - cropSize) / 2;
 
-    const cropSize = Math.min(img.width, img.height);
-    const offsetX = (img.width - cropSize) / 2;
-    const offsetY = (img.height - cropSize) / 2;
+          const squareCanvas = document.createElement("canvas");
+          squareCanvas.width = 300;
+          squareCanvas.height = 300;
+          const squareCtx = squareCanvas.getContext("2d");
 
-    const squareCanvas = document.createElement("canvas");
-    squareCanvas.width = 300;
-    squareCanvas.height = 300;
-    const squareCtx = squareCanvas.getContext("2d");
+          squareCtx.drawImage(img, offsetX, offsetY, cropSize, cropSize, 0, 0, 300, 300);
 
-    squareCtx.drawImage(
-      img,
-      offsetX,
-      offsetY,
-      cropSize,
-      cropSize,
-      0,
-      0,
-      300,
-      300
-    );
+          for (let row = 0; row < gridSize; row++) {
+            for (let col = 0; col < gridSize; col++) {
+              const piece = document.createElement("div");
+              piece.classList.add("puzzle-piece");
+              piece.style.width = `${pieceSize}px`;
+              piece.style.height = `${pieceSize}px`;
 
-    for (let row = 0; row < gridSize; row++) {
-      for (let col = 0; col < gridSize; col++) {
-        const piece = document.createElement("div");
-        piece.classList.add("puzzle-piece");
-        piece.style.width = `${pieceSize}px`;
-        piece.style.height = `${pieceSize}px`;
+              piece.id = `piece-${row}-${col}`;
 
-        piece.id = `piece-${row}-${col}`;
+              const canvas = document.createElement("canvas");
+              canvas.width = pieceSize;
+              canvas.height = pieceSize;
+              const ctx = canvas.getContext("2d");
 
-        const canvas = document.createElement("canvas");
-        canvas.width = pieceSize;
-        canvas.height = pieceSize;
-        const ctx = canvas.getContext("2d");
+              ctx.drawImage(
+                squareCanvas,
+                col * pieceSize,
+                row * pieceSize,
+                pieceSize,
+                pieceSize,
+                0,
+                0,
+                pieceSize,
+                pieceSize
+              );
 
-        ctx.drawImage(
-          squareCanvas,
-          col * pieceSize,
-          row * pieceSize,
-          pieceSize,
-          pieceSize,
-          0,
-          0,
-          pieceSize,
-          pieceSize
-        );
+              const imgPiece = new Image();
+              imgPiece.src = canvas.toDataURL();
+              imgPiece.draggable = false;
+              imgPiece.style.width = "100%";
+              imgPiece.style.height = "100%";
+              piece.appendChild(imgPiece);
 
-        const imgPiece = new Image();
-        imgPiece.src = canvas.toDataURL();
-        imgPiece.draggable = false;
-        imgPiece.style.width = "100%";
-        imgPiece.style.height = "100%";
-        piece.appendChild(imgPiece);
+              piece.dataset.correctRow = row;
+              piece.dataset.correctCol = col;
 
-        piece.dataset.correctRow = row;
-        piece.dataset.correctCol = col;
+              addEventsToPiece(piece);
 
-        addEventsToPiece(piece);
+              pieces.push(piece);
+              puzzleContainer.appendChild(piece);
+            }
+          }
 
-        pieces.push(piece);
-        puzzleContainer.appendChild(piece);
+          shufflePieces();
+        };
       }
-    }
-
-    shufflePieces();
-  };
-}
 
       function shufflePieces() {
         pieces.sort(() => Math.random() - 0.5);
@@ -753,30 +742,30 @@ function createPieces() {
         e.dataTransfer.setData("text/plain", e.target.id);
       }
 
-function dragOver(e) {
-  e.preventDefault();
-}
+      function dragOver(e) {
+        e.preventDefault();
+      }
 
-function dropPiece(e) {
-  e.preventDefault();
-  const draggedId = e.dataTransfer.getData("text/plain");
-  const draggedEl = document.getElementById(draggedId);
-  const targetEl = e.currentTarget;
+      function dropPiece(e) {
+        e.preventDefault();
+        const draggedId = e.dataTransfer.getData("text/plain");
+        const draggedEl = document.getElementById(draggedId);
+        const targetEl = e.currentTarget;
 
-  if (!draggedEl || !targetEl || draggedEl === targetEl) return;
+        if (!draggedEl || !targetEl || draggedEl === targetEl) return;
 
-  const draggedClone = draggedEl.cloneNode(true);
-  const targetClone = targetEl.cloneNode(true);
+        const draggedClone = draggedEl.cloneNode(true);
+        const targetClone = targetEl.cloneNode(true);
 
-  targetEl.replaceWith(draggedClone);
-  draggedEl.replaceWith(targetClone);
+        targetEl.replaceWith(draggedClone);
+        draggedEl.replaceWith(targetClone);
 
-  addEventsToPiece(draggedClone);
-  addEventsToPiece(targetClone);
+        addEventsToPiece(draggedClone);
+        addEventsToPiece(targetClone);
 
-  checkProgress();
-}
-
+        updateProgress();
+        checkCompletion();
+      }
 
       function addEventsToPiece(piece) {
         piece.draggable = true;
@@ -861,30 +850,27 @@ function dropPiece(e) {
 
       function checkCompletion() {
         const currentPieces = [...puzzleContainer.children];
-        const pieceSize = 300 / gridSize;
+        let allCorrect = true;
 
-        const allCorrect = currentPieces.every((piece, index) => {
+        currentPieces.forEach((piece, index) => {
           const correctRow = Math.floor(index / gridSize);
           const correctCol = index % gridSize;
 
-          const expectedX = -correctCol * pieceSize;
-          const expectedY = -correctRow * pieceSize;
+          const expectedRow = parseInt(piece.dataset.correctRow, 10);
+          const expectedCol = parseInt(piece.dataset.correctCol, 10);
 
-          const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
-          const currentX = parseFloat(bgPos[0]);
-          const currentY = parseFloat(bgPos[1]);
+          if (correctRow !== expectedRow || correctCol !== expectedCol) {
+            allCorrect = false;
+          }
+
           const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
-
-          const isCorrectPosition = Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1;
-
-          const isCorrectRotation = currentRotation === 0;
-
-          return isCorrectPosition && isCorrectRotation;
+          if (currentRotation !== 0) {
+            allCorrect = false;
+          }
         });
 
         if (allCorrect) {
           if (isChallengeMode) clearInterval(challengeTimer);
-
           clearInterval(timer);
           updateLifetimeStats(score, seconds, hintCount);
           disablePuzzleInteraction();
