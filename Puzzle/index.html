@@ -1086,10 +1086,7 @@
       }
 
       function updateProgress() {
-        document.querySelectorAll(".puzzle-piece").forEach((p) => p.classList.remove("highlight-correct"));
-
         const pieces = puzzleContainer.children;
-        const pieceSize = 300 / gridSize;
         let correctCount = 0;
 
         for (let i = 0; i < pieces.length; i++) {
@@ -1097,19 +1094,13 @@
           const correctRow = Math.floor(i / gridSize);
           const correctCol = i % gridSize;
 
-          const expectedX = -correctCol * pieceSize;
-          const expectedY = -correctRow * pieceSize;
-
-          const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
-          const currentX = parseFloat(bgPos[0]);
-          const currentY = parseFloat(bgPos[1]);
-
-          const isCorrectPosition = Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1;
+          const expectedRow = parseInt(piece.dataset.correctRow, 10);
+          const expectedCol = parseInt(piece.dataset.correctCol, 10);
 
           const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
           const isCorrectRotation = currentRotation === 0;
 
-          if (isCorrectPosition && isCorrectRotation) {
+          if (correctRow === expectedRow && correctCol === expectedCol && isCorrectRotation) {
             correctCount++;
           }
         }
@@ -1121,8 +1112,9 @@
           "progress"
         ).textContent = `Progress: ${correctCount} / ${total} pieces in correct position (${percentage}%)`;
 
-        document.getElementById("progressBarFill").style.width = `${percentage}%`;
-        document.getElementById("progressBarFill").style.backgroundColor = getProgressColor(percentage);
+        const progressBarFill = document.getElementById("progressBarFill");
+        progressBarFill.style.width = `${percentage}%`;
+        progressBarFill.style.backgroundColor = getProgressColor(percentage);
       }
 
       let isPaused = false;
