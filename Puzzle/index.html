@@ -1261,61 +1261,91 @@
       document.getElementById("hintButton").addEventListener("click", showHint);
 
       function showHint() {
-        const pieces = Array.from(puzzleContainer.children);
-        const pieceSize = 300 / gridSize;
+        const children = Array.from(puzzleContainer.children);
+        const size = gridSize;
 
-        for (let i = 0; i < pieces.length; i++) {
-          const piece = pieces[i];
-          const correctRow = Math.floor(i / gridSize);
-          const correctCol = i % gridSize;
+        // Cari index pertama yang salah (posisi atau rotasi)
+        let wrongIndex = -1;
+        for (let i = 0; i < children.length; i++) {
+          const piece = children[i];
+          const expectedRow = Math.floor(i / size);
+          const expectedCol = i % size;
+          const row = parseInt(piece.dataset.correctRow, 10);
+          const col = parseInt(piece.dataset.correctCol, 10);
+          const rotation = parseInt(piece.getAttribute("data-rotation") || "0", 10);
+          const rotationWrong = document.getElementById("rotationMode").checked && rotation !== 0;
 
-          const expectedX = -correctCol * pieceSize;
-          const expectedY = -correctRow * pieceSize;
-
-          const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
-          const currentX = parseFloat(bgPos[0]);
-          const currentY = parseFloat(bgPos[1]);
-          const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
-
-          const isCorrectPosition = Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1;
-          const isCorrectRotation = currentRotation === 0;
-
-          if (!isCorrectPosition || !isCorrectRotation) {
-            const correctPiece = pieces.find((p) => {
-              const bg = window.getComputedStyle(p).backgroundPosition.split(" ");
-              const bx = parseFloat(bg[0]);
-              const by = parseFloat(bg[1]);
-              return Math.abs(bx - expectedX) < 1 && Math.abs(by - expectedY) < 1;
-            });
-
-            if (correctPiece && correctPiece !== piece) {
-              const tempPos = piece.style.backgroundPosition;
-              piece.style.backgroundPosition = correctPiece.style.backgroundPosition;
-              correctPiece.style.backgroundPosition = tempPos;
-
-              const rotA = piece.getAttribute("data-rotation") || "0";
-              const rotB = correctPiece.getAttribute("data-rotation") || "0";
-
-              piece.setAttribute("data-rotation", rotB);
-              correctPiece.setAttribute("data-rotation", rotA);
-
-              piece.style.transform = `rotate(${rotB}deg)`;
-              correctPiece.style.transform = `rotate(${rotA}deg)`;
-
-              correctPiece.classList.add("hint-highlight");
-              setTimeout(() => {
-                correctPiece.classList.remove("hint-highlight");
-              }, 1000);
-
-              hintCount++;
-              updateHintDisplay();
-
-              updateProgress();
-              checkCompletion();
-              break;
-            }
+          if (row !== expectedRow || col !== expectedCol || rotationWrong) {
+            wrongIndex = i;
+            break;
           }
         }
+
+        // Semua sudah benar -> tidak ada yang perlu dibantu
+        if (wrongIndex === -1) return;
+
+        const atTarget = children[wrongIndex];
+        const expectedRow = Math.floor(wrongIndex / size);
+        const expectedCol = wrongIndex % size;
+        const row = parseInt(atTarget.dataset.correctRow, 10);
+        const col = parseInt(atTarget.dataset.correctCol, 10);
+        const rotation = parseInt(atTarget.getAttribute("data-rotation") || "0", 10);
+        const rotationMode = document.getElementById("rotationMode").checked;
+
+        // Kasus 1: posisi sudah benar tapi rotasinya salah -> luruskan saja
+        if (row === expectedRow && col === expectedCol && rotationMode && rotation !== 0) {
+          const fixed = atTarget.cloneNode(true);
+          fixed.style.transform = "rotate(0deg)";
+          fixed.setAttribute("data-rotation", "0");
+          puzzleContainer.replaceChild(fixed, atTarget);
+          addEventsToPiece(fixed);
+
+          // efek highlight singkat
+          fixed.classList.add("hint-highlight");
+          setTimeout(() => fixed.classList.remove("hint-highlight"), 800);
+
+          hintCount++;
+          updateHintDisplay();
+          updateProgress();
+          checkCompletion();
+          lastSwapped = null; // tidak ada swap
+          return;
+        }
+
+        // Kasus 2: posisi salah -> tukar dengan potongan yang seharusnya berada di posisi ini
+        const correctIndex = children.findIndex(
+          (p) =>
+            parseInt(p.dataset.correctRow, 10) === expectedRow && parseInt(p.dataset.correctCol, 10) === expectedCol
+        );
+        if (correctIndex === -1) return;
+
+        const pieceAtTarget = children[wrongIndex];
+        const correctPiece = children[correctIndex];
+
+        const cloneA = pieceAtTarget.cloneNode(true);
+        const cloneB = correctPiece.cloneNode(true);
+
+        if (rotationMode) {
+          cloneB.style.transform = "rotate(0deg)";
+          cloneB.setAttribute("data-rotation", "0");
+        }
+
+        puzzleContainer.replaceChild(cloneB, pieceAtTarget);
+        puzzleContainer.replaceChild(cloneA, correctPiece);
+
+        addEventsToPiece(cloneA);
+        addEventsToPiece(cloneB);
+
+        lastSwapped = [wrongIndex, correctIndex];
+
+        const newChildren = Array.from(puzzleContainer.children);
+        newChildren[wrongIndex].classList.add("hint-highlight");
+        setTimeout(() => newChildren[wrongIndex]?.classList.remove("hint-highlight"), 800);
+
+        hintCount++;
+        updateHintDisplay();
+        updateProgress();
+        checkCompletion();
       }
 
       function updateHintDisplay() {
