@@ -646,6 +646,7 @@
       let currentImageUrl = "image/image1.jpg";
       let pieces = [];
       let timer;
+      let highlightTimer;
       let seconds = 0;
       let gridSize = 3;
       let lastSwapped = null;
@@ -1060,31 +1061,33 @@
 
       function highlightCorrectPieces() {
         const pieces = puzzleContainer.children;
-        const pieceSize = 300 / gridSize;
+
+        for (let i = 0; i < pieces.length; i++) {
+          pieces[i].classList.remove("highlight-correct");
+        }
+
+        clearTimeout(highlightTimer);
 
         for (let i = 0; i < pieces.length; i++) {
           const piece = pieces[i];
           const correctRow = Math.floor(i / gridSize);
           const correctCol = i % gridSize;
-
-          const expectedX = -correctCol * pieceSize;
-          const expectedY = -correctRow * pieceSize;
-
-          const bgPos = window.getComputedStyle(piece).backgroundPosition.split(" ");
-          const currentX = parseFloat(bgPos[0]);
-          const currentY = parseFloat(bgPos[1]);
-
+          const expectedRow = parseInt(piece.dataset.correctRow, 10);
+          const expectedCol = parseInt(piece.dataset.correctCol, 10);
           const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
           const isCorrectRotation = currentRotation === 0;
-
-          const isCorrectPosition = Math.abs(currentX - expectedX) < 1 && Math.abs(currentY - expectedY) < 1;
+          const isCorrectPosition = correctRow === expectedRow && correctCol === expectedCol;
 
           if (isCorrectPosition && isCorrectRotation) {
             piece.classList.add("highlight-correct");
-          } else {
-            piece.classList.remove("highlight-correct");
           }
         }
+
+        highlightTimer = setTimeout(() => {
+          for (let i = 0; i < pieces.length; i++) {
+            pieces[i].classList.remove("highlight-correct");
+          }
+        }, 5000);
       }
 
       function getProgressColor(percentage) {
