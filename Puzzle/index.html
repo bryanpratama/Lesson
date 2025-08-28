@@ -766,14 +766,19 @@
         const draggedClone = draggedEl.cloneNode(true);
         const targetClone = targetEl.cloneNode(true);
 
+        const children = Array.from(puzzleContainer.children);
+        const index1 = children.indexOf(draggedEl);
+        const index2 = children.indexOf(targetEl);
+
         targetEl.replaceWith(draggedClone);
         draggedEl.replaceWith(targetClone);
 
         addEventsToPiece(draggedClone);
         addEventsToPiece(targetClone);
 
+        lastSwapped = [index1, index2];
+
         updateProgress();
-        checkCompletion();
       }
 
       function addEventsToPiece(piece) {
