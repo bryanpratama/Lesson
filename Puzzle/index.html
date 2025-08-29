@@ -369,8 +369,11 @@
       }
 
       .highlight-preview {
-        outline: 4px dashed orange;
-        animation: pulseBorder 0.5s ease-in-out infinite alternate;
+        position: relative;
+        z-index: 9999 !important;
+        box-shadow: 0 0 15px 5px orange;
+        border: 3px solid orange !important;
+        animation: pulseHighlight 0.8s ease-in-out infinite alternate;
       }
 
       @keyframes pulseBorder {
@@ -1272,7 +1275,6 @@
         const children = Array.from(puzzleContainer.children);
         const size = gridSize;
 
-        // Cari index pertama yang salah (posisi atau rotasi)
         let wrongIndex = -1;
         for (let i = 0; i < children.length; i++) {
           const piece = children[i];
@@ -1289,7 +1291,6 @@
           }
         }
 
-        // Semua sudah benar -> tidak ada yang perlu dibantu
         if (wrongIndex === -1) return;
 
         const atTarget = children[wrongIndex];
@@ -1300,7 +1301,6 @@
         const rotation = parseInt(atTarget.getAttribute("data-rotation") || "0", 10);
         const rotationMode = document.getElementById("rotationMode").checked;
 
-        // Kasus 1: posisi sudah benar tapi rotasinya salah -> luruskan saja
         if (row === expectedRow && col === expectedCol && rotationMode && rotation !== 0) {
           const fixed = atTarget.cloneNode(true);
           fixed.style.transform = "rotate(0deg)";
@@ -1308,7 +1308,6 @@
           puzzleContainer.replaceChild(fixed, atTarget);
           addEventsToPiece(fixed);
 
-          // efek highlight singkat
           fixed.classList.add("hint-highlight");
           setTimeout(() => fixed.classList.remove("hint-highlight"), 800);
 
@@ -1316,11 +1315,10 @@
           updateHintDisplay();
           updateProgress();
           checkCompletion();
-          lastSwapped = null; // tidak ada swap
+          lastSwapped = null;
           return;
         }
 
-        // Kasus 2: posisi salah -> tukar dengan potongan yang seharusnya berada di posisi ini
         const correctIndex = children.findIndex(
           (p) =>
             parseInt(p.dataset.correctRow, 10) === expectedRow && parseInt(p.dataset.correctCol, 10) === expectedCol
@@ -1417,14 +1415,19 @@
           p.classList.remove("highlight-preview");
         });
 
-        if (!lastSwap) return;
+        if (!lastSwapped) return;
 
-        lastSwap.forEach((piece) => {
+        const children = Array.from(puzzleContainer.children);
+        const [index1, index2] = lastSwapped;
+        const piece1 = children[index1];
+        const piece2 = children[index2];
+
+        [piece1, piece2].forEach((piece) => {
           piece.classList.add("highlight-preview");
         });
 
         setTimeout(() => {
-          lastSwap?.forEach((piece) => {
+          [piece1, piece2].forEach((piece) => {
             piece.classList.remove("highlight-preview");
           });
         }, 3000);
