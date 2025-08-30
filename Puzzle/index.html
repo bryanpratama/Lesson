@@ -906,6 +906,11 @@
 
         disablePuzzleInteraction();
 
+        originalImage.style.display = "none";
+        const showOriginalBtn = document.getElementById("showOriginal");
+        showOriginalBtn.classList.remove("active");
+        showOriginalBtn.disabled = false;
+
         showEndModal();
         toggleControls(false);
         toggleShowButton(false);
@@ -913,6 +918,11 @@
 
       function closeGame() {
         document.getElementById("previewImage").style.display = "block";
+
+        originalImage.style.display = "none";
+        const showOriginalBtn = document.getElementById("showOriginal");
+        showOriginalBtn.classList.remove("active");
+        showOriginalBtn.disabled = false;
 
         toggleControls(false);
       }
