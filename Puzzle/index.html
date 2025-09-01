@@ -614,7 +614,7 @@
 
       <div id="timer">Time: 00:00</div>
       <div id="hintCountDisplay">Hint used: 0</div>
-
+      <div id="highlightCountDisplay">Highlight used: 0</div>
       <div id="toggleEndButton" style="display: none">
         <button class="btn btn-danger button-base" id="endGameButton" onclick="endGame()">🛑 End Game</button>
       </div>
@@ -661,6 +661,7 @@
       let challengeTimeInitial = 0;
       let challengeTimer = null;
       let lastSwap = null;
+      let highlightCount = 0;
       const STATS_KEY = "jigsawStats";
 
       function updatePreviewImage(url) {
@@ -1010,7 +1011,9 @@
         hintCount = 0;
         stepCount = 0;
         score = 0;
+        highlightCount = 0;
 
+        updateHighlightDisplay();
         updateHintDisplay();
         toggleShowButton(false);
         toggleControls(true);
@@ -1080,6 +1083,8 @@
       document.getElementById("highlightButton").addEventListener("click", highlightCorrectPieces);
 
       function highlightCorrectPieces() {
+        highlightCount++;
+        updateHighlightDisplay();
         const pieces = puzzleContainer.children;
 
         for (let i = 0; i < pieces.length; i++) {
@@ -1108,6 +1113,10 @@
             pieces[i].classList.remove("highlight-correct");
           }
         }, 5000);
+      }
+
+      function updateHighlightDisplay() {
+        document.getElementById("highlightCountDisplay").textContent = `Highlight used: ${highlightCount}`;
       }
 
       function getProgressColor(percentage) {
@@ -1146,6 +1155,10 @@
         const progressBarFill = document.getElementById("progressBarFill");
         progressBarFill.style.width = `${percentage}%`;
         progressBarFill.style.backgroundColor = getProgressColor(percentage);
+
+        if (percentage === 100) {
+          checkCompletion();
+        }
       }
 
       let isPaused = false;
