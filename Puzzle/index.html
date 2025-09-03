@@ -535,16 +535,34 @@
         color: #fff;
       }
 
-      @keyframes pulse {
-        0% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.05);
-        }
-        100% {
-          transform: scale(1);
-        }
+      .counter-display {
+        display: inline-block;
+        margin: 8px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      #hintCountDisplay {
+        background: linear-gradient(135deg, #ffcc00, #ff9900);
+        color: #222;
+      }
+
+      #highlightCountDisplay {
+        background: linear-gradient(135deg, #66ff99, #33cc66);
+        color: #111;
+      }
+
+      .dark-mode #hintCountDisplay {
+        background: linear-gradient(135deg, #ffcc00, #cc8400);
+        color: #000;
+      }
+      .dark-mode #highlightCountDisplay {
+        background: linear-gradient(135deg, #33cc66, #227744);
+        color: #fff;
       }
 
       @media (max-width: 500px) {
@@ -614,8 +632,9 @@
       </div>
 
       <div id="timer">Time: 00:00</div>
-      <div id="hintCountDisplay">Hint used: 0</div>
-      <div id="highlightCountDisplay">Highlight used: 0</div>
+      <div id="hintCountDisplay" class="counter-display">Hint used: 0</div>
+      <div id="highlightCountDisplay" class="counter-display">Highlight used: 0</div>
+
       <div id="toggleEndButton" style="display: none">
         <button class="btn btn-danger button-base" id="endGameButton" onclick="endGame()">🛑 End Game</button>
       </div>
