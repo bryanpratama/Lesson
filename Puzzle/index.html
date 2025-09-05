@@ -555,6 +555,11 @@
         color: #fff;
       }
 
+      #completionResult {
+        margin: 20px auto;
+        max-width: 400px;
+      }
+
       @media (max-width: 500px) {
         #puzzle-container {
           width: 95vw;
@@ -634,6 +639,8 @@
     </div>
 
     <div id="puzzle-container"></div>
+
+    <div id="completionResult"></div>
 
     <div id="original-image" style="display: none">
       <img id="originalImagePreview" src="image/image1.jpg" alt="Original Image" width="300" />
@@ -868,12 +875,16 @@
       }
 
       function closeModal() {
-        document.getElementById("customModal").classList.add("hidden");
+        const modal = document.getElementById("customModal");
+        modal.classList.add("hidden");
         document.getElementById("modalButtons").innerHTML = "";
 
         const showOriginalBtn = document.getElementById("showOriginal");
         showOriginalBtn.classList.remove("active");
         showOriginalBtn.disabled = false;
+
+        const modalContent = document.getElementById("modalMessage").innerHTML;
+        document.getElementById("completionResult").innerHTML = modalContent;
       }
 
       function checkCompletion() {
