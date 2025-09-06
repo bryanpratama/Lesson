@@ -52,23 +52,42 @@
         border: none;
         margin: 5px;
       }
-      .btn-danger {
-        background-color: #cc0000;
-        color: white;
-      }
-      .btn-danger:hover {
-        background-color: #a00000;
-      }
-      .dark-mode .btn-danger {
-        background-color: #880000;
-      }
-
+      
       .custom-checkbox-button {
-        border: 1px solid #ccc;
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 8px;
+        border: none;
         background: #f4f4f4;
         color: #000;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
         user-select: none;
       }
+
+      .custom-checkbox-button:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
+      }
+
+      .custom-checkbox-button input[type="checkbox"] {
+        display: none;
+      }
+
+      .dark-mode .custom-checkbox-button {
+        background: #222;
+        color: #fff;
+        border: none;
+      }
+
+      .dark-mode .custom-checkbox-button:hover {
+        box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
+      }
+
       .custom-checkbox-button.active {
         background-color: #64ec64;
         border-color: #333;
@@ -111,19 +130,6 @@
 
       .dark-mode .puzzle-piece {
         border-color: #444;
-      }
-
-      .dark-mode .swal2-popup {
-        background: #2c2c2c !important;
-        color: #ffffff !important;
-      }
-
-      .dark-mode .swal2-title {
-        color: #ffffff !important;
-      }
-
-      .dark-mode .swal2-content {
-        color: #dddddd !important;
       }
 
       .dark-mode .modal-content {
@@ -376,15 +382,6 @@
         animation: pulseHighlight 0.8s ease-in-out infinite alternate;
       }
 
-      @keyframes pulseBorder {
-        from {
-          outline-offset: 0px;
-        }
-        to {
-          outline-offset: 4px;
-        }
-      }
-
       .hidden {
         display: none;
       }
@@ -414,55 +411,6 @@
       body:not(.dark-mode) #pauseOverlay {
         background-color: #f0f0f0;
         color: #000;
-      }
-
-      .custom-checkbox-button {
-        display: inline-block;
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: 500;
-        border-radius: 8px;
-        border: none;
-        background: #f4f4f4;
-        color: #000;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-        user-select: none;
-      }
-
-      .custom-checkbox-button:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
-      }
-
-      .custom-checkbox-button input[type="checkbox"] {
-        display: none;
-      }
-
-      .custom-checkbox-button.active {
-        background-color: #64ec64;
-        border-color: #333;
-      }
-
-      .dark-mode .custom-checkbox-button {
-        background: #222;
-        color: #fff;
-        border: none;
-      }
-
-      .dark-mode .custom-checkbox-button:hover {
-        box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
-      }
-
-      .dark-mode .custom-checkbox-button.active {
-        background-color: #079c07;
-      }
-
-      .custom-select {
-        border: none;
-        background-color: #f4f4f4;
       }
 
       .hint-highlight {
