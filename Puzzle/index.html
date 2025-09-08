@@ -814,8 +814,10 @@
         showOriginalBtn.classList.remove("active");
         showOriginalBtn.disabled = false;
 
-        const modalContent = document.getElementById("modalMessage").innerHTML;
-        document.getElementById("completionResult").innerHTML = modalContent;
+  if (document.getElementById("modalMessage").querySelector(".completion-stats")) {
+    const modalContent = document.getElementById("modalMessage").innerHTML;
+    document.getElementById("completionResult").innerHTML = modalContent;
+  }
       }
 
       function checkCompletion() {
