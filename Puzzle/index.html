@@ -610,6 +610,8 @@
       let challengeTimer = null;
       let lastSwap = null;
       let highlightCount = 0;
+      let highlightUsed = 0;
+
       const STATS_KEY = "jigsawStats";
 
       function updatePreviewImage(url) {
@@ -779,7 +781,8 @@
           score,
           formatTime(timeSpent),
           stepCount,
-          hintCount
+          hintCount,
+          highlightUsed
         );
 
         message.innerHTML = `
@@ -791,6 +794,7 @@
             )}</span></div>
             <div class="stat-row"><span class="label">🔁 Steps</span><span class="value">${stepCount}</span></div>
             <div class="stat-row"><span class="label">💡 Hints used</span><span class="value">${hintCount}</span></div>
+            <div class="stat-row"><span class="label">✨ Highlights  used</span><span class="value">${highlightUsed}</span></div>
             <div class="stat-row"><span class="label">🧮 Score</span><span class="value score">${score}</span></div>
             <div class="stat-row"><span class="label">🏅 Rank</span><span class="value ${rankClass}">${medal}</span></div>
         </div>
@@ -814,10 +818,10 @@
         showOriginalBtn.classList.remove("active");
         showOriginalBtn.disabled = false;
 
-  if (document.getElementById("modalMessage").querySelector(".completion-stats")) {
-    const modalContent = document.getElementById("modalMessage").innerHTML;
-    document.getElementById("completionResult").innerHTML = modalContent;
-  }
+        if (document.getElementById("modalMessage").querySelector(".completion-stats")) {
+          const modalContent = document.getElementById("modalMessage").innerHTML;
+          document.getElementById("completionResult").innerHTML = modalContent;
+        }
       }
 
       function checkCompletion() {
@@ -966,6 +970,7 @@
         stepCount = 0;
         score = 0;
         highlightCount = 0;
+        highlightUsed = 0;
 
         updateHighlightDisplay();
         updateHintDisplay();
@@ -1037,6 +1042,7 @@
       document.getElementById("highlightButton").addEventListener("click", highlightCorrectPieces);
 
       function highlightCorrectPieces() {
+        highlightUsed++;
         highlightCount++;
         updateHighlightDisplay();
         const pieces = puzzleContainer.children;
