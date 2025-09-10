@@ -322,6 +322,7 @@
 
       .stat-row .label {
         font-weight: 500;
+        white-space: nowrap;
       }
 
       .stat-row .value {
@@ -331,7 +332,7 @@
       .stat-row {
         display: grid;
         grid-template-columns: 130px 1fr;
-        gap: 5px;
+        gap: 15px;
         align-items: center;
       }
 
@@ -794,7 +795,7 @@
             )}</span></div>
             <div class="stat-row"><span class="label">🔁 Steps</span><span class="value">${stepCount}</span></div>
             <div class="stat-row"><span class="label">💡 Hints used</span><span class="value">${hintCount}</span></div>
-            <div class="stat-row"><span class="label">✨ Highlights  used</span><span class="value">${highlightUsed}</span></div>
+            <div class="stat-row"><span class="label">✨ Highlights used</span><span class="value">${highlightUsed}</span></div>
             <div class="stat-row"><span class="label">🧮 Score</span><span class="value score">${score}</span></div>
             <div class="stat-row"><span class="label">🏅 Rank</span><span class="value ${rankClass}">${medal}</span></div>
         </div>
