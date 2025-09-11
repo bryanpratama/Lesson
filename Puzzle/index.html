@@ -912,6 +912,8 @@
       function startGame() {
         document.getElementById("previewImage").style.display = "none";
 
+        document.getElementById("completionResult").innerHTML = "";
+
         const selectedDifficulty = document.getElementById("difficulty").value;
         gridSize = parseInt(selectedDifficulty);
         createPieces();
