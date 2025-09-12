@@ -492,6 +492,18 @@
         max-width: 400px;
       }
 
+      .zoom-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      #zoomSlider {
+        width: 150px;
+      }
+
       @media (max-width: 500px) {
         #puzzle-container {
           width: 95vw;
@@ -571,6 +583,12 @@
     </div>
 
     <div id="puzzle-container"></div>
+
+    <div class="zoom-controls">
+      <button id="zoomOut">-</button>
+      <input type="range" id="zoomSlider" min="50" max="150" value="100" />
+      <button id="zoomIn">+</button>
+    </div>
 
     <div id="completionResult"></div>
 
@@ -1518,6 +1536,41 @@
           reader.readAsDataURL(file);
         }
       });
+
+      let zoomLevel = 100;
+
+      function applyZoom() {
+        const puzzle = document.getElementById("puzzle-container");
+        const scale = zoomLevel / 100;
+        puzzle.style.transform = `scale(${scale})`;
+        puzzle.style.transformOrigin = "center";
+
+        const maxWidth = window.innerWidth * 0.9;
+        if (puzzle.offsetWidth * scale > maxWidth) {
+          zoomLevel = (maxWidth / puzzle.offsetWidth) * 100;
+          puzzle.style.transform = `scale(${zoomLevel / 100})`;
+          document.getElementById("zoomSlider").value = zoomLevel;
+        }
+      }
+
+      document.getElementById("zoomOut").addEventListener("click", () => {
+        zoomLevel = Math.max(50, zoomLevel - 10);
+        document.getElementById("zoomSlider").value = zoomLevel;
+        applyZoom();
+      });
+
+      document.getElementById("zoomIn").addEventListener("click", () => {
+        zoomLevel = Math.min(150, zoomLevel + 10);
+        document.getElementById("zoomSlider").value = zoomLevel;
+        applyZoom();
+      });
+
+      document.getElementById("zoomSlider").addEventListener("input", (e) => {
+        zoomLevel = parseInt(e.target.value);
+        applyZoom();
+      });
+
+      window.addEventListener("resize", applyZoom);
 
       function toggleControls(isPlaying) {
         document.getElementById("preGameControls").style.display = isPlaying ? "none" : "block";
