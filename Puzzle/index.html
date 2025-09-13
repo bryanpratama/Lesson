@@ -584,7 +584,7 @@
 
     <div id="puzzle-container"></div>
 
-    <div class="zoom-controls">
+    <div class="zoom-controls" id="zoomControls" style="display: none">
       <button id="zoomOut">-</button>
       <input type="range" id="zoomSlider" min="50" max="150" value="100" />
       <button id="zoomIn">+</button>
@@ -1576,6 +1576,7 @@
         document.getElementById("preGameControls").style.display = isPlaying ? "none" : "block";
         document.getElementById("inGameControls").style.display = isPlaying ? "block" : "none";
         document.getElementById("puzzle-container").style.display = isPlaying ? "flex" : "none";
+        document.getElementById("zoomControls").style.display = isPlaying ? "flex" : "none";
       }
 
       function toggleShowButton(isPlaying) {
