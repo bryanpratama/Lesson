@@ -504,6 +504,13 @@
         width: 150px;
       }
 
+      .puzzle-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
       @media (max-width: 500px) {
         #puzzle-container {
           width: 95vw;
@@ -582,7 +589,14 @@
       </div>
     </div>
 
-    <div id="puzzle-container"></div>
+    <div class="puzzle-wrapper">
+      <div id="puzzle-container"></div>
+      <div class="zoom-controls" id="zoomControls" style="display: none">
+        <button id="zoomOut">-</button>
+        <input type="range" id="zoomSlider" min="50" max="150" value="100" />
+        <button id="zoomIn">+</button>
+      </div>
+    </div>
 
     <div class="zoom-controls" id="zoomControls" style="display: none">
       <button id="zoomOut">-</button>
@@ -1543,7 +1557,7 @@
         const puzzle = document.getElementById("puzzle-container");
         const scale = zoomLevel / 100;
         puzzle.style.transform = `scale(${scale})`;
-        puzzle.style.transformOrigin = "center";
+        puzzle.style.transformOrigin = "top center";
 
         const maxWidth = window.innerWidth * 0.9;
         if (puzzle.offsetWidth * scale > maxWidth) {
