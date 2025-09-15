@@ -498,6 +498,8 @@
         align-items: center;
         gap: 10px;
         margin-top: 10px;
+        position: relative;
+        z-index: 10;
       }
 
       #zoomSlider {
@@ -509,6 +511,14 @@
         flex-direction: column;
         align-items: center;
         gap: 10px;
+      }
+
+      #puzzle-scaler {
+        display: inline-block;
+        transition: transform 0.2s ease;
+        transform-origin: top center;
+        position: relative;
+        z-index: 1;
       }
 
       @media (max-width: 500px) {
@@ -590,7 +600,9 @@
     </div>
 
     <div class="puzzle-wrapper">
-      <div id="puzzle-container"></div>
+      <div id="puzzle-scaler">
+        <div id="puzzle-container"></div>
+      </div>
       <div class="zoom-controls" id="zoomControls" style="display: none">
         <button id="zoomOut">-</button>
         <input type="range" id="zoomSlider" min="50" max="150" value="100" />
@@ -1554,18 +1566,37 @@
       let zoomLevel = 100;
 
       function applyZoom() {
-        const puzzle = document.getElementById("puzzle-container");
+        const scaler = document.getElementById("puzzle-scaler");
         const scale = zoomLevel / 100;
-        puzzle.style.transform = `scale(${scale})`;
-        puzzle.style.transformOrigin = "top center";
+        scaler.style.transform = `scale(${scale})`;
 
+        const puzzle = document.getElementById("puzzle-container");
         const maxWidth = window.innerWidth * 0.9;
         if (puzzle.offsetWidth * scale > maxWidth) {
           zoomLevel = (maxWidth / puzzle.offsetWidth) * 100;
-          puzzle.style.transform = `scale(${zoomLevel / 100})`;
+          scaler.style.transform = `scale(${zoomLevel / 100})`;
           document.getElementById("zoomSlider").value = zoomLevel;
         }
       }
+
+      document.getElementById("zoomOut").addEventListener("click", () => {
+        zoomLevel = Math.max(50, zoomLevel - 10);
+        document.getElementById("zoomSlider").value = zoomLevel;
+        applyZoom();
+      });
+
+      document.getElementById("zoomIn").addEventListener("click", () => {
+        zoomLevel = Math.min(150, zoomLevel + 10);
+        document.getElementById("zoomSlider").value = zoomLevel;
+        applyZoom();
+      });
+
+      document.getElementById("zoomSlider").addEventListener("input", (e) => {
+        zoomLevel = parseInt(e.target.value);
+        applyZoom();
+      });
+
+      window.addEventListener("resize", applyZoom);
 
       document.getElementById("zoomOut").addEventListener("click", () => {
         zoomLevel = Math.max(50, zoomLevel - 10);
