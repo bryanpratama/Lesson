@@ -907,6 +907,10 @@
           updateLifetimeStats(score, seconds, hintCount);
           disablePuzzleInteraction();
 
+          zoomLevel = 100;
+          document.getElementById("zoomSlider").value = zoomLevel;
+          applyZoom();
+
           setTimeout(() => {
             showCompletionModal(formatTime(seconds));
           }, 100);
