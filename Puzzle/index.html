@@ -536,6 +536,14 @@
         z-index: 1;
       }
 
+      #completionResult.completed-prev {
+        border: 2px solid limegreen;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 20px;
+        background: rgba(0, 255, 0, 0.05);
+      }
+
       @media (max-width: 500px) {
         #puzzle-container {
           width: 95vw;
@@ -876,7 +884,9 @@
 
         if (document.getElementById("modalMessage").querySelector(".completion-stats")) {
           const modalContent = document.getElementById("modalMessage").innerHTML;
-          document.getElementById("completionResult").innerHTML = modalContent;
+          const resultBox = document.getElementById("completionResult");
+          resultBox.innerHTML = modalContent;
+          resultBox.classList.add("completed-prev");
         }
       }
 
@@ -929,6 +939,10 @@
         const showOriginalBtn = document.getElementById("showOriginal");
         showOriginalBtn.classList.remove("active");
         showOriginalBtn.disabled = false;
+
+        const resultBox = document.getElementById("completionResult");
+        resultBox.innerHTML = "";
+        resultBox.classList.remove("completed-prev");
 
         showEndModal();
         toggleControls(false);
