@@ -1044,6 +1044,16 @@
               clearInterval(challengeTimer);
               clearInterval(timer);
               disablePuzzleInteraction();
+
+                document.getElementById("undoButtonHidden").style.display = "none";
+  document.getElementById("toggleRotateButton").style.display = "none";
+  document.getElementById("highlightButton").style.display = "none";
+  document.getElementById("hintButton").style.display = "none";
+  document.getElementById("pauseButton").style.display = "none";
+  document.getElementById("showOriginal").style.display = "none";
+
+  document.getElementById("toggleEndButton").style.display = "block";
+
               alert("⏱️ Waktu habis! Kamu gagal menyelesaikan puzzle.");
             }
           }, 1000);
