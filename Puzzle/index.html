@@ -538,6 +538,23 @@
         gap: 10px;
       }
 
+      @keyframes blinkRed {
+        0% {
+          color: red;
+        }
+        50% {
+          color: transparent;
+        }
+        100% {
+          color: red;
+        }
+      }
+
+      .blink-red {
+        animation: blinkRed 1s step-start infinite;
+        font-weight: bold;
+      }
+
       #puzzle-scaler {
         display: inline-block;
         transition: transform 0.2s ease;
@@ -1040,20 +1057,27 @@
           challengeTimer = setInterval(() => {
             challengeTimeLeft--;
             timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
+
+            if (challengeTimeLeft <= 30) {
+              timerDisplay.classList.add("blink-red");
+            } else {
+              timerDisplay.classList.remove("blink-red");
+            }
+
             if (challengeTimeLeft <= 0) {
               clearInterval(challengeTimer);
               clearInterval(timer);
               disablePuzzleInteraction();
 
-                document.getElementById("undoButtonHidden").style.display = "none";
-  document.getElementById("toggleRotateButton").style.display = "none";
-  document.getElementById("highlightButton").style.display = "none";
-  document.getElementById("hintButton").style.display = "none";
-  document.getElementById("pauseButton").style.display = "none";
-  document.getElementById("showOriginal").style.display = "none";
+              document.getElementById("undoButtonHidden").style.display = "none";
+              document.getElementById("toggleRotateButton").style.display = "none";
+              document.getElementById("highlightButton").style.display = "none";
+              document.getElementById("hintButton").style.display = "none";
+              document.getElementById("pauseButton").style.display = "none";
+              document.getElementById("showOriginal").style.display = "none";
 
-  document.getElementById("toggleEndButton").style.display = "block";
-
+              document.getElementById("toggleEndButton").style.display = "block";
+              timerDisplay.classList.remove("blink-red");
               alert("⏱️ Waktu habis! Kamu gagal menyelesaikan puzzle.");
             }
           }, 1000);
