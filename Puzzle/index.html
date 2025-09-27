@@ -583,6 +583,26 @@
         }
       }
 
+      #warningOverlay {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(255, 0, 0, 0.3) 100%);
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        z-index: -10;
+        animation: pulseRed 2s infinite alternate ease-in-out;
+      }
+
+      @keyframes pulseRed {
+        0% {
+          background: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(255, 0, 0, 0.2) 100%);
+        }
+        100% {
+          background: radial-gradient(circle, rgba(0, 0, 0, 1) 40%, rgba(255, 0, 0, 0.5) 100%);
+        }
+      }
+
       #puzzle-scaler {
         display: inline-block;
         transition: transform 0.2s ease;
@@ -706,6 +726,8 @@
       <div>Game Paused<br />Klik Resume untuk melanjutkan</div>
       <button class="btn button-base" id="resumeButton">Resume</button>
     </div>
+
+    <div id="warningOverlay"></div>
 
     <script>
       const puzzleContainer = document.getElementById("puzzle-container");
@@ -1088,8 +1110,10 @@
 
             if (challengeTimeLeft <= 30) {
               timerDisplay.classList.add("blink-red");
+              document.getElementById("warningOverlay").style.opacity = "1";
             } else {
               timerDisplay.classList.remove("blink-red");
+              document.getElementById("warningOverlay").style.opacity = "0";
             }
 
             if (challengeTimeLeft <= 0) {
