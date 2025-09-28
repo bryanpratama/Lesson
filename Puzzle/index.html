@@ -755,6 +755,13 @@
 
       const STATS_KEY = "jigsawStats";
 
+      const warningOverlayEl = document.getElementById("warningOverlay");
+      function setWarningOverlayVisible(show) {
+        if (!warningOverlayEl) return;
+        warningOverlayEl.style.opacity = show ? "1" : "0";
+        warningOverlayEl.style.zIndex = show ? "0" : "-10";
+      }
+
       function updatePreviewImage(url) {
         const preview = document.getElementById("previewImage");
         preview.src = url;
@@ -1108,18 +1115,19 @@
             challengeTimeLeft--;
             timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
 
-            if (challengeTimeLeft <= 30) {
+            if (challengeTimeLeft <= 30 && challengeTimeLeft > 0) {
               timerDisplay.classList.add("blink-red");
-              document.getElementById("warningOverlay").style.opacity = "1";
+              setWarningOverlayVisible(true);
             } else {
               timerDisplay.classList.remove("blink-red");
-              document.getElementById("warningOverlay").style.opacity = "0";
+              setWarningOverlayVisible(false);
             }
 
             if (challengeTimeLeft <= 0) {
               clearInterval(challengeTimer);
               clearInterval(timer);
               disablePuzzleInteraction();
+              setWarningOverlayVisible(false);
 
               document.getElementById("undoButtonHidden").style.display = "none";
               document.getElementById("toggleRotateButton").style.display = "none";
