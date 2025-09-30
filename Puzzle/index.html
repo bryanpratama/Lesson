@@ -587,19 +587,25 @@
         position: fixed;
         inset: 0;
         pointer-events: none;
-        background: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(255, 0, 0, 0.3) 100%);
+        background: radial-gradient(circle, rgba(0, 0, 0, 0) 50%, rgba(255, 0, 0, 0.3) 100%);
         opacity: 0;
         transition: opacity 1s ease-in-out;
         z-index: -10;
-        animation: pulseRed 2s infinite alternate ease-in-out;
       }
 
-      @keyframes pulseRed {
+      #warningOverlay.active {
+        animation: fadePulse 3s infinite ease-in-out;
+      }
+
+      @keyframes fadePulse {
         0% {
-          background: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(255, 0, 0, 0.2) 100%);
+          opacity: 0.2;
+        }
+        50% {
+          opacity: 0.6;
         }
         100% {
-          background: radial-gradient(circle, rgba(0, 0, 0, 1) 40%, rgba(255, 0, 0, 0.5) 100%);
+          opacity: 0.2;
         }
       }
 
@@ -758,7 +764,11 @@
       const warningOverlayEl = document.getElementById("warningOverlay");
       function setWarningOverlayVisible(show) {
         if (!warningOverlayEl) return;
-        warningOverlayEl.style.opacity = show ? "1" : "0";
+        if (show) {
+          warningOverlayEl.classList.add("active");
+        } else {
+          warningOverlayEl.classList.remove("active");
+        }
       }
 
       function updatePreviewImage(url) {
