@@ -587,7 +587,7 @@
         position: fixed;
         inset: 0;
         pointer-events: none;
-        background: radial-gradient(circle, rgba(0, 0, 0, 0) 50%, rgba(255, 0, 0, 0.3) 100%);
+        background: radial-gradient(circle, rgba(0, 0, 0, 0) 50%, rgba(255, 0, 0, 0.6) 100%);
         opacity: 0;
         transition: opacity 1s ease-in-out;
         z-index: -10;
@@ -623,6 +623,13 @@
         padding: 15px;
         margin-top: 20px;
         background: rgba(0, 255, 0, 0.05);
+      }
+
+      .puzzle-piece.filter-grayscale img {
+        filter: grayscale(100%);
+      }
+      .puzzle-piece.filter-sepia img {
+        filter: sepia(100%);
       }
 
       @media (max-width: 500px) {
@@ -667,6 +674,14 @@
         <option value="120">🎯 Mode Tantangan: 2 Menit</option>
         <option value="300">🎯 Mode Tantangan: 5 Menit</option>
       </select>
+
+      <select id="filterModeSelect" class="custom-select button-base">
+        <option value="none" selected>🎭 Tanpa Filter</option>
+        <option value="grayscale">⚫ Grayscale</option>
+        <option value="sepia">🟤 Sepia</option>
+      </select>
+      <button class="btn button-base" id="removeFilterButton" style="display: none">🔓 Lepas Filter</button>
+
       <button class="btn button-base" onclick="showLeaderboard()">🏆 Leaderboard</button>
       <button class="btn button-base" onclick="showStats()">📊 Statistik</button>
     </div>
@@ -758,6 +773,8 @@
       let lastSwap = null;
       let highlightCount = 0;
       let highlightUsed = 0;
+      let filterMode = "none";
+      let filterRemoved = false;
 
       const STATS_KEY = "jigsawStats";
 
@@ -840,6 +857,7 @@
           }
 
           shufflePieces();
+          applyFilterToPieces();
         };
       }
 
@@ -1077,6 +1095,9 @@
       }
 
       function startGame() {
+        filterRemoved = false;
+        document.getElementById("removeFilterButton").style.display = filterMode !== "none" ? "inline-block" : "none";
+
         document.getElementById("previewImage").style.display = "none";
 
         const resultBox = document.getElementById("completionResult");
@@ -1761,6 +1782,28 @@
       });
 
       window.addEventListener("resize", applyZoom);
+
+      document.getElementById("filterModeSelect").addEventListener("change", (e) => {
+        filterMode = e.target.value;
+      });
+
+      function applyFilterToPieces() {
+        const pieces = document.querySelectorAll(".puzzle-piece");
+        pieces.forEach((piece) => {
+          piece.classList.remove("filter-grayscale", "filter-sepia");
+          if (!filterRemoved) {
+            if (filterMode === "grayscale") piece.classList.add("filter-grayscale");
+            if (filterMode === "sepia") piece.classList.add("filter-sepia");
+          }
+        });
+      }
+
+      document.getElementById("removeFilterButton").addEventListener("click", () => {
+        filterRemoved = true;
+        applyFilterToPieces();
+        alert("Filter dilepas, sekarang kamu lihat gambar asli!");
+        document.getElementById("removeFilterButton").style.display = "none";
+      });
 
       function toggleControls(isPlaying) {
         document.getElementById("preGameControls").style.display = isPlaying ? "none" : "block";
