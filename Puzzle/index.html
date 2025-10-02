@@ -680,7 +680,6 @@
         <option value="grayscale">⚫ Grayscale</option>
         <option value="sepia">🟤 Sepia</option>
       </select>
-      <button class="btn button-base" id="removeFilterButton" style="display: none">🔓 Lepas Filter</button>
 
       <button class="btn button-base" onclick="showLeaderboard()">🏆 Leaderboard</button>
       <button class="btn button-base" onclick="showStats()">📊 Statistik</button>
@@ -703,12 +702,15 @@
 
         <button class="btn button-base" onclick="previewLastSwap()">👀 Lihat Langkah Terakhir</button>
         <button class="btn button-base" id="hintButton">🔍 Hint</button>
+        <button class="btn button-base" id="removeFilterButton" style="display: none">🔓 Lepas Filter</button>
+
         <button class="btn button-base" id="pauseButton">Pause</button>
       </div>
 
       <div id="timer">Time: 00:00</div>
       <div id="hintCountDisplay" class="counter-display">Hint used: 0</div>
       <div id="highlightCountDisplay" class="counter-display">Highlight used: 0</div>
+      <div id="filterRemoveCountDisplay" class="counter-display">Filter removed: 0</div>
 
       <div id="toggleEndButton" style="display: none">
         <button class="btn btn-danger button-base" id="endGameButton" onclick="endGame()">🛑 End Game</button>
@@ -775,6 +777,7 @@
       let highlightUsed = 0;
       let filterMode = "none";
       let filterRemoved = false;
+      let filterRemoveCount = 0;
 
       const STATS_KEY = "jigsawStats";
 
@@ -970,6 +973,7 @@
             <div class="stat-row"><span class="label">🔁 Steps</span><span class="value">${stepCount}</span></div>
             <div class="stat-row"><span class="label">💡 Hints used</span><span class="value">${hintCount}</span></div>
             <div class="stat-row"><span class="label">✨ Highlights used</span><span class="value">${highlightUsed}</span></div>
+            <div class="stat-row"><span class="label">🎭 Filter removed</span><span class="value">${filterRemoveCount}</span></div>
             <div class="stat-row"><span class="label">🧮 Score</span><span class="value score">${score}</span></div>
             <div class="stat-row"><span class="label">🏅 Rank</span><span class="value ${rankClass}">${medal}</span></div>
         </div>
@@ -1184,7 +1188,9 @@
         score = 0;
         highlightCount = 0;
         highlightUsed = 0;
+        filterRemoveCount = 0;
 
+        updateFilterRemoveDisplay();
         updateHighlightDisplay();
         updateHintDisplay();
         toggleShowButton(false);
@@ -1799,11 +1805,15 @@
       }
 
       document.getElementById("removeFilterButton").addEventListener("click", () => {
-        filterRemoved = true;
+        filterRemoved = !filterRemoved;
         applyFilterToPieces();
-        alert("Filter dilepas, sekarang kamu lihat gambar asli!");
-        document.getElementById("removeFilterButton").style.display = "none";
+        filterRemoveCount++;
+        updateFilterRemoveDisplay();
       });
+
+      function updateFilterRemoveDisplay() {
+        document.getElementById("filterRemoveCountDisplay").textContent = `Filter removed: ${filterRemoveCount}`;
+      }
 
       function toggleControls(isPlaying) {
         document.getElementById("preGameControls").style.display = isPlaying ? "none" : "block";
