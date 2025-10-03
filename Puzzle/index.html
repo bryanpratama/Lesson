@@ -778,6 +778,7 @@
       let filterMode = "none";
       let filterRemoved = false;
       let filterRemoveCount = 0;
+      let filterTimer = null;
 
       const STATS_KEY = "jigsawStats";
 
@@ -1189,6 +1190,9 @@
         highlightCount = 0;
         highlightUsed = 0;
         filterRemoveCount = 0;
+
+        clearTimeout(filterTimer);
+        filterTimer = null;
 
         updateFilterRemoveDisplay();
         updateHighlightDisplay();
@@ -1805,10 +1809,18 @@
       }
 
       document.getElementById("removeFilterButton").addEventListener("click", () => {
-        filterRemoved = !filterRemoved;
+        clearTimeout(filterTimer);
+
+        filterRemoved = true;
         applyFilterToPieces();
+
         filterRemoveCount++;
         updateFilterRemoveDisplay();
+
+        filterTimer = setTimeout(() => {
+          filterRemoved = false;
+          applyFilterToPieces();
+        }, 10000);
       });
 
       function updateFilterRemoveDisplay() {
