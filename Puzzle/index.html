@@ -683,8 +683,6 @@
 
       <button class="btn button-base" onclick="showLeaderboard()">🏆 Leaderboard</button>
       <button class="btn button-base" onclick="showStats()">📊 Statistik</button>
-
-      <p id="motivationalTip" style="font-style: italic; font-size: 16px; margin-top: 5px; color: #555"></p>
     </div>
 
     <div class="controls" id="inGameControls" style="display: none">
@@ -754,6 +752,8 @@
     </div>
 
     <div id="completionResult"></div>
+
+    <p id="motivationalTip" style="font-style: italic; font-size: 16px; margin-top: 5px; color: #555"></p>
 
     <div id="original-image" style="display: none">
       <img id="originalImagePreview" src="image/image1.jpg" alt="Original Image" width="300" />
@@ -1872,6 +1872,11 @@
         document.getElementById("inGameControls").style.display = isPlaying ? "block" : "none";
         document.getElementById("puzzle-container").style.display = isPlaying ? "flex" : "none";
         document.getElementById("zoomControls").style.display = isPlaying ? "flex" : "none";
+
+        const tipElement = document.getElementById("motivationalTip");
+        if (tipElement) {
+          tipElement.style.display = isPlaying ? "none" : "block";
+        }
       }
 
       function toggleShowButton(isPlaying) {
