@@ -735,6 +735,7 @@
       </div>
       <div id="toggleShowButton" style="display: none">
         <button class="btn active button-base" id="closeButton" onclick="closeGame()">Close Game</button>
+        <button class="btn button-base" id="screenshotButton">📸 Simpan Hasil</button>
       </div>
     </div>
 
@@ -1867,6 +1868,66 @@
       function updateFilterRemoveDisplay() {
         document.getElementById("filterRemoveCountDisplay").textContent = `Filter removed: ${filterRemoveCount}`;
       }
+
+      document.getElementById("screenshotButton").addEventListener("click", () => {
+        const puzzleContainer = document.getElementById("puzzle-container");
+        const pieces = puzzleContainer.querySelectorAll(".puzzle-piece");
+        const modal = document.getElementById("modalMessage");
+        const gridCount = Math.sqrt(pieces.length);
+        const size = puzzleContainer.clientWidth;
+        const pieceSize = size / gridCount;
+
+        const canvas = document.createElement("canvas");
+        const modalHeight = 290;
+        canvas.width = size;
+        canvas.height = size + modalHeight;
+        const ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        pieces.forEach((piece, index) => {
+          const row = Math.floor(index / gridCount);
+          const col = index % gridCount;
+          const img = piece.querySelector("img");
+          const rotation = parseInt(piece.getAttribute("data-rotation") || "0");
+
+          if (img) {
+            const tempImg = new Image();
+            tempImg.src = img.src;
+            ctx.save();
+            const centerX = col * pieceSize + pieceSize / 2;
+            const centerY = row * pieceSize + pieceSize / 2;
+            ctx.translate(centerX, centerY);
+            ctx.rotate((rotation * Math.PI) / 180);
+            ctx.drawImage(tempImg, -pieceSize / 2, -pieceSize / 2, pieceSize, pieceSize);
+            ctx.restore();
+          }
+        });
+
+        ctx.fillStyle = "#000000";
+        ctx.font = "bold 20px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("🎉 Puzzle Completed!", canvas.width / 2, size + 40);
+
+        if (modal) {
+          ctx.font = "14px Arial";
+          ctx.textAlign = "left";
+          ctx.fillStyle = "#222";
+
+          const modalText = modal.innerText.split("\n").filter((t) => t.trim() !== "");
+          let y = size + 70;
+          modalText.forEach((line) => {
+            ctx.fillText(line.trim(), 20, y);
+            y += 20;
+          });
+        }
+
+        const link = document.createElement("a");
+        link.download = "puzzle_result_with_stats.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
 
       function toggleControls(isPlaying) {
         document.getElementById("preGameControls").style.display = isPlaying ? "none" : "block";
