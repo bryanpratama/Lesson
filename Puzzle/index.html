@@ -1877,8 +1877,8 @@
         const size = puzzleContainer.clientWidth;
         const pieceSize = size / gridCount;
 
+        const modalHeight = 250;
         const canvas = document.createElement("canvas");
-        const modalHeight = 290;
         canvas.width = size;
         canvas.height = size + modalHeight;
         const ctx = canvas.getContext("2d");
@@ -1905,21 +1905,57 @@
           }
         });
 
-        ctx.fillStyle = "#000000";
+        const cardX = 1;
+        const cardY = size;
+        const cardWidth = canvas.width - 1;
+        const cardHeight = modalHeight;
+        const radius = 1;
+
+        ctx.fillStyle = "#103b0f";
+        ctx.beginPath();
+        ctx.moveTo(cardX + radius, cardY);
+        ctx.lineTo(cardX + cardWidth - radius, cardY);
+        ctx.quadraticCurveTo(cardX + cardWidth, cardY, cardX + cardWidth, cardY + radius);
+        ctx.lineTo(cardX + cardWidth, cardY + cardHeight - radius);
+        ctx.quadraticCurveTo(cardX + cardWidth, cardY + cardHeight, cardX + cardWidth - radius, cardY + cardHeight);
+        ctx.lineTo(cardX + radius, cardY + cardHeight);
+        ctx.quadraticCurveTo(cardX, cardY + cardHeight, cardX, cardY + cardHeight - radius);
+        ctx.lineTo(cardX, cardY + radius);
+        ctx.quadraticCurveTo(cardX, cardY, cardX + radius, cardY);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = "#00ff5a";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = "#ffffff";
         ctx.font = "bold 20px Arial";
         ctx.textAlign = "center";
-        ctx.fillText("🎉 Puzzle Completed!", canvas.width / 2, size + 40);
+        ctx.fillText("🎉 Puzzle Completed!", canvas.width / 2, cardY + 35);
 
         if (modal) {
-          ctx.font = "14px Arial";
-          ctx.textAlign = "left";
-          ctx.fillStyle = "#222";
-
           const modalText = modal.innerText.split("\n").filter((t) => t.trim() !== "");
-          let y = size + 70;
+          ctx.font = "16px Arial";
+          ctx.textAlign = "left";
+          ctx.fillStyle = "#f0f0f0";
+
+          let y = cardY + 65;
+          const lineHeight = 24;
+          const labelX = cardX + 40;
+          const valueX = cardX + cardWidth - 130;
+
           modalText.forEach((line) => {
-            ctx.fillText(line.trim(), 20, y);
-            y += 20;
+            const match = line.match(/^(.*?)(\d{1,2}[:.]?\d{0,2}|Gold|Silver|Bronze|Medal|No Medal|0|\d+)$/);
+            if (match) {
+              ctx.fillText(match[1].trim(), labelX, y);
+              ctx.textAlign = "right";
+              ctx.fillText(match[2].trim(), valueX + 80, y);
+              ctx.textAlign = "left";
+            } else {
+              ctx.fillText(line.trim(), labelX, y);
+            }
+            y += lineHeight;
           });
         }
 
