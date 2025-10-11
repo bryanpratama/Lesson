@@ -1935,7 +1935,7 @@
         ctx.fillText("🎉 Puzzle Completed!", canvas.width / 2, cardY + 35);
 
         if (modal) {
-          const modalText = modal.innerText.split("\n").filter((t) => t.trim() !== "");
+          const modalText = modal.innerText.split("\n").filter(t => t.trim() !== "" && !t.toLowerCase().includes("puzzle completed"));
           ctx.font = "16px Arial";
           ctx.textAlign = "left";
           ctx.fillStyle = "#f0f0f0";
