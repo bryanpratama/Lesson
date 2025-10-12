@@ -480,6 +480,8 @@
 
       .counter-display {
         display: inline-block;
+        min-width: 130px;
+        text-align: center;
         margin: 8px;
         padding: 6px 14px;
         border-radius: 20px;
@@ -726,8 +728,8 @@
       </div>
 
       <div id="timer">Time: 00:00</div>
-      <div id="hintCountDisplay" class="counter-display">Hint used: 0</div>
       <div id="highlightCountDisplay" class="counter-display">Highlight used: 0</div>
+      <div id="hintCountDisplay" class="counter-display">Hint used: 0</div>
       <div id="filterRemoveCountDisplay" class="counter-display">Filter removed: 0</div>
 
       <div id="toggleEndButton" style="display: none">
@@ -1935,7 +1937,9 @@
         ctx.fillText("🎉 Puzzle Completed!", canvas.width / 2, cardY + 35);
 
         if (modal) {
-          const modalText = modal.innerText.split("\n").filter(t => t.trim() !== "" && !t.toLowerCase().includes("puzzle completed"));
+          const modalText = modal.innerText
+            .split("\n")
+            .filter((t) => t.trim() !== "" && !t.toLowerCase().includes("puzzle completed"));
           ctx.font = "16px Arial";
           ctx.textAlign = "left";
           ctx.fillStyle = "#f0f0f0";
