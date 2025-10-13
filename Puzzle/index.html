@@ -1460,9 +1460,14 @@
       }
 
       document.addEventListener("contextmenu", (e) => {
-        if (e.target.classList.contains("puzzle-piece") && document.getElementById("rotationMode").checked) {
+        const piece = e.target.closest(".puzzle-piece");
+
+        if (piece) {
           e.preventDefault();
-          rotatePiece(e.target);
+
+          if (document.getElementById("rotationMode").checked) {
+            rotatePiece(piece);
+          }
         }
       });
 
