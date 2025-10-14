@@ -984,7 +984,8 @@
           formatTime(timeSpent),
           stepCount,
           hintCount,
-          highlightUsed
+          highlightUsed,
+          filterMode
         );
 
         message.innerHTML = `
@@ -1596,18 +1597,18 @@
         document.getElementById("hintCountDisplay").textContent = `Hint used: ${hintCount}`;
       }
 
-      function saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, score, time, steps, hints) {
-        const data = JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || {};
-        const key = `${difficulty}-${isRotationEnabled}-${challengeTime}`;
-        const currentBest = data[key];
+function saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, score, time, steps, hints, filterMode) {
+  const data = JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || {};
+  const key = `${difficulty}-${isRotationEnabled}-${challengeTime}-${filterMode}`;
+  const currentBest = data[key];
 
-        if (!currentBest || score > currentBest.score) {
-          data[key] = { score, time, steps, hints, isRotationEnabled, challengeTime, difficulty };
-          localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(data));
-          return true;
-        }
-        return false;
-      }
+  if (!currentBest || score > currentBest.score) {
+    data[key] = { score, time, steps, hints, isRotationEnabled, challengeTime, difficulty, filterMode };
+    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(data));
+    return true;
+  }
+  return false;
+}
 
       function showLeaderboard() {
         const data = JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || {};
@@ -1621,11 +1622,16 @@
             const entry = data[key];
             const rotationText = entry.isRotationEnabled ? "🔄 Aktif" : "❌ Nonaktif";
             const challengeText = entry.challengeTime > 0 ? `${entry.challengeTime / 60} Menit` : "❌ Nonaktif";
+            const filterText = entry.filterMode && entry.filterMode !== "none"
+  ? (entry.filterMode === "grayscale" ? "⚫ Grayscale" : "🟤 Sepia")
+  : "❌ Nonaktif";
+
             html += `
         <div class="board-block">
           <div class="diff-row">🧩 ${entry.difficulty}x${entry.difficulty}</div>
           <div class="stat-row"><span class="label">Mode Rotasi</span><span class="value">${rotationText}</span></div>
           <div class="stat-row"><span class="label">Mode Tantangan</span><span class="value">${challengeText}</span></div>
+          <div class="stat-row"><span class="label">Mode Filter</span><span class="value">${filterText}</span></div>
           <div class="stat-row"><span class="label">Skor</span><span class="value">${entry.score}</span></div>
           <div class="stat-row"><span class="label">Waktu</span><span class="value">${entry.time}</span></div>
           <div class="stat-row"><span class="label">Langkah</span><span class="value">${entry.steps}</span></div>
@@ -1825,6 +1831,7 @@
 
       document.getElementById("filterModeSelect").addEventListener("change", (e) => {
         filterMode = e.target.value;
+        applyFilterToPieces();
       });
 
       function applyFilterToPieces() {
