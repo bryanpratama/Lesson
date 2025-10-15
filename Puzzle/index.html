@@ -1125,6 +1125,8 @@
       }
 
       function startGame() {
+      filterMode = document.getElementById("filterModeSelect").value;
+
         showRandomMotivationalTip();
         filterRemoved = false;
         document.getElementById("removeFilterButton").style.display = filterMode !== "none" ? "inline-block" : "none";
@@ -1597,7 +1599,7 @@
         document.getElementById("hintCountDisplay").textContent = `Hint used: ${hintCount}`;
       }
 
-function saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, score, time, steps, hints, filterMode) {
+function saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, score, time, steps, hints, highlights, filterMode) {
   const data = JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || {};
   const key = `${difficulty}-${isRotationEnabled}-${challengeTime}-${filterMode}`;
   const currentBest = data[key];
