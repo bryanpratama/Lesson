@@ -731,6 +731,7 @@
       <div id="highlightCountDisplay" class="counter-display">Highlight used: 0</div>
       <div id="hintCountDisplay" class="counter-display">Hint used: 0</div>
       <div id="filterRemoveCountDisplay" class="counter-display">Filter removed: 0</div>
+      <div id="stepCountDisplay" class="counter-display">Langkah: 0</div>
 
       <div id="toggleEndButton" style="display: none">
         <button class="btn btn-danger button-base" id="endGameButton" onclick="endGame()">🛑 End Game</button>
@@ -933,6 +934,9 @@
         addEventsToPiece(targetClone);
 
         lastSwapped = [index1, index2];
+
+        stepCount++;
+        updateStepDisplay();
 
         updateProgress();
       }
@@ -1225,6 +1229,7 @@
         updateFilterRemoveDisplay();
         updateHighlightDisplay();
         updateHintDisplay();
+        updateStepDisplay();
         toggleShowButton(false);
         toggleControls(true);
         toggleShowRotate(document.getElementById("rotationMode").checked);
@@ -1458,6 +1463,9 @@
         piece.style.transform = `rotate(${newRotation}deg)`;
         piece.setAttribute("data-rotation", newRotation);
 
+        stepCount++;
+        updateStepDisplay();
+
         checkCompletion();
         updateProgress();
       }
@@ -1554,6 +1562,8 @@
 
           hintCount++;
           updateHintDisplay();
+          stepCount++;
+          updateStepDisplay();
           updateProgress();
           checkCompletion();
           lastSwapped = null;
@@ -1591,6 +1601,8 @@
 
         hintCount++;
         updateHintDisplay();
+        stepCount++;
+        updateStepDisplay();
         updateProgress();
         checkCompletion();
       }
@@ -1982,6 +1994,10 @@ function saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, sc
         link.href = canvas.toDataURL("image/png");
         link.click();
       });
+
+      function updateStepDisplay() {
+        document.getElementById("stepCountDisplay").textContent = `Langkah: ${stepCount}`;
+      }
 
       function toggleControls(isPlaying) {
         document.getElementById("preGameControls").style.display = isPlaying ? "none" : "block";
