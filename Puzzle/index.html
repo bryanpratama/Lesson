@@ -1075,8 +1075,23 @@
       function endGame() {
         if (!document.querySelector(".puzzle-piece")) return;
 
+        showConfirmationModal(
+          "Yakin Ingin Mengakhiri Permainan?",
+          "Semua progres akan hilang dan permainan akan berakhir. Kamu tidak akan mendapat skor.",
+          "Ya, Akhiri",
+          confirmEndGame,
+          "Batal",
+          closeModal
+        );
+      }
+
+      function confirmEndGame() {
+        if (!document.querySelector(".puzzle-piece")) return;
+        closeModal();
+
         clearInterval(timer);
         if (isChallengeMode) clearInterval(challengeTimer);
+        setWarningOverlayVisible(false);
 
         disablePuzzleInteraction();
 
@@ -1093,6 +1108,31 @@
         showEndModal();
         toggleControls(false);
         toggleShowButton(false);
+      }
+
+      function showConfirmationModal(title, message, confirmText, confirmAction, cancelText, cancelAction) {
+        const modal = document.getElementById("customModal");
+        const modalMessage = document.getElementById("modalMessage");
+        const buttons = document.getElementById("modalButtons");
+
+        modalMessage.innerHTML = `
+          <div style="text-align:center">
+              <h3>${title}</h3>
+              <p style="margin-top: 10px;">${message}</p>
+          </div>
+      `;
+
+        buttons.innerHTML = `
+          <div class="reset-container horizontal-buttons">
+              <button class="btn btn-danger button-base" id="confirmActionButton">${confirmText}</button>
+              <button class="btn button-base" id="cancelActionButton">${cancelText}</button>
+          </div>
+      `;
+
+        document.getElementById("confirmActionButton").onclick = confirmAction;
+        document.getElementById("cancelActionButton").onclick = cancelAction;
+
+        modal.classList.remove("hidden");
       }
 
       function closeGame() {
@@ -1744,19 +1784,33 @@ function saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, sc
       }
 
       function resetStats() {
-        if (confirm("Yakin ingin menghapus semua statistik lifetime?")) {
-          localStorage.removeItem(STATS_KEY);
-          alert("Statistik lifetime telah direset.");
-          showStats();
-        }
+        showConfirmationModal(
+          "Hapus Statistik?",
+          "Tindakan ini akan menghapus semua statistik lifetime. Yakin ingin melanjutkan?",
+          "Ya, Hapus",
+          () => {
+            localStorage.removeItem(STATS_KEY);
+            alert("Statistik lifetime telah direset.");
+            showStats();
+          },
+          "Batal",
+          closeModal
+        );
       }
 
       function resetLeaderboard() {
-        if (confirm("Yakin ingin menghapus semua data leaderboard?")) {
-          localStorage.removeItem(LEADERBOARD_KEY);
-          alert("Leaderboard telah direset.");
-          showLeaderboard();
-        }
+        showConfirmationModal(
+          "Hapus Leaderboard?",
+          "Tindakan ini akan menghapus semua rekor skor terbaik. Yakin ingin melanjutkan?",
+          "Ya, Hapus",
+          () => {
+            localStorage.removeItem(LEADERBOARD_KEY);
+            alert("Leaderboard telah direset.");
+            showLeaderboard();
+          },
+          "Batal",
+          closeModal
+        );
       }
 
       function disablePuzzleInteraction() {
