@@ -1111,6 +1111,7 @@
       }
 
       function showConfirmationModal(title, message, confirmText, confirmAction, cancelText, cancelAction) {
+        closeModal();
         const modal = document.getElementById("customModal");
         const modalMessage = document.getElementById("modalMessage");
         const buttons = document.getElementById("modalButtons");
@@ -1695,16 +1696,20 @@ function saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, sc
           }
         }
 
-        html += `
-          <div class="reset-container horizontal-buttons">
-            <button onclick="resetLeaderboard()" class="btn btn-danger button-base">🗑️ Reset Leaderboard</button>
-            <button class="btn close-modal-button button-base" onclick="closeModal()">OK</button>
-          </div>
-        </div>`;
+        html += `</div>`;
 
         const modal = document.getElementById("customModal");
         const message = document.getElementById("modalMessage");
         message.innerHTML = html;
+        const buttons = document.getElementById("modalButtons");
+
+buttons.innerHTML = `
+          <div class="reset-container horizontal-buttons">
+            <button onclick="resetLeaderboard()" class="btn btn-danger button-base">🗑️ Reset Leaderboard</button>
+            <button class="btn close-modal-button button-base" onclick="closeModal()">OK</button>
+          </div>
+        `;
+
         modal.classList.remove("hidden");
       }
 
@@ -1767,19 +1772,22 @@ function saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, sc
         stats.totalTime
       )}</span></div>
       <div class="stat-row"><span class="label">🎯 Rata-rata Skor</span><span class="value">${avgScore}</span></div>
-      <div class="stat-row"><span class="label">💡 Total Hint</span><span class="value">${stats.totalHints}</span></div>
-    
-    <div class="reset-container horizontal-buttons">
-  <button onclick="resetStats()" class="btn btn-danger button-base">🗑️ Reset Statistik</button>
-  <button class="btn close-modal-button button-base" onclick="closeModal()">OK</button>
-</div>
-    
+      <div class="stat-row"><span class="label">💡 Total Hint</span><span class="value">${stats.totalHints}</span></div> 
     </div>
   `;
 
         const modal = document.getElementById("customModal");
         const message = document.getElementById("modalMessage");
+        const buttons = document.getElementById("modalButtons");
         message.innerHTML = html;
+
+buttons.innerHTML = `
+            <div class="reset-container horizontal-buttons">
+                <button onclick="resetStats()" class="btn btn-danger button-base">🗑️ Reset Statistik</button>
+                <button class="btn close-modal-button button-base" onclick="closeModal()">OK</button>
+            </div>
+        `;
+
         modal.classList.remove("hidden");
       }
 
