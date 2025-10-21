@@ -965,10 +965,9 @@
       const buttons = document.getElementById("modalButtons");
 
       toggleShowButton(true);
-
       let timeSpent = isChallengeMode ? challengeTimeInitial - challengeTimeLeft : seconds;
-
       score = Math.max(0, 1000 - (timeSpent * 2 + hintCount * 50 + stepCount * 10));
+      updateLifetimeStats(score, timeSpent, hintCount);
 
       let medal = "";
       let rankClass = "";
@@ -1069,7 +1068,6 @@
       if (allCorrect) {
         if (isChallengeMode) clearInterval(challengeTimer);
         clearInterval(timer);
-        updateLifetimeStats(score, seconds, hintCount);
         disablePuzzleInteraction();
 
         zoomLevel = 100;
