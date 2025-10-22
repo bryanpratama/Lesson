@@ -813,6 +813,7 @@
     let filterRemoved = false;
     let filterRemoveCount = 0;
     let filterTimer = null;
+    let hasUpdatedStats = false;
 
     const STATS_KEY = "jigsawStats";
 
@@ -967,7 +968,10 @@
       toggleShowButton(true);
       let timeSpent = isChallengeMode ? challengeTimeInitial - challengeTimeLeft : seconds;
       score = Math.max(0, 1000 - (timeSpent * 2 + hintCount * 50 + stepCount * 10));
-      updateLifetimeStats(score, timeSpent, hintCount);
+      if (!hasUpdatedStats) {
+        updateLifetimeStats(score, timeSpent, hintCount);
+        hasUpdatedStats = true;
+      }
 
       let medal = "";
       let rankClass = "";
@@ -1179,7 +1183,7 @@
 
     function startGame() {
       filterMode = document.getElementById("filterModeSelect").value;
-
+      hasUpdatedStats = false;
       showRandomMotivationalTip();
       filterRemoved = false;
       document.getElementById("removeFilterButton").style.display = filterMode !== "none" ? "inline-block" : "none";
