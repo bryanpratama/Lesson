@@ -773,6 +773,8 @@
         👀 Lihat Langkah Terakhir
       </button>
       <button class="btn button-base" id="hintButton">🔍 Hint</button>
+      <button class="btn btn-danger button-base" id="resetGameButton" onclick="resetCurrentGame()">🔄 Reset
+        Game</button>
       <button class="btn button-base" id="removeFilterButton" style="display: none"
         title="Reveal original image for 10 seconds">
         🔓 Lepas Filter
@@ -939,7 +941,6 @@
           }
         }
 
-        shufflePieces();
         applyFilterToPieces();
       };
     }
@@ -1323,6 +1324,8 @@
       clearTimeout(filterTimer);
       filterTimer = null;
 
+      confirmResetGame(true);
+      resetCurrentGame();
       updateFilterRemoveDisplay();
       updateHighlightDisplay();
       updateHintDisplay();
@@ -1872,7 +1875,6 @@
         "Ya, Hapus",
         () => {
           localStorage.removeItem(STATS_KEY);
-          //alert("Statistik lifetime telah direset.");
           showStats();
         },
         "Batal",
@@ -1887,7 +1889,6 @@
         "Ya, Hapus",
         () => {
           localStorage.removeItem(LEADERBOARD_KEY);
-          //alert("Leaderboard telah direset.");
           showLeaderboard();
         },
         "Batal",
@@ -2133,6 +2134,97 @@
 
     function updateStepDisplay() {
       document.getElementById("stepCountDisplay").textContent = `Langkah: ${stepCount}`;
+    }
+
+    function resetCurrentGame() {
+      showConfirmationModal(
+        "Konfirmasi Reset",
+        "Apakah Anda yakin ingin mengocok ulang puzzle? Waktu, langkah, dan hitungan petunjuk akan direset.",
+        "Ya, Reset",
+        () => confirmResetGame(false),
+        "Batal",
+        closeModal
+      );
+    }
+
+    function confirmResetGame(skipModal = false) {
+      if (!skipModal) closeModal();
+
+      shufflePieces();
+
+      seconds = 0;
+      stepCount = 0;
+      hintCount = 0;
+      highlightCount = 0;
+      highlightUsed = 0;
+      filterRemoveCount = 0;
+      lastSwapped = null;
+
+      clearInterval(timer);
+      clearInterval(challengeTimer);
+      setWarningOverlayVisible(false);
+
+      const challengeValue = parseInt(document.getElementById("challengeModeSelect").value);
+      isChallengeMode = challengeValue > 0;
+
+      if (isChallengeMode) {
+        challengeTimeLeft = challengeValue;
+        challengeTimeInitial = challengeValue;
+        timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
+        timerDisplay.classList.remove("blink-red");
+
+        challengeTimer = setInterval(() => {
+          challengeTimeLeft--;
+          timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
+
+          if (challengeTimeLeft <= 30 && challengeTimeLeft > 0) {
+            timerDisplay.classList.add("blink-red");
+            setWarningOverlayVisible(true);
+          } else {
+            timerDisplay.classList.remove("blink-red");
+            setWarningOverlayVisible(false);
+          }
+
+          if (challengeTimeLeft <= 0) {
+            clearInterval(challengeTimer);
+            clearInterval(timer);
+            disablePuzzleInteraction();
+            setWarningOverlayVisible(false);
+
+            document.getElementById("undoButtonHidden").style.display = "none";
+            document.getElementById("toggleRotateButton").style.display = "none";
+            document.getElementById("highlightButton").style.display = "none";
+            document.getElementById("hintButton").style.display = "none";
+            document.getElementById("pauseButton").style.display = "none";
+            document.getElementById("showOriginal").style.display = "none";
+
+            document.getElementById("toggleEndButton").style.display = "block";
+            timerDisplay.classList.remove("blink-red");
+            alert("⏱️ Waktu habis! Kamu gagal menyelesaikan puzzle.");
+          }
+        }, 1000);
+      } else {
+        timerDisplay.textContent = "Time: 00:00";
+        timer = setInterval(() => {
+          seconds++;
+          timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
+        }, 1000);
+      }
+
+      updateStepDisplay();
+      updateHintDisplay();
+      updateHighlightDisplay();
+      updateFilterRemoveDisplay();
+      updateProgress();
+
+      const resultBox = document.getElementById("completionResult");
+      resultBox.innerHTML = "";
+      resultBox.classList.remove("completed-prev");
+      resultBox.style.display = "none";
+
+      if (!skipModal) {
+        alert("Puzzle telah diacak ulang!");
+      }
     }
 
     function toggleControls(isPlaying) {
