@@ -2150,6 +2150,7 @@
     function confirmResetGame(skipModal = false) {
       if (!skipModal) closeModal();
 
+      puzzleContainer.innerHTML = "";
       shufflePieces();
 
       seconds = 0;
