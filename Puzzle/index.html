@@ -693,6 +693,27 @@
       filter: sepia(100%);
     }
 
+    #comboDisplay {
+      font-size: 22px;
+      font-weight: bold;
+      color: gold;
+      text-shadow: 0 0 8px orange;
+      height: 28px;
+      margin-top: 5px;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.2s ease;
+    }
+
+    #comboDisplay.active {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+
+    .dark-mode #comboDisplay {
+      color: #ffb400;
+      text-shadow: 0 0 10px #ff7700;
+    }
+
     @media (max-width: 500px) {
       #puzzle-container {
         width: 95vw;
@@ -752,6 +773,7 @@
     <div id="progressBarContainer">
       <div id="progressBarFill"></div>
     </div>
+    <div id="comboDisplay"></div>
 
     <div id="undoButtonHidden" style="display: none">
       <button class="btn button-base" onclick="showOriginal()" id="showOriginal"
@@ -860,6 +882,9 @@
     let filterRemoveCount = 0;
     let filterTimer = null;
     let hasUpdatedStats = false;
+    let comboCount = 0;
+    let lastCorrectPieces = 0;
+    let comboTimeout = null;
 
     const STATS_KEY = "jigsawStats";
 
@@ -1473,6 +1498,26 @@
       const progressBarFill = document.getElementById("progressBarFill");
       progressBarFill.style.width = `${percentage}%`;
       progressBarFill.style.backgroundColor = getProgressColor(percentage);
+
+      if (correctCount > lastCorrectPieces) {
+        comboCount++;
+        if (comboTimeout) clearTimeout(comboTimeout);
+
+        if (comboCount >= 3) {
+          const comboDisplay = document.getElementById("comboDisplay");
+          comboDisplay.textContent = `🔥 COMBO x${comboCount}!`;
+          comboDisplay.classList.add("active");
+
+          comboTimeout = setTimeout(() => {
+            comboDisplay.classList.remove("active");
+            comboDisplay.textContent = "";
+          }, 1500);
+        }
+      } else {
+        comboCount = 0;
+      }
+
+      lastCorrectPieces = correctCount;
 
       if (percentage === 100) {
         checkCompletion();
