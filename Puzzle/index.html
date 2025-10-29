@@ -803,6 +803,7 @@
       </button>
 
       <button class="btn button-base" id="pauseButton">Pause</button>
+      <button class="btn button-base" id="lockToggleButton">🔒 Lock Correct Pieces: OFF</button>
     </div>
 
     <div id="timer">Time: 00:00</div>
@@ -885,6 +886,7 @@
     let comboCount = 0;
     let lastCorrectPieces = 0;
     let comboTimeout = null;
+    let lockCorrectPieces = false;
 
     const STATS_KEY = "jigsawStats";
 
@@ -1003,6 +1005,29 @@
       const targetEl = e.currentTarget;
 
       if (!draggedEl || !targetEl || draggedEl === targetEl) return;
+
+      if (lockCorrectPieces) {
+        const children = Array.from(puzzleContainer.children);
+        const indexTarget = children.indexOf(targetEl);
+        const indexDragged = children.indexOf(draggedEl);
+
+        const correctRowTarget = parseInt(targetEl.dataset.correctRow, 10);
+        const correctColTarget = parseInt(targetEl.dataset.correctCol, 10);
+        const correctRowDragged = parseInt(draggedEl.dataset.correctRow, 10);
+        const correctColDragged = parseInt(draggedEl.dataset.correctCol, 10);
+
+        const targetCorrect =
+          Math.floor(indexTarget / gridSize) === correctRowTarget &&
+          indexTarget % gridSize === correctColTarget;
+
+        const draggedCorrect =
+          Math.floor(indexDragged / gridSize) === correctRowDragged &&
+          indexDragged % gridSize === correctColDragged;
+
+        if (targetCorrect || draggedCorrect) {
+          return;
+        }
+      }
 
       const draggedClone = draggedEl.cloneNode(true);
       const targetClone = targetEl.cloneNode(true);
@@ -1530,6 +1555,14 @@
       clearInterval(timer);
       document.getElementById("pauseOverlay").style.display = "flex";
       isPaused = true;
+    });
+
+    document.getElementById("lockToggleButton").addEventListener("click", () => {
+      lockCorrectPieces = !lockCorrectPieces;
+      const btn = document.getElementById("lockToggleButton");
+      btn.textContent = lockCorrectPieces
+        ? "🔒 Lock Correct Pieces: ON"
+        : "🔓 Lock Correct Pieces: OFF";
     });
 
     document.getElementById("resumeButton").addEventListener("click", () => {
