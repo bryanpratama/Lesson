@@ -1022,6 +1022,14 @@
       updateProgress();
     }
 
+    document.getElementById("chaosModeSelect").addEventListener("change", (e) => {
+      if (e.target.value !== "0") {
+        e.target.classList.add("active");
+      } else {
+        e.target.classList.remove("active");
+      }
+    });
+
     let draggedPiece = null;
 
     function dragStart(e) {
