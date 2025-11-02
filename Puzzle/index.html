@@ -1616,6 +1616,12 @@
       btn.textContent = lockCorrectPieces
         ? "🔒 Lock Correct Pieces: ON"
         : "🔓 Lock Correct Pieces: OFF";
+
+      if (lockCorrectPieces) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
     });
 
     document.getElementById("resumeButton").addEventListener("click", () => {
