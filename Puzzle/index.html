@@ -2122,6 +2122,12 @@
     document.getElementById("filterModeSelect").addEventListener("change", (e) => {
       filterMode = e.target.value;
       applyFilterToPieces();
+
+      if (filterMode !== "none") {
+        e.target.classList.add("active");
+      } else {
+        e.target.classList.remove("active");
+      }
     });
 
     function applyFilterToPieces() {
