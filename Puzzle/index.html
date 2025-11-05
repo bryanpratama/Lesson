@@ -1098,10 +1098,10 @@
 
       updateProgress();
       if (mutateMode) {
-        const prevCorrect = lastCorrectPieces;
-        updateProgress();
+        const draggedCorrect = draggedId === draggedEl.dataset.correctId;
+        const targetCorrect = targetEl.id === targetEl.dataset.correctId;
 
-        if (lastCorrectPieces < prevCorrect) {
+        if (!draggedCorrect || !targetCorrect) {
           wrongMoveCount++;
         }
 
@@ -1110,6 +1110,7 @@
           forceMoveRandomCorrectPiece();
         }
       }
+
     }
 
     function addEventsToPiece(piece) {
@@ -2403,32 +2404,24 @@
     }
 
     function forceMoveRandomCorrectPiece() {
-      const children = Array.from(puzzleContainer.children);
+      const piecesArr = Array.from(document.querySelectorAll(".puzzle-piece"));
 
-      const correctPieces = children.filter((piece, index) => {
-        const row = Math.floor(index / gridSize);
-        const col = index % gridSize;
-        const expectedRow = parseInt(piece.dataset.correctRow, 10);
-        const expectedCol = parseInt(piece.dataset.correctCol, 10);
-        const rot = parseInt(piece.getAttribute("data-rotation") || "0");
-
-        return row === expectedRow && col === expectedCol && rot === 0;
+      const correctPieces = piecesArr.filter(piece => {
+        return piece.id === `piece-${piece.dataset.correctRow}-${piece.dataset.correctCol}`;
       });
 
       if (correctPieces.length === 0) return;
 
       const targetPiece = correctPieces[Math.floor(Math.random() * correctPieces.length)];
 
-      const randomIndex = Math.floor(Math.random() * children.length);
-      const otherPiece = children[randomIndex];
-
-      if (!otherPiece || otherPiece === targetPiece) return;
+      const others = piecesArr.filter(p => p !== targetPiece);
+      const randomSpot = others[Math.floor(Math.random() * others.length)];
 
       const cloneA = targetPiece.cloneNode(true);
-      const cloneB = otherPiece.cloneNode(true);
+      const cloneB = randomSpot.cloneNode(true);
 
-      puzzleContainer.replaceChild(cloneB, targetPiece);
-      puzzleContainer.replaceChild(cloneA, otherPiece);
+      targetPiece.replaceWith(cloneB);
+      randomSpot.replaceWith(cloneA);
 
       addEventsToPiece(cloneA);
       addEventsToPiece(cloneB);
@@ -2438,7 +2431,7 @@
       setTimeout(() => {
         cloneA.classList.remove("blink-red");
         cloneB.classList.remove("blink-red");
-      }, 800);
+      }, 600);
 
       updateProgress();
     }
