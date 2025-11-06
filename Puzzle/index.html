@@ -766,9 +766,9 @@
     </select>
 
     <label id="mutateModeButton" class="custom-checkbox-button button-base">
-      <input type="checkbox" id="mutateMode" />
-      🧬 Mutate Mode
-    </label>
+  <input type="checkbox" id="mutateMode" />
+  🧬 Mutate Mode
+</label>
 
     <select id="filterModeSelect" class="custom-select button-base">
       <option value="none" selected>🎭 Tanpa Filter</option>
@@ -1098,19 +1098,33 @@
 
       updateProgress();
       if (mutateMode) {
-        const draggedCorrect = draggedId === draggedEl.dataset.correctId;
-        const targetCorrect = targetEl.id === targetEl.dataset.correctId;
+      const isPieceCorrect = (pieceEl, index) => {
+        const correctRow = Math.floor(index / gridSize);
+        const correctCol = index % gridSize;
+        const expectedRow = parseInt(pieceEl.dataset.correctRow, 10);
+        const expectedCol = parseInt(pieceEl.dataset.correctCol, 10);
+        const currentRotation = parseInt(pieceEl.getAttribute("data-rotation") || "0");
+        const isCorrectRotation = currentRotation === 0;
 
-        if (!draggedCorrect || !targetCorrect) {
+        return correctRow === expectedRow && correctCol === expectedCol && isCorrectRotation;
+      };
+
+      const newChildren = Array.from(puzzleContainer.children);
+      
+      const isTargetCorrectAfter = isPieceCorrect(newChildren[index2], index2);
+      const isDraggedCorrectAfter = isPieceCorrect(newChildren[index1], index1);
+      
+      if (!isTargetCorrectAfter || !isDraggedCorrectAfter) {
           wrongMoveCount++;
-        }
-
-        if (wrongMoveCount >= 3) {
+      } else {
           wrongMoveCount = 0;
-          forceMoveRandomCorrectPiece();
-        }
       }
 
+      if (wrongMoveCount >= 3) {
+        wrongMoveCount = 0;
+        forceMoveRandomCorrectPiece();
+      }
+    }
     }
 
     function addEventsToPiece(piece) {
@@ -1432,15 +1446,6 @@
         }, 1000);
       }
 
-      const mutateCheckbox = document.getElementById("mutateMode");
-      const mutateLabel = document.getElementById("mutateModeButton");
-
-      mutateCheckbox.addEventListener("change", () => {
-        mutateMode = mutateCheckbox.checked;
-        mutateLabel.classList.toggle("active", mutateMode);
-        wrongMoveCount = 0;
-      });
-
       const chaosValue = parseInt(document.getElementById("chaosModeSelect").value);
       chaosInterval = chaosValue;
 
@@ -1526,6 +1531,15 @@
       if (localStorage.getItem("theme") === "dark") {
         document.body.classList.add("dark-mode");
       }
+
+      const mutateCheckbox = document.getElementById("mutateMode");
+      const mutateLabel = document.getElementById("mutateModeButton");
+
+      mutateCheckbox.addEventListener("change", () => {
+        mutateMode = mutateCheckbox.checked;
+        mutateLabel.classList.toggle("active", mutateMode);
+        wrongMoveCount = 0;
+      });
 
       updatePreviewImage(currentImageUrl);
     });
@@ -2406,8 +2420,14 @@
     function forceMoveRandomCorrectPiece() {
       const piecesArr = Array.from(document.querySelectorAll(".puzzle-piece"));
 
-      const correctPieces = piecesArr.filter(piece => {
-        return piece.id === `piece-${piece.dataset.correctRow}-${piece.dataset.correctCol}`;
+      const correctPieces = piecesArr.filter((piece, index) => {
+        const correctRow = Math.floor(index / gridSize);
+        const correctCol = index % gridSize;
+        const expectedRow = parseInt(piece.dataset.correctRow, 10);
+        const expectedCol = parseInt(piece.dataset.correctCol, 10);
+        const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
+
+        return correctRow === expectedRow && correctCol === expectedCol && currentRotation === 0;
       });
 
       if (correctPieces.length === 0) return;
