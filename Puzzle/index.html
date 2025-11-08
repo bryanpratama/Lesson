@@ -2470,6 +2470,11 @@
       document.getElementById("puzzle-container").style.display = isPlaying ? "flex" : "none";
       document.getElementById("zoomControls").style.display = isPlaying ? "flex" : "none";
 
+      const previewElement = document.getElementById("previewContainer");
+      if (previewElement) {
+        previewElement.style.display = isPlaying ? "none" : "flex";
+      }
+
       const tipElement = document.getElementById("motivationalTip");
       if (tipElement) {
         tipElement.style.display = isPlaying ? "none" : "block";
@@ -2485,6 +2490,14 @@
     function toggleShowRotate(isRotationMode) {
       document.getElementById("toggleRotateButton").style.display = isRotationMode ? "block" : "none";
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const initialUrl = document.getElementById("defaultImageSelector").value;
+      if (initialUrl && initialUrl !== "__upload__") {
+        currentImageUrl = initialUrl;
+        updatePreviewImage(currentImageUrl);
+      }
+    });
 
     updateProgress();
     // startGame();
