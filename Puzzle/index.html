@@ -1485,6 +1485,19 @@
       updateProgress();
     }
 
+    const mutateModeSelect = document.getElementById("mutateModeSelect");
+    mutateModeSelect.addEventListener("change", function () {
+      const value = mutateModeSelect.value;
+
+      mutateThreshold = parseInt(value);
+
+      if (value !== "0") {
+        mutateModeSelect.classList.add("active");
+      } else {
+        mutateModeSelect.classList.remove("active");
+      }
+    });
+
     document.getElementById("imageUpload").addEventListener("change", function (e) {
       const file = e.target.files[0];
       if (file && file.type.startsWith("image/")) {
