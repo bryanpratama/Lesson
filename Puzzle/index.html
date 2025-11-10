@@ -1118,7 +1118,7 @@
         const isTargetCorrectAfter = isPieceCorrect(newChildren[index2], index2);
         const isDraggedCorrectAfter = isPieceCorrect(newChildren[index1], index1);
 
-        if (!isTargetCorrectAfter || !isDraggedCorrectAfter) {
+        if (!isTargetCorrectAfter && !isDraggedCorrectAfter) {
           wrongMoveCount++;
         } else {
           wrongMoveCount = 0;
