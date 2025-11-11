@@ -1181,7 +1181,8 @@
         stepCount,
         hintCount,
         highlightUsed,
-        filterMode
+        filterMode,
+        mutateThreshold
       );
 
       message.innerHTML = `
@@ -1915,13 +1916,13 @@
       document.getElementById("hintCountDisplay").textContent = `Hint used: ${hintCount}`;
     }
 
-    function saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, score, time, steps, hints, highlights, filterMode) {
+    function saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, score, time, steps, hints, highlights, filterMode, mutateMode) {
       const data = JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || {};
-      const key = `${difficulty}-${isRotationEnabled}-${challengeTime}-${filterMode}`;
+      const key = `${difficulty}-${isRotationEnabled}-${challengeTime}-${filterMode}-${mutateMode}`;
       const currentBest = data[key];
 
       if (!currentBest || score > currentBest.score) {
-        data[key] = { score, time, steps, hints, isRotationEnabled, challengeTime, difficulty, filterMode };
+        data[key] = { score, time, steps, hints, isRotationEnabled, challengeTime, difficulty, filterMode, mutateMode };
         localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(data));
         return true;
       }
@@ -1950,6 +1951,7 @@
           <div class="stat-row"><span class="label">Mode Rotasi</span><span class="value">${rotationText}</span></div>
           <div class="stat-row"><span class="label">Mode Tantangan</span><span class="value">${challengeText}</span></div>
           <div class="stat-row"><span class="label">Mode Filter</span><span class="value">${filterText}</span></div>
+          <div class="stat-row"><span class="label">Mode Mutasi</span><span class="value">${mutateText}</span></div>
           <div class="stat-row"><span class="label">Skor</span><span class="value">${entry.score}</span></div>
           <div class="stat-row"><span class="label">Waktu</span><span class="value">${entry.time}</span></div>
           <div class="stat-row"><span class="label">Langkah</span><span class="value">${entry.steps}</span></div>
