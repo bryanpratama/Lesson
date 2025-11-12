@@ -1944,6 +1944,7 @@
           const filterText = entry.filterMode && entry.filterMode !== "none"
             ? (entry.filterMode === "grayscale" ? "⚫ Grayscale" : "🟤 Sepia")
             : "❌ Nonaktif";
+          const mutateText = entry.mutateMode > 0 ? `${entry.mutateMode} Kesalahan` : "❌ Nonaktif";
 
           html += `
         <div class="board-block">
