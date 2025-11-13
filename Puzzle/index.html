@@ -908,6 +908,7 @@
     let chaosInterval = 0;
     let mutateThreshold = 0;
     let wrongMoveCount = 0;
+    let showOriginalUsed = false;
 
     const STATS_KEY = "jigsawStats";
 
@@ -1146,7 +1147,9 @@
 
       toggleShowButton(true);
       let timeSpent = isChallengeMode ? challengeTimeInitial - challengeTimeLeft : seconds;
-      score = Math.max(0, 1000 - (timeSpent * 2 + hintCount * 50 + stepCount * 10));
+let baseScore = 1000 - (timeSpent * 2 + hintCount * 50 + stepCount * 10);
+if (showOriginalUsed) baseScore -= 100;
+score = Math.max(0, baseScore);
       if (!hasUpdatedStats) {
         updateLifetimeStats(score, timeSpent, hintCount);
         hasUpdatedStats = true;
@@ -1519,6 +1522,17 @@
       const button = document.getElementById("showOriginal");
       button.classList.add("active");
       button.disabled = true;
+
+      showOriginalUsed = true;
+
+  const comboDisplay = document.getElementById("comboDisplay");
+  comboDisplay.textContent = "-100 poin (Show Original)";
+  comboDisplay.classList.add("active");
+  setTimeout(() => {
+    comboDisplay.classList.remove("active");
+    comboDisplay.textContent = "";
+  }, 1500);
+
     }
 
     function formatTime(secs) {
