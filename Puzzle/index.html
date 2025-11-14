@@ -1147,9 +1147,15 @@
 
       toggleShowButton(true);
       let timeSpent = isChallengeMode ? challengeTimeInitial - challengeTimeLeft : seconds;
-let baseScore = 1000 - (timeSpent * 2 + hintCount * 50 + stepCount * 10);
-if (showOriginalUsed) baseScore -= 100;
-score = Math.max(0, baseScore);
+      if (showOriginalUsed) baseScore -= 100;
+      let penaltySteps = stepCount * 10;
+      let penaltyHints = hintCount * 50;
+      let penaltyTime = timeSpent * 2;
+      let penaltyShowOriginal = showOriginalUsed ? 100 : 0;
+
+      let baseScore = 1000 - (penaltySteps + penaltyHints + penaltyTime + penaltyShowOriginal);
+      score = Math.max(0, baseScore);
+
       if (!hasUpdatedStats) {
         updateLifetimeStats(score, timeSpent, hintCount);
         hasUpdatedStats = true;
@@ -1189,20 +1195,44 @@ score = Math.max(0, baseScore);
       );
 
       message.innerHTML = `
-        <div class="completion-stats">
-            <div class="title">🎉 Puzzle Completed!</div>
-            ${isNewHigh ? `<div style="color: limegreen; font-weight: bold;">🔥 New High Score!</div>` : ""}
-            <div class="stat-row"><span class="label">⏱ Time</span><span class="value">${formatTime(
-        timeSpent
-      )}</span></div>
-            <div class="stat-row"><span class="label">🔁 Steps</span><span class="value">${stepCount}</span></div>
-            <div class="stat-row"><span class="label">💡 Hints used</span><span class="value">${hintCount}</span></div>
-            <div class="stat-row"><span class="label">✨ Highlights used</span><span class="value">${highlightUsed}</span></div>
-            <div class="stat-row"><span class="label">🎭 Filter removed</span><span class="value">${filterRemoveCount}</span></div>
-            <div class="stat-row"><span class="label">🧮 Score</span><span class="value score">${score}</span></div>
-            <div class="stat-row"><span class="label">🏅 Rank</span><span class="value ${rankClass}">${medal}</span></div>
+    <div class="completion-stats">
+        <div class="title">🎉 Puzzle Completed!</div>
+
+        <div class="stat-row"><span class="label">⏱ Time</span>
+            <span class="value">${formatTime(timeSpent)} <span style="color:red;">- ${penaltyTime}</span></span>
         </div>
-    `;
+
+        <div class="stat-row"><span class="label">🔁 Steps</span>
+            <span class="value">${stepCount} <span style="color:red;">- ${penaltySteps}</span></span>
+        </div>
+
+        <div class="stat-row"><span class="label">💡 Hints used</span>
+            <span class="value">${hintCount} <span style="color:red;">- ${penaltyHints}</span></span>
+        </div>
+
+        <div class="stat-row"><span class="label">📷 Show Original</span>
+            <span class="value">${showOriginalUsed ? "Yes" : "No"} 
+            <span style="color:red;">- ${penaltyShowOriginal}</span></span>
+        </div>
+
+        <div class="stat-row"><span class="label">✨ Highlights used</span>
+            <span class="value">${highlightUsed}</span>
+        </div>
+
+        <div class="stat-row"><span class="label">🎭 Filter removed</span>
+            <span class="value">${filterRemoveCount}</span>
+        </div>
+
+        <div class="stat-row"><span class="label">🧮 Score</span>
+            <span class="value score">${score}</span>
+        </div>
+
+        <div class="stat-row"><span class="label">🏅 Rank</span>
+            <span class="value ${rankClass}">${medal}</span>
+        </div>
+    </div>
+`;
+
 
       buttons.innerHTML = `
         <div class="reset-container horizontal-buttons">
@@ -1525,13 +1555,13 @@ score = Math.max(0, baseScore);
 
       showOriginalUsed = true;
 
-  const comboDisplay = document.getElementById("comboDisplay");
-  comboDisplay.textContent = "-100 poin (Show Original)";
-  comboDisplay.classList.add("active");
-  setTimeout(() => {
-    comboDisplay.classList.remove("active");
-    comboDisplay.textContent = "";
-  }, 1500);
+      const comboDisplay = document.getElementById("comboDisplay");
+      comboDisplay.textContent = "-100 poin (Show Original)";
+      comboDisplay.classList.add("active");
+      setTimeout(() => {
+        comboDisplay.classList.remove("active");
+        comboDisplay.textContent = "";
+      }, 1500);
 
     }
 
