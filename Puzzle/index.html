@@ -328,6 +328,10 @@
       font-weight: bold;
     }
 
+    .stats-medal-title {
+      margin-top: 15px;
+    }
+
     .board-block {
       border-top: 1px solid #666;
       padding-top: 10px;
@@ -2125,22 +2129,22 @@
       const avgScore = stats.totalGames > 0 ? Math.round(stats.totalScore / stats.totalGames) : 0;
 
       const html = `
-    <div class="lifetime-stats">
-      <div class="title">📊 Statistik Lifetime</div>
-      <div class="stat-row"><span class="label">🧩 Total Puzzle</span><span class="value">${stats.totalGames
+        <div class="lifetime-stats">
+          <div class="title">📊 Statistik Lifetime</div>
+          <div class="stat-row"><span class="label">🧩 Total Puzzle</span><span class="value">${stats.totalGames
         }</span></div>
-      <div class="stat-row"><span class="label">⏱️ Total Waktu</span><span class="value">${formatTime(
+          <div class="stat-row"><span class="label">⏱️ Total Waktu</span><span class="value">${formatTime(
           stats.totalTime
         )}</span></div>
-      <div class="stat-row"><span class="label">🎯 Rata-rata Skor</span><span class="value">${avgScore}</span></div>
-      <div class="stat-row"><span class="label">💡 Total Hint</span><span class="value">${stats.totalHints}</span></div> 
-    
-    <div style="margin-top: 15px;" class="title">🏅 Total Medali</div>
-      <div class="stat-row"><span class="label">🥇 Emas</span><span class="value gold">${stats.goldCount}</span></div>
-      <div class="stat-row"><span class="label">🥈 Perak</span><span class="value silver">${stats.silverCount}</span></div>
-      <div class="stat-row"><span class="label">🥉 Perunggu</span><span class="value bronze">${stats.bronzeCount}</span></div>
-    </div>
-  `;
+          <div class="stat-row"><span class="label">🎯 Rata-rata Skor</span><span class="value">${avgScore}</span></div>
+          <div class="stat-row"><span class="label">💡 Total Hint</span><span class="value">${stats.totalHints}</span></div> 
+        
+        <div class="title stats-medal-title">🏅 Total Medali</div>
+          <div class="stat-row"><span class="label">🥇 Emas</span><span class="value gold">${stats.goldCount}</span></div>
+          <div class="stat-row"><span class="label">🥈 Perak</span><span class="value silver">${stats.silverCount}</span></div>
+          <div class="stat-row"><span class="label">🥉 Perunggu</span><span class="value bronze">${stats.bronzeCount}</span></div>
+        </div>
+      `;
 
       const modal = document.getElementById("customModal");
       const message = document.getElementById("modalMessage");
