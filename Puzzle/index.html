@@ -332,6 +332,15 @@
       margin-top: 15px;
     }
 
+    .progress-info {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .hidden-control {
+      display: none !important;
+    }
+
     .board-block {
       border-top: 1px solid #666;
       padding-top: 10px;
@@ -817,14 +826,14 @@
     <button class="btn button-base" onclick="showStats()">📊 Statistik</button>
   </div>
 
-  <div class="controls" id="inGameControls" style="display: none">
-    <div id="progress" style="margin-top: 10px; font-weight: bold">Progress: 0%</div>
+  <div class="controls hidden-control" id="inGameControls">
+    <div id="progress" class="progress-info">Progress: 0%</div>
     <div id="progressBarContainer">
       <div id="progressBarFill"></div>
     </div>
     <div id="comboDisplay"></div>
 
-    <div id="undoButtonHidden" style="display: none">
+    <div id="undoButtonHidden" class="hidden-control">
       <button class="btn button-base" onclick="showOriginal()" id="showOriginal"
         title="Show the full original image (cannot be turned off once activated)">
         Show Original
@@ -834,7 +843,7 @@
         Highlight Posisi Benar
       </button>
 
-      <div id="toggleRotateButton" style="display: none">
+      <div id="toggleRotateButton" class="hidden-control">
         <button class="btn button-base" id="rotateSelected">🔄 Rotate</button>
       </div>
 
@@ -846,7 +855,7 @@
       <button class="btn button-base" id="hintButton">🔍 Hint</button>
       <button class="btn btn-danger button-base" id="resetGameButton" onclick="resetCurrentGame()">🔄 Reset
         Game</button>
-      <button class="btn button-base" id="removeFilterButton" style="display: none"
+      <button class="btn button-base hidden-control" id="removeFilterButton"
         title="Reveal original image for 10 seconds">
         🔓 Lepas Filter
       </button>
