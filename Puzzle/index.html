@@ -341,6 +341,13 @@
       display: none !important;
     }
 
+    .motivational-tip-style {
+      font-style: italic;
+      font-size: 16px;
+      margin-top: 5px;
+      color: #555;
+    }
+
     .board-block {
       border-top: 1px solid #666;
       padding-top: 10px;
@@ -869,10 +876,10 @@
     <div id="filterRemoveCountDisplay" class="counter-display">Filter removed: 0</div>
     <div id="stepCountDisplay" class="counter-display">Langkah: 0</div>
 
-    <div id="toggleEndButton" style="display: none">
+    <div id="toggleEndButton" class="hidden-control">
       <button class="btn btn-danger button-base" id="endGameButton" onclick="endGame()">🛑 End Game</button>
     </div>
-    <div id="toggleShowButton" style="display: none">
+    <div id="toggleShowButton" class="hidden-control">
       <button class="btn active button-base" id="closeButton" onclick="closeGame()">Close Game</button>
       <button class="btn button-base" id="screenshotButton">📸 Simpan Hasil</button>
     </div>
@@ -884,8 +891,7 @@
     </div>
   </div>
 
-  <!-- zoom controls keluar dari scaler -->
-  <div class="zoom-controls" id="zoomControls" style="display: none">
+  <div class="zoom-controls hidden-control" id="zoomControls">
     <button id="zoomOut">-</button>
     <input type="range" id="zoomSlider" min="50" max="150" value="100" />
     <button id="zoomIn">+</button>
@@ -893,9 +899,9 @@
 
   <div id="completionResult"></div>
 
-  <p id="motivationalTip" style="font-style: italic; font-size: 16px; margin-top: 5px; color: #555"></p>
+  <p id="motivationalTip" class="motivational-tip-style"></p>
 
-  <div id="original-image" style="display: none">
+  <div id="original-image" class="hidden-control">
     <img id="originalImagePreview" src="image/image1.jpg" alt="Original Image" width="300" />
   </div>
   <div id="customModal" class="modal hidden">
