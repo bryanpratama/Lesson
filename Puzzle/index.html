@@ -734,6 +734,10 @@
       text-shadow: 0 0 10px #ff7700;
     }
 
+    .penalty-value {
+      color: red;
+    }
+
     .penalty-header {
       margin-top: 10px;
       text-align: left;
@@ -1244,20 +1248,20 @@
         <div class="title">🎉 Puzzle Completed!</div>
 
         <div class="stat-row"><span class="label">⏱ Time</span>
-            <span class="value">${formatTime(timeSpent)} <span style="color:red;">- ${penaltyTime}</span></span>
+            <span class="value">${formatTime(timeSpent)} class="penalty-value">- ${penaltyTime}</span></span>
         </div>
 
         <div class="stat-row"><span class="label">🔁 Steps</span>
-            <span class="value">${stepCount} <span style="color:red;">- ${penaltySteps}</span></span>
+            <span class="value">${stepCount} class="penalty-value">- ${penaltySteps}</span></span>
         </div>
 
         <div class="stat-row"><span class="label">💡 Hints used</span>
-            <span class="value">${hintCount} <span style="color:red;">- ${penaltyHints}</span></span>
+            <span class="value">${hintCount} class="penalty-value">- ${penaltyHints}</span></span>
         </div>
 
         <div class="stat-row"><span class="label">📷 Show Original</span>
             <span class="value">${showOriginalUsed ? "Yes" : "No"} 
-            <span style="color:red;">- ${penaltyShowOriginal}</span></span>
+            class="penalty-value">- ${penaltyShowOriginal}</span></span>
         </div>
 
         <div class="stat-row"><span class="label">✨ Highlights used</span>
