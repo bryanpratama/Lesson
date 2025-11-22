@@ -481,6 +481,14 @@
       margin-bottom: 15px;
     }
 
+    .modal-content-center {
+      text-align: center;
+    }
+
+    .modal-paragraph-margin {
+      margin-top: 10px;
+    }
+
     .horizontal-buttons {
       display: flex;
       justify-content: center;
@@ -1405,9 +1413,9 @@
       const buttons = document.getElementById("modalButtons");
 
       modalMessage.innerHTML = `
-          <div style="text-align:center">
+          <div class="modal-content-center">
               <h3>${title}</h3>
-              <p style="margin-top: 10px;">${message}</p>
+              <p class="modal-paragraph-margin">${message}</p>
           </div>
       `;
 
@@ -1441,7 +1449,7 @@
       const buttons = document.getElementById("modalButtons");
 
       message.innerHTML = `
-        <div style="text-align:center">
+        <div class="modal-content-center">
             <h3>😓 Puzzle Tidak Diselesaikan</h3>
             <p>Kamu menyerah. Puzzle belum selesai.</p>
         </div>
