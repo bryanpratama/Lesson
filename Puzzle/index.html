@@ -299,6 +299,12 @@
       margin-bottom: 10px;
     }
 
+    .leaderboard-empty-message {
+      text-align: center;
+      color: gray;
+      font-style: italic;
+    }
+
     .lifetime-stats {
       font-size: 16px;
       text-align: left;
@@ -2048,7 +2054,7 @@
 
       const keys = Object.keys(data);
       if (keys.length === 0) {
-        html += `<div style="text-align:center; color:gray; font-style:italic;">Belum ada skor</div>`;
+        html += `<div class="leaderboard-empty-message">Belum ada skor</div>`;
       } else {
         for (const key of keys) {
           const entry = data[key];
