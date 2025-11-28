@@ -1204,9 +1204,13 @@
       const modal = document.getElementById("customModal");
       const message = document.getElementById("modalMessage");
       const buttons = document.getElementById("modalButtons");
+      const currentSeconds = seconds || 0;
+        const initialChallengeTime = challengeTimeInitial || 0;
+        const timeLeftChallenge = challengeTimeLeft || 0;
 
       toggleShowButton(true);
       let timeSpent = isChallengeMode ? challengeTimeInitial - challengeTimeLeft : seconds;
+      timeSpent = Math.max(0, timeSpent || 0);
       let penaltySteps = stepCount * 10;
       let penaltyHints = hintCount * 50;
       let penaltyTime = timeSpent * 2;
@@ -1506,6 +1510,19 @@
       clearInterval(timer);
       clearInterval(challengeTimer);
       seconds = 0;
+      stepCount = 0;
+      hintCount = 0;
+      highlightUsed = 0;
+      filterRemoveCount = 0;
+      showOriginalUsed = false;
+      comboCount = 0;
+      lastCorrectPieces = 0;
+      wrongMoveCount = 0;
+
+      updateHintDisplay();
+      updateHighlightDisplay();
+      updateFilterRemoveDisplay();
+
       challengeTimeLeft = 0;
       challengeTimeInitial = 0;
 
