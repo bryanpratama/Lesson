@@ -1,1281 +1,1387 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jigsaw Puzzle Game</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: #f0f0f0;
-      margin: 0;
-      padding: 20px;
-    }
-
-    h1 {
-      margin-bottom: 5px;
-    }
-
-    body.dark-mode {
-      background-color: #121212;
-      color: #f0f0f0;
-    }
-
-    .button-base {
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: 500;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .button-base:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
-    }
-
-    .dark-mode .button-base {
-      background: #222;
-      color: #f0f0f0;
-      border: none;
-    }
-
-    .dark-mode .button-base:hover {
-      box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
-    }
-
-    .btn {
-      background: #f4f4f4;
-      color: black;
-      border: none;
-      margin: 5px;
-    }
-
-    .custom-checkbox-button {
-      display: inline-block;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: 500;
-      border-radius: 8px;
-      border: none;
-      background: #f4f4f4;
-      color: #000;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-      user-select: none;
-    }
-
-    .custom-checkbox-button:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
-    }
-
-    .custom-checkbox-button input[type="checkbox"] {
-      display: none;
-    }
-
-    .dark-mode .custom-checkbox-button {
-      background: #222;
-      color: #fff;
-      border: none;
-    }
-
-    .dark-mode .custom-checkbox-button:hover {
-      box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
-    }
-
-    .custom-checkbox-button.active {
-      background-color: #64ec64;
-      border-color: #333;
-    }
-
-    .dark-mode .custom-checkbox-button.active {
-      background-color: #079c07;
-    }
-
-    .custom-select {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      padding-right: 35px;
-      border-radius: 6px;
-      border: 1px transparent;
-      background: #f4f4f4 url("./icons/arrow-black.svg") no-repeat right 10px center;
-      background-size: 12px;
-    }
-
-    .dark-mode .custom-select {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      padding-right: 35px;
-      border-radius: 6px;
-      color: #fff;
-      background: #222 url("./icons/arrow-white.svg") no-repeat right 10px center;
-      background-size: 12px;
-    }
-
-    .dark-mode .btn:hover {
-      box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
-    }
-
-    .btn-danger {
-      background-color: #cc0000;
-      color: white;
-    }
-
-    .btn-danger:hover {
-      background-color: #a00000;
-    }
-
-    .dark-mode .btn-danger {
-      background-color: #880000;
-      color: #fff;
-    }
-
-    .dark-mode .puzzle-piece {
-      border-color: #444;
-    }
-
-    .dark-mode .modal-content {
-      background-color: #2c2c2c;
-      color: #ffffff;
-    }
-
-    .highlight-correct {
-      border: 2px solid limegreen !important;
-      box-shadow: 0 0 5px limegreen;
-    }
-
-    #progressBarContainer {
-      width: 300px;
-      height: 20px;
-      background-color: #ddd;
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 10px auto;
-    }
-
-    #progressBarFill {
-      height: 100%;
-      width: 0%;
-      background-color: red;
-      transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
-    }
-
-    #puzzle-container {
-      width: 300px;
-      height: 300px;
-      display: flex;
-      flex-wrap: wrap;
-      border: 2px solid #ccc;
-      margin: 20px auto;
-      position: relative;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .dark-mode #puzzle-container {
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    }
-
-    .puzzle-piece {
-      width: 100px;
-      height: 100px;
-      background-size: cover;
-      background-position: center;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      cursor: grab;
-    }
-
-    .controls {
-      margin-bottom: 20px;
-    }
-
-    .dark-mode select option {
-      background-color: #111;
-      color: #fff;
-    }
-
-    input[type="file"] {
-      display: none;
-    }
-
-    .puzzle-piece.selected {
-      outline: 2px solid yellow;
-    }
-
-    #timer {
-      margin: 10px 0;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .modal-content {
-      background-color: #fff;
-      padding: 20px 30px;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .completion-stats {
-      font-size: 16px;
-      line-height: 1.8;
-      padding: 0 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      text-align: left;
-    }
-
-    .completion-stats .title {
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .completion-stats .gold {
-      color: gold;
-      font-weight: bold;
-    }
-
-    .completion-stats .silver {
-      color: silver;
-      font-weight: bold;
-    }
-
-    .completion-stats .bronze {
-      color: peru;
-      font-weight: bold;
-    }
-
-    .completion-stats .fail {
-      color: red;
-      font-weight: bold;
-    }
-
-    .leaderboard {
-      font-size: 16px;
-      text-align: left;
-      padding: 0 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .leaderboard .title {
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .leaderboard-empty-message {
-      text-align: center;
-      color: gray;
-      font-style: italic;
-    }
-
-    .lifetime-stats {
-      font-size: 16px;
-      text-align: left;
-      padding: 0 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .lifetime-stats .title {
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .lifetime-stats .stat-row {
-      display: grid;
-      grid-template-columns: 150px 1fr;
-    }
-
-    .lifetime-stats .label {
-      font-weight: 500;
-    }
-
-    .lifetime-stats .value {
-      font-weight: bold;
-    }
-
-    .stats-medal-title {
-      margin-top: 15px;
-    }
-
-    .progress-info {
-      margin-top: 10px;
-      font-weight: bold;
-    }
-
-    .motivational-tip-style {
-      font-style: italic;
-      font-size: 16px;
-      margin-top: 5px;
-      color: #555;
-    }
-
-    .board-block {
-      border-top: 1px solid #666;
-      padding-top: 10px;
-    }
-
-    .diff-row {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    .stat-row .label {
-      font-weight: 500;
-      white-space: nowrap;
-    }
-
-    .stat-row .value {
-      font-weight: bold;
-    }
-
-    .stat-row {
-      display: grid;
-      grid-template-columns: 130px 1fr;
-      gap: 15px;
-      align-items: center;
-    }
-
-    .stat-row .score {
-      color: gold;
-    }
-
-    .stat-row .gold {
-      color: gold;
-    }
-
-    .stat-row .silver {
-      color: silver;
-    }
-
-    .stat-row .bronze {
-      color: peru;
-    }
-
-    .stat-row .fail {
-      color: red;
-    }
-
-    .reset-container {
-      text-align: center;
-      margin-top: 15px;
-    }
-
-    .highlight-preview {
-      position: relative;
-      z-index: 9999 !important;
-      box-shadow: 0 0 15px 5px orange;
-      border: 3px solid orange !important;
-      animation: pulseHighlight 0.8s ease-in-out infinite alternate;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    #pauseOverlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgb(0, 0, 0);
-      z-index: 9999;
-      color: white;
-      font-size: 24px;
-      /* display: flex; */
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-
-    body.dark-mode #pauseOverlay {
-      background-color: rgba(0, 0, 0);
-      color: #fff;
-    }
-
-    body:not(.dark-mode) #pauseOverlay {
-      background-color: #f0f0f0;
-      color: #000;
-    }
-
-    .hint-highlight {
-      outline: 3px solid orange !important;
-      border: 2px solid orange !important;
-      box-shadow: 0 0 8px orange;
-    }
-
-    #previewContainer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    #previewContainer p {
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-
-    #previewImage {
-      width: 300px;
-      height: 300px;
-      object-fit: cover;
-      object-position: center;
-      border-radius: 8px;
-    }
-
-    .btn.active {
-      background-color: #64ec64;
-      border-color: #333;
-      color: white;
-    }
-
-    .dark-mode .btn.active {
-      background-color: #079c07;
-      color: #fff;
-      border-color: #666;
-    }
-
-    #darkModeControl {
-      margin-bottom: 10px;
-    }
-
-    .controls {
-      margin-bottom: 15px;
-    }
-
-    .modal-content-center {
-      text-align: center;
-    }
-
-    .modal-paragraph-margin {
-      margin-top: 10px;
-    }
-
-    .horizontal-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .horizontal-buttons .btn {
-      flex: 1;
-      min-width: 120px;
-    }
-
-    .custom-select.active {
-      background-color: #64ec64;
-      border-color: #333;
-      color: rgb(0, 0, 0);
-    }
-
-    .dark-mode .custom-select.active {
-      background-color: #079c07;
-      border-color: #666;
-      color: #fff;
-    }
-
-    .counter-display {
-      display: inline-block;
-      min-width: 130px;
-      text-align: center;
-      margin: 8px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: bold;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
-      background-color: #227744;
-    }
-
-    body:not(.dark-mode) .counter-display {
-      color: #000;
-    }
-
-    body.dark-mode .counter-display {
-      color: #fff;
-    }
-
-    #completionResult {
-      display: none;
-      margin: 20px auto;
-      max-width: 400px;
-    }
-
-    #completionResult.completed-prev {
-      display: block;
-      border: 2px solid limegreen;
-      border-radius: 10px;
-      padding: 15px;
-      margin-top: 20px;
-      background: rgba(0, 255, 0, 0.05);
-    }
-
-    .zoom-controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-      position: relative;
-      z-index: 10;
-    }
-
-    #zoomControls {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.85);
-      padding: 10px 15px;
-      border-radius: 12px;
-      z-index: 9999;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-      gap: 15px;
-    }
-
-    #zoomControls button {
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-      border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 6px;
-      font-size: 18px;
-      font-weight: bold;
-      line-height: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: background 0.2s ease;
-      cursor: pointer;
-    }
-
-    #zoomControls button:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    #zoomSlider {
-      width: 150px;
-      -webkit-appearance: none;
-      appearance: none;
-      height: 8px;
-      background: #333;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    #zoomSlider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: #f0f0f0;
-      border: 4px solid #007bff;
-      transition: background 0.2s ease;
-    }
-
-    #zoomSlider::-moz-range-thumb {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: #f0f0f0;
-      border: 4px solid #007bff;
-      transition: background 0.2s ease;
-    }
-
-    .puzzle-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-
-    body:not(.dark-mode) .blink-red {
-      animation: blinkRedLight 1s step-start infinite;
-      font-weight: bold;
-    }
-
-    @keyframes blinkRedLight {
-      0% {
-        color: red;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jigsaw Puzzle Game</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: #f0f0f0;
+        margin: 0;
+        padding: 20px;
       }
 
-      50% {
+      h1 {
+        margin-bottom: 5px;
+      }
+
+      body.dark-mode {
+        background-color: #121212;
+        color: #f0f0f0;
+      }
+
+      .button-base {
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .button-base:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
+      }
+
+      .dark-mode .button-base {
+        background: #222;
+        color: #f0f0f0;
+        border: none;
+      }
+
+      .dark-mode .button-base:hover {
+        box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
+      }
+
+      .btn {
+        background: #f4f4f4;
         color: black;
+        border: none;
+        margin: 5px;
       }
 
-      100% {
-        color: red;
+      .custom-checkbox-button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 8px;
+        border: none;
+        background: #f4f4f4;
+        color: #000;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        user-select: none;
       }
-    }
 
-    body.dark-mode .blink-red {
-      animation: blinkRedDark 1s step-start infinite;
-      font-weight: bold;
-    }
-
-    @keyframes blinkRedDark {
-      0% {
-        color: red;
+      .custom-checkbox-button:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.8);
       }
 
-      50% {
+      .custom-checkbox-button input[type="checkbox"] {
+        display: none;
+      }
+
+      .dark-mode .custom-checkbox-button {
+        background: #222;
+        color: #fff;
+        border: none;
+      }
+
+      .dark-mode .custom-checkbox-button:hover {
+        box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
+      }
+
+      .custom-checkbox-button.active {
+        background-color: #64ec64;
+        border-color: #333;
+      }
+
+      .dark-mode .custom-checkbox-button.active {
+        background-color: #079c07;
+      }
+
+      .custom-select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        padding-right: 35px;
+        border-radius: 6px;
+        border: 1px transparent;
+        background: #f4f4f4 url("./icons/arrow-black.svg") no-repeat right 10px
+          center;
+        background-size: 12px;
+      }
+
+      .dark-mode .custom-select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        padding-right: 35px;
+        border-radius: 6px;
+        color: #fff;
+        background: #222 url("./icons/arrow-white.svg") no-repeat right 10px
+          center;
+        background-size: 12px;
+      }
+
+      .dark-mode .btn:hover {
+        box-shadow: 0 3px 5px rgba(255, 255, 255, 0.8);
+      }
+
+      .btn-danger {
+        background-color: #cc0000;
         color: white;
       }
 
-      100% {
-        color: red;
-      }
-    }
-
-    #warningOverlay {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background: radial-gradient(circle, rgba(0, 0, 0, 0) 50%, rgba(255, 0, 0, 0.6) 100%);
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-      z-index: -10;
-    }
-
-    #warningOverlay.active {
-      animation: fadePulse 3s infinite ease-in-out;
-    }
-
-    @keyframes fadePulse {
-      0% {
-        opacity: 0.2;
+      .btn-danger:hover {
+        background-color: #a00000;
       }
 
-      50% {
-        opacity: 0.6;
+      .dark-mode .btn-danger {
+        background-color: #880000;
+        color: #fff;
       }
 
-      100% {
-        opacity: 0.2;
+      .dark-mode .puzzle-piece {
+        border-color: #444;
       }
-    }
 
-    #puzzle-scaler {
-      display: inline-block;
-      transition: transform 0.2s ease;
-      transform-origin: top center;
-      position: relative;
-      z-index: 1;
-    }
+      .dark-mode .modal-content {
+        background-color: #2c2c2c;
+        color: #ffffff;
+      }
 
-    #completionResult.completed-prev {
-      border: 2px solid limegreen;
-      border-radius: 10px;
-      padding: 15px;
-      margin-top: 20px;
-      background: rgba(0, 255, 0, 0.05);
-    }
-
-    .puzzle-piece.filter-grayscale img {
-      filter: grayscale(100%);
-    }
-
-    .puzzle-piece.filter-sepia img {
-      filter: sepia(100%);
-    }
-
-    #comboDisplay {
-      font-size: 22px;
-      font-weight: bold;
-      color: gold;
-      text-shadow: 0 0 8px orange;
-      height: 28px;
-      margin-top: 5px;
-      opacity: 0;
-      transition: opacity 0.3s ease, transform 0.2s ease;
-    }
-
-    #comboDisplay.active {
-      opacity: 1;
-      transform: scale(1.2);
-    }
-
-    .dark-mode #comboDisplay {
-      color: #ffb400;
-      text-shadow: 0 0 10px #ff7700;
-    }
-
-    .penalty-value {
-      color: red;
-    }
-
-    .penalty-header {
-      margin-top: 10px;
-      text-align: left;
-      font-weight: bold;
-    }
-
-    .penalty-progress-container {
-      width: 100%;
-      background: #ddd;
-      border-radius: 10px;
-      margin-top: 8px;
-      overflow: hidden;
-      height: 18px;
-    }
-
-    .penalty-progress-fill {
-      height: 100%;
-      width: 0%;
-      background: red;
-      transition: width 0.4s ease-in-out;
-      font-size: 12px;
-      color: white;
-      text-align: center;
-      line-height: 18px;
-    }
-
-
-    @media (max-width: 500px) {
-      #puzzle-container {
-        width: 95vw;
-        max-width: 320px;
+      .highlight-correct {
+        border: 2px solid limegreen !important;
+        box-shadow: 0 0 5px limegreen;
       }
 
       #progressBarContainer {
-        width: 90%;
+        width: 300px;
+        height: 20px;
+        background-color: #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 10px auto;
       }
-    }
-  </style>
-</head>
 
-<body>
-  <h1>Jigsaw Puzzle Game</h1>
+      #progressBarFill {
+        height: 100%;
+        width: 0%;
+        background-color: red;
+        transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+      }
 
-  <div class="controls" id="preGameControls">
-    <button class="btn button-base" onclick="startGame()">Start New Game</button>
-    <input type="file" id="imageUpload" accept="image/*" />
-    <select id="defaultImageSelector" class="custom-select button-base"></select>
-    <button class="btn button-base" id="toggleDarkMode">Dark Mode</button>
-    <div id="previewContainer">
-      <p>Preview Gambar:</p>
-      <img id="previewImage" src="" alt="Preview" />
-    </div>
-    <select id="difficulty" class="custom-select button-base">
-      <option value="3">Easy (3x3)</option>
-      <option value="4">Medium (4x4)</option>
-      <option value="5">Hard (5x5)</option>
-      <option value="6">Extreme (6x6)</option>
-      <option value="7">Insane (7x7)</option>
-      <option value="8">Godlike (8x8)</option>
-    </select>
-    <label id="rotationModeButton" class="custom-checkbox-button button-base">
-      <input type="checkbox" id="rotationMode" />
-      Mode Rotasi
-    </label>
-    <select id="challengeModeSelect" class="custom-select button-base">
-      <option value="0" selected>🎯 Mode Tantangan: Nonaktif</option>
-      <option value="60">🎯 Mode Tantangan: 1 Menit</option>
-      <option value="120">🎯 Mode Tantangan: 2 Menit</option>
-      <option value="300">🎯 Mode Tantangan: 5 Menit</option>
-    </select>
+      #puzzle-container {
+        width: 300px;
+        height: 300px;
+        display: flex;
+        flex-wrap: wrap;
+        border: 2px solid #ccc;
+        margin: 20px auto;
+        position: relative;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+      }
 
-    <select id="chaosModeSelect" class="custom-select button-base">
-      <option value="0" selected>🌀 Chaos Mode: Nonaktif</option>
-      <option value="30000">🌀 Chaos 30 detik</option>
-      <option value="60000">🌀 Chaos 1 menit</option>
-      <option value="120000">🌀 Chaos 2 menit</option>
-    </select>
+      .dark-mode #puzzle-container {
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
 
-    <select id="mutateModeSelect" class="custom-select button-base">
-      <option value="0" selected>🧬 Mutate Mode: Nonaktif</option>
-      <option value="3">🧬 Mutate Mode: 3 Kesalahan</option>
-      <option value="4">🧬 Mutate Mode: 4 Kesalahan</option>
-      <option value="5">🧬 Mutate Mode: 5 Kesalahan</option>
-      <option value="6">🧬 Mutate Mode: 6 Kesalahan</option>
-      <option value="7">🧬 Mutate Mode: 7 Kesalahan</option>
-    </select>
+      .puzzle-piece {
+        width: 100px;
+        height: 100px;
+        background-size: cover;
+        background-position: center;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        cursor: grab;
+      }
 
-    <select id="filterModeSelect" class="custom-select button-base">
-      <option value="none" selected>🎭 Tanpa Filter</option>
-      <option value="grayscale">⚫ Grayscale</option>
-      <option value="sepia">🟤 Sepia</option>
-    </select>
+      .controls {
+        margin-bottom: 20px;
+      }
 
-    <button class="btn button-base" id="lockToggleButton">🔒 Lock Correct Pieces: OFF</button>
+      .dark-mode select option {
+        background-color: #111;
+        color: #fff;
+      }
 
-    <button class="btn button-base" onclick="showLeaderboard()">🏆 Leaderboard</button>
-    <button class="btn button-base" onclick="showStats()">📊 Statistik</button>
-  </div>
+      input[type="file"] {
+        display: none;
+      }
 
-  <div class="controls" id="inGameControls" style="display: none">
-    <div id="progress" class="progress-info">Progress: 0%</div>
-    <div id="progressBarContainer">
-      <div id="progressBarFill"></div>
-    </div>
-    <div id="comboDisplay"></div>
+      .puzzle-piece.selected {
+        outline: 2px solid yellow;
+      }
 
-    <div id="undoButtonHidden" style="display: none">
-      <button class="btn button-base" onclick="showOriginal()" id="showOriginal"
-        title="Show the full original image (cannot be turned off once activated)">
-        Show Original
+      #timer {
+        margin: 10px 0;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background-color: #fff;
+        padding: 20px 30px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .completion-stats {
+        font-size: 16px;
+        line-height: 1.8;
+        padding: 0 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        text-align: left;
+      }
+
+      .completion-stats .title {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .completion-stats .gold {
+        color: gold;
+        font-weight: bold;
+      }
+
+      .completion-stats .silver {
+        color: silver;
+        font-weight: bold;
+      }
+
+      .completion-stats .bronze {
+        color: peru;
+        font-weight: bold;
+      }
+
+      .completion-stats .fail {
+        color: red;
+        font-weight: bold;
+      }
+
+      .leaderboard {
+        font-size: 16px;
+        text-align: left;
+        padding: 0 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .leaderboard .title {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .leaderboard-empty-message {
+        text-align: center;
+        color: gray;
+        font-style: italic;
+      }
+
+      .lifetime-stats {
+        font-size: 16px;
+        text-align: left;
+        padding: 0 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .lifetime-stats .title {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .lifetime-stats .stat-row {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+      }
+
+      .lifetime-stats .label {
+        font-weight: 500;
+      }
+
+      .lifetime-stats .value {
+        font-weight: bold;
+      }
+
+      .stats-medal-title {
+        margin-top: 15px;
+      }
+
+      .progress-info {
+        margin-top: 10px;
+        font-weight: bold;
+      }
+
+      .motivational-tip-style {
+        font-style: italic;
+        font-size: 16px;
+        margin-top: 5px;
+        color: #555;
+      }
+
+      .board-block {
+        border-top: 1px solid #666;
+        padding-top: 10px;
+      }
+
+      .diff-row {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .stat-row .label {
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .stat-row .value {
+        font-weight: bold;
+      }
+
+      .stat-row {
+        display: grid;
+        grid-template-columns: 130px 1fr;
+        gap: 15px;
+        align-items: center;
+      }
+
+      .stat-row .score {
+        color: gold;
+      }
+
+      .stat-row .gold {
+        color: gold;
+      }
+
+      .stat-row .silver {
+        color: silver;
+      }
+
+      .stat-row .bronze {
+        color: peru;
+      }
+
+      .stat-row .fail {
+        color: red;
+      }
+
+      .reset-container {
+        text-align: center;
+        margin-top: 15px;
+      }
+
+      .highlight-preview {
+        position: relative;
+        z-index: 9999 !important;
+        box-shadow: 0 0 15px 5px orange;
+        border: 3px solid orange !important;
+        animation: pulseHighlight 0.8s ease-in-out infinite alternate;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #pauseOverlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgb(0, 0, 0);
+        z-index: 9999;
+        color: white;
+        font-size: 24px;
+        /* display: flex; */
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      body.dark-mode #pauseOverlay {
+        background-color: rgba(0, 0, 0);
+        color: #fff;
+      }
+
+      body:not(.dark-mode) #pauseOverlay {
+        background-color: #f0f0f0;
+        color: #000;
+      }
+
+      .hint-highlight {
+        outline: 3px solid orange !important;
+        border: 2px solid orange !important;
+        box-shadow: 0 0 8px orange;
+      }
+
+      #previewContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      #previewContainer p {
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      #previewImage {
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 8px;
+      }
+
+      .btn.active {
+        background-color: #64ec64;
+        border-color: #333;
+        color: white;
+      }
+
+      .dark-mode .btn.active {
+        background-color: #079c07;
+        color: #fff;
+        border-color: #666;
+      }
+
+      #darkModeControl {
+        margin-bottom: 10px;
+      }
+
+      .controls {
+        margin-bottom: 15px;
+      }
+
+      .modal-content-center {
+        text-align: center;
+      }
+
+      .modal-paragraph-margin {
+        margin-top: 10px;
+      }
+
+      .horizontal-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .horizontal-buttons .btn {
+        flex: 1;
+        min-width: 120px;
+      }
+
+      .custom-select.active {
+        background-color: #64ec64;
+        border-color: #333;
+        color: rgb(0, 0, 0);
+      }
+
+      .dark-mode .custom-select.active {
+        background-color: #079c07;
+        border-color: #666;
+        color: #fff;
+      }
+
+      .counter-display {
+        display: inline-block;
+        min-width: 130px;
+        text-align: center;
+        margin: 8px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        background-color: #227744;
+      }
+
+      body:not(.dark-mode) .counter-display {
+        color: #000;
+      }
+
+      body.dark-mode .counter-display {
+        color: #fff;
+      }
+
+      #completionResult {
+        display: none;
+        margin: 20px auto;
+        max-width: 400px;
+      }
+
+      #completionResult.completed-prev {
+        display: block;
+        border: 2px solid limegreen;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 20px;
+        background: rgba(0, 255, 0, 0.05);
+      }
+
+      .zoom-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+        position: relative;
+        z-index: 10;
+      }
+
+      #zoomControls {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.85);
+        padding: 10px 15px;
+        border-radius: 12px;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        gap: 15px;
+      }
+
+      #zoomControls button {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 6px;
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background 0.2s ease;
+        cursor: pointer;
+      }
+
+      #zoomControls button:hover {
+        background: rgba(255, 255, 255, 0.25);
+      }
+
+      #zoomSlider {
+        width: 150px;
+        -webkit-appearance: none;
+        appearance: none;
+        height: 8px;
+        background: #333;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      #zoomSlider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #f0f0f0;
+        border: 4px solid #007bff;
+        transition: background 0.2s ease;
+      }
+
+      #zoomSlider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #f0f0f0;
+        border: 4px solid #007bff;
+        transition: background 0.2s ease;
+      }
+
+      .puzzle-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      body:not(.dark-mode) .blink-red {
+        animation: blinkRedLight 1s step-start infinite;
+        font-weight: bold;
+      }
+
+      @keyframes blinkRedLight {
+        0% {
+          color: red;
+        }
+
+        50% {
+          color: black;
+        }
+
+        100% {
+          color: red;
+        }
+      }
+
+      body.dark-mode .blink-red {
+        animation: blinkRedDark 1s step-start infinite;
+        font-weight: bold;
+      }
+
+      @keyframes blinkRedDark {
+        0% {
+          color: red;
+        }
+
+        50% {
+          color: white;
+        }
+
+        100% {
+          color: red;
+        }
+      }
+
+      #warningOverlay {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(
+          circle,
+          rgba(0, 0, 0, 0) 50%,
+          rgba(255, 0, 0, 0.6) 100%
+        );
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        z-index: -10;
+      }
+
+      #warningOverlay.active {
+        animation: fadePulse 3s infinite ease-in-out;
+      }
+
+      @keyframes fadePulse {
+        0% {
+          opacity: 0.2;
+        }
+
+        50% {
+          opacity: 0.6;
+        }
+
+        100% {
+          opacity: 0.2;
+        }
+      }
+
+      #puzzle-scaler {
+        display: inline-block;
+        transition: transform 0.2s ease;
+        transform-origin: top center;
+        position: relative;
+        z-index: 1;
+      }
+
+      #completionResult.completed-prev {
+        border: 2px solid limegreen;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 20px;
+        background: rgba(0, 255, 0, 0.05);
+      }
+
+      .puzzle-piece.filter-grayscale img {
+        filter: grayscale(100%);
+      }
+
+      .puzzle-piece.filter-sepia img {
+        filter: sepia(100%);
+      }
+
+      #comboDisplay {
+        font-size: 22px;
+        font-weight: bold;
+        color: gold;
+        text-shadow: 0 0 8px orange;
+        height: 28px;
+        margin-top: 5px;
+        opacity: 0;
+        transition: opacity 0.3s ease, transform 0.2s ease;
+      }
+
+      #comboDisplay.active {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+
+      .dark-mode #comboDisplay {
+        color: #ffb400;
+        text-shadow: 0 0 10px #ff7700;
+      }
+
+      .penalty-value {
+        color: red;
+      }
+
+      .penalty-header {
+        margin-top: 10px;
+        text-align: left;
+        font-weight: bold;
+      }
+
+      .penalty-progress-container {
+        width: 100%;
+        background: #ddd;
+        border-radius: 10px;
+        margin-top: 8px;
+        overflow: hidden;
+        height: 18px;
+      }
+
+      .penalty-progress-fill {
+        height: 100%;
+        width: 0%;
+        background: red;
+        transition: width 0.4s ease-in-out;
+        font-size: 12px;
+        color: white;
+        text-align: center;
+        line-height: 18px;
+      }
+
+      @media (max-width: 500px) {
+        #puzzle-container {
+          width: 95vw;
+          max-width: 320px;
+        }
+
+        #progressBarContainer {
+          width: 90%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Jigsaw Puzzle Game</h1>
+
+    <div class="controls" id="preGameControls">
+      <button class="btn button-base" onclick="startGame()">
+        Start New Game
       </button>
-      <button class="btn button-base" id="toggleDarkModeInGame">Dark Mode</button>
-      <button class="btn button-base" id="highlightButton" title="Highlight correct pieces for 5 seconds">
-        Highlight Posisi Benar
+      <input type="file" id="imageUpload" accept="image/*" />
+      <select
+        id="defaultImageSelector"
+        class="custom-select button-base"
+      ></select>
+      <button class="btn button-base" id="toggleDarkMode">Dark Mode</button>
+      <div id="previewContainer">
+        <p>Preview Gambar:</p>
+        <img id="previewImage" src="" alt="Preview" />
+      </div>
+      <select id="difficulty" class="custom-select button-base">
+        <option value="3">Easy (3x3)</option>
+        <option value="4">Medium (4x4)</option>
+        <option value="5">Hard (5x5)</option>
+        <option value="6">Extreme (6x6)</option>
+        <option value="7">Insane (7x7)</option>
+        <option value="8">Godlike (8x8)</option>
+      </select>
+      <label id="rotationModeButton" class="custom-checkbox-button button-base">
+        <input type="checkbox" id="rotationMode" />
+        Mode Rotasi
+      </label>
+      <select id="challengeModeSelect" class="custom-select button-base">
+        <option value="0" selected>🎯 Mode Tantangan: Nonaktif</option>
+        <option value="60">🎯 Mode Tantangan: 1 Menit</option>
+        <option value="120">🎯 Mode Tantangan: 2 Menit</option>
+        <option value="300">🎯 Mode Tantangan: 5 Menit</option>
+      </select>
+
+      <select id="chaosModeSelect" class="custom-select button-base">
+        <option value="0" selected>🌀 Chaos Mode: Nonaktif</option>
+        <option value="30000">🌀 Chaos 30 detik</option>
+        <option value="60000">🌀 Chaos 1 menit</option>
+        <option value="120000">🌀 Chaos 2 menit</option>
+      </select>
+
+      <select id="mutateModeSelect" class="custom-select button-base">
+        <option value="0" selected>🧬 Mutate Mode: Nonaktif</option>
+        <option value="3">🧬 Mutate Mode: 3 Kesalahan</option>
+        <option value="4">🧬 Mutate Mode: 4 Kesalahan</option>
+        <option value="5">🧬 Mutate Mode: 5 Kesalahan</option>
+        <option value="6">🧬 Mutate Mode: 6 Kesalahan</option>
+        <option value="7">🧬 Mutate Mode: 7 Kesalahan</option>
+      </select>
+
+      <select id="filterModeSelect" class="custom-select button-base">
+        <option value="none" selected>🎭 Tanpa Filter</option>
+        <option value="grayscale">⚫ Grayscale</option>
+        <option value="sepia">🟤 Sepia</option>
+      </select>
+
+      <button class="btn button-base" id="lockToggleButton">
+        🔒 Lock Correct Pieces: OFF
       </button>
 
-      <div id="toggleRotateButton" style="display: none">
-        <button class="btn button-base" id="rotateSelected">🔄 Rotate</button>
+      <button class="btn button-base" onclick="showLeaderboard()">
+        🏆 Leaderboard
+      </button>
+      <button class="btn button-base" onclick="showStats()">
+        📊 Statistik
+      </button>
+    </div>
+
+    <div class="controls" id="inGameControls" style="display: none">
+      <div id="progress" class="progress-info">Progress: 0%</div>
+      <div id="progressBarContainer">
+        <div id="progressBarFill"></div>
+      </div>
+      <div id="comboDisplay"></div>
+
+      <div id="undoButtonHidden" style="display: none">
+        <button
+          class="btn button-base"
+          onclick="showOriginal()"
+          id="showOriginal"
+          title="Show the full original image (cannot be turned off once activated)"
+        >
+          Show Original
+        </button>
+        <button class="btn button-base" id="toggleDarkModeInGame">
+          Dark Mode
+        </button>
+        <button
+          class="btn button-base"
+          id="highlightButton"
+          title="Highlight correct pieces for 5 seconds"
+        >
+          Highlight Posisi Benar
+        </button>
+
+        <div id="toggleRotateButton" style="display: none">
+          <button class="btn button-base" id="rotateSelected">🔄 Rotate</button>
+        </div>
+
+        <button
+          class="btn button-base"
+          id="undoButton"
+          title="Undo your last move (only one step back)"
+        >
+          Undo
+        </button>
+
+        <button
+          class="btn button-base"
+          onclick="previewLastSwap()"
+          title="Show your last move for 3 seconds"
+        >
+          👀 Lihat Langkah Terakhir
+        </button>
+        <button class="btn button-base" id="hintButton">🔍 Hint</button>
+        <button
+          class="btn btn-danger button-base"
+          id="resetGameButton"
+          onclick="resetCurrentGame()"
+        >
+          🔄 Reset Game
+        </button>
+        <button
+          class="btn button-base"
+          id="removeFilterButton"
+          style="display: none"
+          title="Reveal original image for 10 seconds"
+        >
+          🔓 Lepas Filter
+        </button>
+
+        <button class="btn button-base" id="pauseButton">Pause</button>
       </div>
 
-      <button class="btn button-base" id="undoButton" title="Undo your last move (only one step back)">Undo</button>
+      <div id="timer">Time: 00:00</div>
+      <div id="highlightCountDisplay" class="counter-display">
+        Highlight used: 0
+      </div>
+      <div id="hintCountDisplay" class="counter-display">Hint used: 0</div>
+      <div id="filterRemoveCountDisplay" class="counter-display">
+        Filter removed: 0
+      </div>
+      <div id="stepCountDisplay" class="counter-display">Langkah: 0</div>
 
-      <button class="btn button-base" onclick="previewLastSwap()" title="Show your last move for 3 seconds">
-        👀 Lihat Langkah Terakhir
-      </button>
-      <button class="btn button-base" id="hintButton">🔍 Hint</button>
-      <button class="btn btn-danger button-base" id="resetGameButton" onclick="resetCurrentGame()">🔄 Reset
-        Game</button>
-      <button class="btn button-base" id="removeFilterButton" style="display: none"
-        title="Reveal original image for 10 seconds">
-        🔓 Lepas Filter
-      </button>
-
-      <button class="btn button-base" id="pauseButton">Pause</button>
+      <div id="toggleEndButton" style="display: none">
+        <button
+          class="btn btn-danger button-base"
+          id="endGameButton"
+          onclick="endGame()"
+        >
+          🛑 End Game
+        </button>
+      </div>
+      <div id="toggleShowButton" style="display: none">
+        <button
+          class="btn active button-base"
+          id="closeButton"
+          onclick="closeGame()"
+        >
+          Close Game
+        </button>
+        <button class="btn button-base" id="screenshotButton">
+          📸 Simpan Hasil
+        </button>
+      </div>
     </div>
 
-    <div id="timer">Time: 00:00</div>
-    <div id="highlightCountDisplay" class="counter-display">Highlight used: 0</div>
-    <div id="hintCountDisplay" class="counter-display">Hint used: 0</div>
-    <div id="filterRemoveCountDisplay" class="counter-display">Filter removed: 0</div>
-    <div id="stepCountDisplay" class="counter-display">Langkah: 0</div>
-
-    <div id="toggleEndButton" style="display: none">
-      <button class="btn btn-danger button-base" id="endGameButton" onclick="endGame()">🛑 End Game</button>
+    <div class="puzzle-wrapper">
+      <div id="puzzle-scaler">
+        <div id="puzzle-container"></div>
+      </div>
     </div>
-    <div id="toggleShowButton" style="display: none">
-      <button class="btn active button-base" id="closeButton" onclick="closeGame()">Close Game</button>
-      <button class="btn button-base" id="screenshotButton">📸 Simpan Hasil</button>
+
+    <div class="zoom-controls" id="zoomControls" style="display: none">
+      <button id="zoomOut">-</button>
+      <input type="range" id="zoomSlider" min="50" max="150" value="100" />
+      <button id="zoomIn">+</button>
     </div>
-  </div>
 
-  <div class="puzzle-wrapper">
-    <div id="puzzle-scaler">
-      <div id="puzzle-container"></div>
+    <div id="completionResult"></div>
+
+    <p id="motivationalTip" class="motivational-tip-style"></p>
+
+    <div id="original-image" style="display: none">
+      <img
+        id="originalImagePreview"
+        src="image/image1.jpg"
+        alt="Original Image"
+        width="300"
+      />
     </div>
-  </div>
-
-  <div class="zoom-controls" id="zoomControls" style="display: none">
-    <button id="zoomOut">-</button>
-    <input type="range" id="zoomSlider" min="50" max="150" value="100" />
-    <button id="zoomIn">+</button>
-  </div>
-
-  <div id="completionResult"></div>
-
-  <p id="motivationalTip" class="motivational-tip-style"></p>
-
-  <div id="original-image" style="display: none">
-    <img id="originalImagePreview" src="image/image1.jpg" alt="Original Image" width="300" />
-  </div>
-  <div id="customModal" class="modal hidden">
-    <div class="modal-content">
-      <p id="modalMessage">Puzzle Completed!</p>
-      <div id="modalButtons"></div>
+    <div id="customModal" class="modal hidden">
+      <div class="modal-content">
+        <p id="modalMessage">Puzzle Completed!</p>
+        <div id="modalButtons"></div>
+      </div>
     </div>
-  </div>
 
-  <div id="pauseOverlay">
-    <div>Game Paused<br />Klik Resume untuk melanjutkan</div>
-    <button class="btn button-base" id="resumeButton">Resume</button>
-  </div>
+    <div id="pauseOverlay">
+      <div>Game Paused<br />Klik Resume untuk melanjutkan</div>
+      <button class="btn button-base" id="resumeButton">Resume</button>
+    </div>
 
-  <div id="warningOverlay"></div>
+    <div id="warningOverlay"></div>
 
-  <script>
-    const puzzleContainer = document.getElementById("puzzle-container");
-    const timerDisplay = document.getElementById("timer");
-    const originalImage = document.getElementById("original-image");
-    const LEADERBOARD_KEY = "jigsawLeaderboard";
+    <script>
+      const puzzleContainer = document.getElementById("puzzle-container");
+      const timerDisplay = document.getElementById("timer");
+      const originalImage = document.getElementById("original-image");
+      const LEADERBOARD_KEY = "jigsawLeaderboard";
 
-    let currentImageUrl = "image/image1.jpg";
-    let pieces = [];
-    let timer;
-    let highlightTimer;
-    let seconds = 0;
-    let gridSize = 3;
-    let lastSwapped = null;
-    let hintCount = 0;
-    let stepCount = 0;
-    let score = 0;
-    let isChallengeMode = false;
-    let challengeTimeLeft = 120;
-    let challengeTimeInitial = 0;
-    let challengeTimer = null;
-    let lastSwap = null;
-    let highlightCount = 0;
-    let highlightUsed = 0;
-    let filterMode = "none";
-    let filterRemoved = false;
-    let filterRemoveCount = 0;
-    let filterTimer = null;
-    let hasUpdatedStats = false;
-    let comboCount = 0;
-    let lastCorrectPieces = 0;
-    let comboTimeout = null;
-    let lockCorrectPieces = false;
-    let chaosTimer = null;
-    let chaosInterval = 0;
-    let mutateThreshold = 0;
-    let wrongMoveCount = 0;
-    let showOriginalUsed = false;
+      let currentImageUrl = "image/image1.jpg";
+      let pieces = [];
+      let timer;
+      let highlightTimer;
+      let seconds = 0;
+      let gridSize = 3;
+      let lastSwapped = null;
+      let hintCount = 0;
+      let stepCount = 0;
+      let score = 0;
+      let isChallengeMode = false;
+      let challengeTimeLeft = 120;
+      let challengeTimeInitial = 0;
+      let challengeTimer = null;
+      let lastSwap = null;
+      let highlightCount = 0;
+      let highlightUsed = 0;
+      let filterMode = "none";
+      let filterRemoved = false;
+      let filterRemoveCount = 0;
+      let filterTimer = null;
+      let hasUpdatedStats = false;
+      let comboCount = 0;
+      let lastCorrectPieces = 0;
+      let comboTimeout = null;
+      let lockCorrectPieces = false;
+      let chaosTimer = null;
+      let chaosInterval = 0;
+      let mutateThreshold = 0;
+      let wrongMoveCount = 0;
+      let showOriginalUsed = false;
 
-    const STATS_KEY = "jigsawStats";
+      const STATS_KEY = "jigsawStats";
 
-    const warningOverlayEl = document.getElementById("warningOverlay");
-    function setWarningOverlayVisible(show) {
-      if (!warningOverlayEl) return;
-      if (show) {
-        warningOverlayEl.classList.add("active");
-      } else {
-        warningOverlayEl.classList.remove("active");
+      const warningOverlayEl = document.getElementById("warningOverlay");
+      function setWarningOverlayVisible(show) {
+        if (!warningOverlayEl) return;
+        if (show) {
+          warningOverlayEl.classList.add("active");
+        } else {
+          warningOverlayEl.classList.remove("active");
+        }
       }
-    }
 
-    function updatePreviewImage(url) {
-      const preview = document.getElementById("previewImage");
-      preview.src = url;
-      preview.style.display = "block";
-    }
+      function updatePreviewImage(url) {
+        const preview = document.getElementById("previewImage");
+        preview.src = url;
+        preview.style.display = "block";
+      }
 
-    function createPieces() {
-      pieces = [];
-      puzzleContainer.innerHTML = "";
-      const pieceSize = 300 / gridSize;
+      function createPieces() {
+        pieces = [];
+        puzzleContainer.innerHTML = "";
+        const pieceSize = 300 / gridSize;
 
-      const img = new Image();
-      img.src = currentImageUrl;
-      img.onload = () => {
-        const cropSize = Math.min(img.width, img.height);
-        const offsetX = (img.width - cropSize) / 2;
-        const offsetY = (img.height - cropSize) / 2;
+        const img = new Image();
+        img.src = currentImageUrl;
+        img.onload = () => {
+          const cropSize = Math.min(img.width, img.height);
+          const offsetX = (img.width - cropSize) / 2;
+          const offsetY = (img.height - cropSize) / 2;
 
-        const squareCanvas = document.createElement("canvas");
-        squareCanvas.width = 300;
-        squareCanvas.height = 300;
-        const squareCtx = squareCanvas.getContext("2d");
+          const squareCanvas = document.createElement("canvas");
+          squareCanvas.width = 300;
+          squareCanvas.height = 300;
+          const squareCtx = squareCanvas.getContext("2d");
 
-        squareCtx.drawImage(img, offsetX, offsetY, cropSize, cropSize, 0, 0, 300, 300);
+          squareCtx.drawImage(
+            img,
+            offsetX,
+            offsetY,
+            cropSize,
+            cropSize,
+            0,
+            0,
+            300,
+            300
+          );
 
-        for (let row = 0; row < gridSize; row++) {
-          for (let col = 0; col < gridSize; col++) {
-            const piece = document.createElement("div");
-            piece.classList.add("puzzle-piece");
-            piece.style.width = `${pieceSize}px`;
-            piece.style.height = `${pieceSize}px`;
+          for (let row = 0; row < gridSize; row++) {
+            for (let col = 0; col < gridSize; col++) {
+              const piece = document.createElement("div");
+              piece.classList.add("puzzle-piece");
+              piece.style.width = `${pieceSize}px`;
+              piece.style.height = `${pieceSize}px`;
 
-            piece.id = `piece-${row}-${col}`;
+              piece.id = `piece-${row}-${col}`;
 
-            const canvas = document.createElement("canvas");
-            canvas.width = pieceSize;
-            canvas.height = pieceSize;
-            const ctx = canvas.getContext("2d");
+              const canvas = document.createElement("canvas");
+              canvas.width = pieceSize;
+              canvas.height = pieceSize;
+              const ctx = canvas.getContext("2d");
 
-            ctx.drawImage(
-              squareCanvas,
-              col * pieceSize,
-              row * pieceSize,
-              pieceSize,
-              pieceSize,
-              0,
-              0,
-              pieceSize,
-              pieceSize
-            );
+              ctx.drawImage(
+                squareCanvas,
+                col * pieceSize,
+                row * pieceSize,
+                pieceSize,
+                pieceSize,
+                0,
+                0,
+                pieceSize,
+                pieceSize
+              );
 
-            const imgPiece = new Image();
-            imgPiece.src = canvas.toDataURL();
-            imgPiece.draggable = false;
-            imgPiece.style.width = "100%";
-            imgPiece.style.height = "100%";
-            piece.appendChild(imgPiece);
+              const imgPiece = new Image();
+              imgPiece.src = canvas.toDataURL();
+              imgPiece.draggable = false;
+              imgPiece.style.width = "100%";
+              imgPiece.style.height = "100%";
+              piece.appendChild(imgPiece);
 
-            piece.dataset.correctRow = row;
-            piece.dataset.correctCol = col;
+              piece.dataset.correctRow = row;
+              piece.dataset.correctCol = col;
 
-            addEventsToPiece(piece);
+              addEventsToPiece(piece);
 
-            pieces.push(piece);
-            puzzleContainer.appendChild(piece);
+              pieces.push(piece);
+              puzzleContainer.appendChild(piece);
+            }
+          }
+
+          applyFilterToPieces();
+          shufflePieces();
+          updateProgress();
+        };
+      }
+
+      function shufflePieces() {
+        pieces.sort(() => Math.random() - 0.5);
+        pieces.forEach((piece) => puzzleContainer.appendChild(piece));
+
+        if (document.getElementById("rotationMode").checked) {
+          pieces.forEach((piece) => {
+            const randomRotation = [0, 90, 180, 270][
+              Math.floor(Math.random() * 4)
+            ];
+            piece.style.transform = `rotate(${randomRotation}deg)`;
+            piece.setAttribute("data-rotation", randomRotation);
+          });
+        }
+      }
+
+      function chaosRandomSwap() {
+        const pieces = Array.from(puzzleContainer.children);
+        if (pieces.length < 2) return;
+
+        const i = Math.floor(Math.random() * pieces.length);
+        let j = Math.floor(Math.random() * pieces.length);
+        while (j === i) j = Math.floor(Math.random() * pieces.length);
+
+        const pieceA = pieces[i];
+        const pieceB = pieces[j];
+
+        const cloneA = pieceA.cloneNode(true);
+        const cloneB = pieceB.cloneNode(true);
+
+        puzzleContainer.replaceChild(cloneB, pieceA);
+        puzzleContainer.replaceChild(cloneA, pieceB);
+
+        addEventsToPiece(cloneA);
+        addEventsToPiece(cloneB);
+
+        lastSwapped = [i, j];
+        updateProgress();
+      }
+
+      document
+        .getElementById("chaosModeSelect")
+        .addEventListener("change", (e) => {
+          if (e.target.value !== "0") {
+            e.target.classList.add("active");
+          } else {
+            e.target.classList.remove("active");
+          }
+        });
+
+      let draggedPiece = null;
+
+      function dragStart(e) {
+        e.dataTransfer.setData("text/plain", e.target.id);
+      }
+
+      function dragOver(e) {
+        e.preventDefault();
+      }
+
+      function dropPiece(e) {
+        e.preventDefault();
+        const draggedId = e.dataTransfer.getData("text/plain");
+        const draggedEl = document.getElementById(draggedId);
+        const targetEl = e.currentTarget;
+
+        if (!draggedEl || !targetEl || draggedEl === targetEl) return;
+
+        if (lockCorrectPieces) {
+          const children = Array.from(puzzleContainer.children);
+          const indexTarget = children.indexOf(targetEl);
+          const indexDragged = children.indexOf(draggedEl);
+
+          const correctRowTarget = parseInt(targetEl.dataset.correctRow, 10);
+          const correctColTarget = parseInt(targetEl.dataset.correctCol, 10);
+          const correctRowDragged = parseInt(draggedEl.dataset.correctRow, 10);
+          const correctColDragged = parseInt(draggedEl.dataset.correctCol, 10);
+
+          const targetCorrect =
+            Math.floor(indexTarget / gridSize) === correctRowTarget &&
+            indexTarget % gridSize === correctColTarget;
+
+          const draggedCorrect =
+            Math.floor(indexDragged / gridSize) === correctRowDragged &&
+            indexDragged % gridSize === correctColDragged;
+
+          if (targetCorrect || draggedCorrect) {
+            return;
           }
         }
 
-        applyFilterToPieces();
-        shufflePieces();
-        updateProgress();
-      };
+        const draggedClone = draggedEl.cloneNode(true);
+        const targetClone = targetEl.cloneNode(true);
 
-    }
-
-    function shufflePieces() {
-      pieces.sort(() => Math.random() - 0.5);
-      pieces.forEach((piece) => puzzleContainer.appendChild(piece));
-
-      if (document.getElementById("rotationMode").checked) {
-        pieces.forEach((piece) => {
-          const randomRotation = [0, 90, 180, 270][Math.floor(Math.random() * 4)];
-          piece.style.transform = `rotate(${randomRotation}deg)`;
-          piece.setAttribute("data-rotation", randomRotation);
-        });
-      }
-    }
-
-    function chaosRandomSwap() {
-      const pieces = Array.from(puzzleContainer.children);
-      if (pieces.length < 2) return;
-
-      const i = Math.floor(Math.random() * pieces.length);
-      let j = Math.floor(Math.random() * pieces.length);
-      while (j === i) j = Math.floor(Math.random() * pieces.length);
-
-      const pieceA = pieces[i];
-      const pieceB = pieces[j];
-
-      const cloneA = pieceA.cloneNode(true);
-      const cloneB = pieceB.cloneNode(true);
-
-      puzzleContainer.replaceChild(cloneB, pieceA);
-      puzzleContainer.replaceChild(cloneA, pieceB);
-
-      addEventsToPiece(cloneA);
-      addEventsToPiece(cloneB);
-
-      lastSwapped = [i, j];
-      updateProgress();
-    }
-
-    document.getElementById("chaosModeSelect").addEventListener("change", (e) => {
-      if (e.target.value !== "0") {
-        e.target.classList.add("active");
-      } else {
-        e.target.classList.remove("active");
-      }
-    });
-
-    let draggedPiece = null;
-
-    function dragStart(e) {
-      e.dataTransfer.setData("text/plain", e.target.id);
-    }
-
-    function dragOver(e) {
-      e.preventDefault();
-    }
-
-    function dropPiece(e) {
-      e.preventDefault();
-      const draggedId = e.dataTransfer.getData("text/plain");
-      const draggedEl = document.getElementById(draggedId);
-      const targetEl = e.currentTarget;
-
-      if (!draggedEl || !targetEl || draggedEl === targetEl) return;
-
-      if (lockCorrectPieces) {
         const children = Array.from(puzzleContainer.children);
-        const indexTarget = children.indexOf(targetEl);
-        const indexDragged = children.indexOf(draggedEl);
+        const index1 = children.indexOf(draggedEl);
+        const index2 = children.indexOf(targetEl);
 
-        const correctRowTarget = parseInt(targetEl.dataset.correctRow, 10);
-        const correctColTarget = parseInt(targetEl.dataset.correctCol, 10);
-        const correctRowDragged = parseInt(draggedEl.dataset.correctRow, 10);
-        const correctColDragged = parseInt(draggedEl.dataset.correctCol, 10);
+        targetEl.replaceWith(draggedClone);
+        draggedEl.replaceWith(targetClone);
 
-        const targetCorrect =
-          Math.floor(indexTarget / gridSize) === correctRowTarget &&
-          indexTarget % gridSize === correctColTarget;
+        addEventsToPiece(draggedClone);
+        addEventsToPiece(targetClone);
 
-        const draggedCorrect =
-          Math.floor(indexDragged / gridSize) === correctRowDragged &&
-          indexDragged % gridSize === correctColDragged;
+        lastSwapped = [index1, index2];
 
-        if (targetCorrect || draggedCorrect) {
-          return;
+        stepCount++;
+        updateStepDisplay();
+
+        updateProgress();
+        if (mutateThreshold > 0) {
+          const isPieceCorrect = (pieceEl, index) => {
+            const correctRow = Math.floor(index / gridSize);
+            const correctCol = index % gridSize;
+            const expectedRow = parseInt(pieceEl.dataset.correctRow, 10);
+            const expectedCol = parseInt(pieceEl.dataset.correctCol, 10);
+            const currentRotation = parseInt(
+              pieceEl.getAttribute("data-rotation") || "0"
+            );
+            const isCorrectRotation = currentRotation === 0;
+
+            return (
+              correctRow === expectedRow &&
+              correctCol === expectedCol &&
+              isCorrectRotation
+            );
+          };
+
+          const newChildren = Array.from(puzzleContainer.children);
+
+          const isTargetCorrectAfter = isPieceCorrect(
+            newChildren[index2],
+            index2
+          );
+          const isDraggedCorrectAfter = isPieceCorrect(
+            newChildren[index1],
+            index1
+          );
+
+          if (!isTargetCorrectAfter && !isDraggedCorrectAfter) {
+            wrongMoveCount++;
+          } else {
+            wrongMoveCount = 0;
+          }
+
+          if (wrongMoveCount >= mutateThreshold) {
+            wrongMoveCount = 0;
+            forceMoveRandomCorrectPiece();
+          }
         }
       }
 
-      const draggedClone = draggedEl.cloneNode(true);
-      const targetClone = targetEl.cloneNode(true);
-
-      const children = Array.from(puzzleContainer.children);
-      const index1 = children.indexOf(draggedEl);
-      const index2 = children.indexOf(targetEl);
-
-      targetEl.replaceWith(draggedClone);
-      draggedEl.replaceWith(targetClone);
-
-      addEventsToPiece(draggedClone);
-      addEventsToPiece(targetClone);
-
-      lastSwapped = [index1, index2];
-
-      stepCount++;
-      updateStepDisplay();
-
-      updateProgress();
-      if (mutateThreshold > 0) {
-        const isPieceCorrect = (pieceEl, index) => {
-          const correctRow = Math.floor(index / gridSize);
-          const correctCol = index % gridSize;
-          const expectedRow = parseInt(pieceEl.dataset.correctRow, 10);
-          const expectedCol = parseInt(pieceEl.dataset.correctCol, 10);
-          const currentRotation = parseInt(pieceEl.getAttribute("data-rotation") || "0");
-          const isCorrectRotation = currentRotation === 0;
-
-          return correctRow === expectedRow && correctCol === expectedCol && isCorrectRotation;
-        };
-
-        const newChildren = Array.from(puzzleContainer.children);
-
-        const isTargetCorrectAfter = isPieceCorrect(newChildren[index2], index2);
-        const isDraggedCorrectAfter = isPieceCorrect(newChildren[index1], index1);
-
-        if (!isTargetCorrectAfter && !isDraggedCorrectAfter) {
-          wrongMoveCount++;
-        } else {
-          wrongMoveCount = 0;
-        }
-
-        if (wrongMoveCount >= mutateThreshold) {
-          wrongMoveCount = 0;
-          forceMoveRandomCorrectPiece();
-        }
+      function addEventsToPiece(piece) {
+        piece.draggable = true;
+        piece.addEventListener("dragstart", dragStart);
+        piece.addEventListener("dragover", dragOver);
+        piece.addEventListener("drop", dropPiece);
+        addClickToPiece(piece);
       }
-    }
 
-    function addEventsToPiece(piece) {
-      piece.draggable = true;
-      piece.addEventListener("dragstart", dragStart);
-      piece.addEventListener("dragover", dragOver);
-      piece.addEventListener("drop", dropPiece);
-      addClickToPiece(piece);
-    }
-
-    function showCompletionModal(time) {
-      const modal = document.getElementById("customModal");
-      const message = document.getElementById("modalMessage");
-      const buttons = document.getElementById("modalButtons");
-      const currentSeconds = seconds || 0;
+      function showCompletionModal(time) {
+        const modal = document.getElementById("customModal");
+        const message = document.getElementById("modalMessage");
+        const buttons = document.getElementById("modalButtons");
+        const currentSeconds = seconds || 0;
         const initialChallengeTime = challengeTimeInitial || 0;
         const timeLeftChallenge = challengeTimeLeft || 0;
 
-      toggleShowButton(true);
-      let timeSpent = isChallengeMode ? challengeTimeInitial - challengeTimeLeft : seconds;
-      timeSpent = Math.max(0, timeSpent || 0);
-      let penaltySteps = stepCount * 10;
-      let penaltyHints = hintCount * 50;
-      let penaltyTime = timeSpent * 2;
-      let penaltyShowOriginal = showOriginalUsed ? 100 : 0;
+        toggleShowButton(true);
+        let timeSpent = isChallengeMode
+          ? challengeTimeInitial - challengeTimeLeft
+          : seconds;
+        timeSpent = Math.max(0, timeSpent || 0);
+        let penaltySteps = stepCount * 10;
+        let penaltyHints = hintCount * 50;
+        let penaltyTime = timeSpent * 2;
+        let penaltyShowOriginal = showOriginalUsed ? 100 : 0;
 
-      let baseScore = 1000 - (penaltySteps + penaltyHints + penaltyTime + penaltyShowOriginal);
-      score = Math.max(0, baseScore);
+        let baseScore =
+          1000 -
+          (penaltySteps + penaltyHints + penaltyTime + penaltyShowOriginal);
+        score = Math.max(0, baseScore);
 
-      if (!hasUpdatedStats) {
-        updateLifetimeStats(score, timeSpent, hintCount);
-        hasUpdatedStats = true;
-      }
+        if (!hasUpdatedStats) {
+          updateLifetimeStats(score, timeSpent, hintCount);
+          hasUpdatedStats = true;
+        }
 
-      let medal = "";
-      let rankClass = "";
+        let medal = "";
+        let rankClass = "";
 
-      if (score >= 800) {
-        medal = "🥇 Gold Medal";
-        rankClass = "gold";
-      } else if (score >= 500) {
-        medal = "🥈 Silver Medal";
-        rankClass = "silver";
-      } else if (score >= 200) {
-        medal = "🥉 Bronze Medal";
-        rankClass = "bronze";
-      } else {
-        medal = "🤡 No Medal";
-        rankClass = "fail";
-      }
+        if (score >= 800) {
+          medal = "🥇 Gold Medal";
+          rankClass = "gold";
+        } else if (score >= 500) {
+          medal = "🥈 Silver Medal";
+          rankClass = "silver";
+        } else if (score >= 200) {
+          medal = "🥉 Bronze Medal";
+          rankClass = "bronze";
+        } else {
+          medal = "🤡 No Medal";
+          rankClass = "fail";
+        }
 
-      const difficulty = document.getElementById("difficulty").value;
-      const isRotationEnabled = document.getElementById("rotationMode").checked;
-      const challengeTime = document.getElementById("challengeModeSelect").value;
-      const isNewHigh = saveScoreToLeaderboard(
-        difficulty,
-        isRotationEnabled,
-        challengeTime,
-        score,
-        formatTime(timeSpent),
-        stepCount,
-        hintCount,
-        highlightUsed,
-        filterMode,
-        mutateThreshold
-      );
+        const difficulty = document.getElementById("difficulty").value;
+        const isRotationEnabled =
+          document.getElementById("rotationMode").checked;
+        const challengeTime = document.getElementById(
+          "challengeModeSelect"
+        ).value;
+        const isNewHigh = saveScoreToLeaderboard(
+          difficulty,
+          isRotationEnabled,
+          challengeTime,
+          score,
+          formatTime(timeSpent),
+          stepCount,
+          hintCount,
+          highlightUsed,
+          filterMode,
+          mutateThreshold
+        );
 
-      message.innerHTML = `
+        message.innerHTML = `
     <div class="completion-stats">
         <div class="title">🎉 Puzzle Completed!</div>
 
         <div class="stat-row"><span class="label">⏱ Time</span>
-            <span class="value">${formatTime(timeSpent)} class="penalty-value">- ${penaltyTime}</span></span>
+            <span class="value">${formatTime(timeSpent)}
+                <span class="penalty-value">- ${penaltyTime}</span>
+            </span>
         </div>
 
         <div class="stat-row"><span class="label">🔁 Steps</span>
-            <span class="value">${stepCount} class="penalty-value">- ${penaltySteps}</span></span>
+            <span class="value">${stepCount}
+                <span class="penalty-value">- ${penaltySteps}</span>
+            </span>
         </div>
 
         <div class="stat-row"><span class="label">💡 Hints used</span>
-            <span class="value">${hintCount} class="penalty-value">- ${penaltyHints}</span></span>
+            <span class="value">${hintCount}
+                <span class="penalty-value">- ${penaltyHints}</span>
+            </span>
         </div>
 
         <div class="stat-row"><span class="label">📷 Show Original</span>
-            <span class="value">${showOriginalUsed ? "Yes" : "No"} 
-            class="penalty-value">- ${penaltyShowOriginal}</span></span>
+            <span class="value">${showOriginalUsed ? "Yes" : "No"}
+                <span class="penalty-value">- ${penaltyShowOriginal}</span>
+            </span>
         </div>
 
         <div class="stat-row"><span class="label">✨ Highlights used</span>
@@ -1286,10 +1392,10 @@
             <span class="value">${filterRemoveCount}</span>
         </div>
 
-         <div class="penalty-header">Penalty Breakdown:</div>
-      <div class="penalty-progress-container">
-        <div id="penaltyBar" class="penalty-progress-fill">0 / 1000 pts lost</div>
-      </div>
+        <div class="penalty-header">Penalty Breakdown:</div>
+          <div class="penalty-progress-container">
+            <div id="penaltyBar" class="penalty-progress-fill">0 / 1000 pts lost</div>
+        </div>
 
         <div class="stat-row"><span class="label">🧮 Score</span>
             <span class="value score">${score}</span>
@@ -1299,703 +1405,819 @@
             <span class="value ${rankClass}">${medal}</span>
         </div>
     </div>
-`;
+    `;
 
-      const penaltyTotal = penaltySteps + penaltyHints + penaltyTime + penaltyShowOriginal;
-      const bar = document.getElementById("penaltyBar");
-      let percent = (penaltyTotal / 1000) * 100;
-      if (percent > 100) percent = 100;
+        const penaltyTotal =
+          penaltySteps + penaltyHints + penaltyTime + penaltyShowOriginal;
+        const bar = document.getElementById("penaltyBar");
+        let percent = (penaltyTotal / 1000) * 100;
+        if (percent > 100) percent = 100;
 
-      bar.style.width = percent + "%";
-      bar.textContent = `${penaltyTotal} / 1000 pts lost`;
+        bar.style.width = percent + "%";
+        bar.textContent = `${penaltyTotal} / 1000 pts lost`;
 
-      buttons.innerHTML = `
+        buttons.innerHTML = `
         <div class="reset-container horizontal-buttons">
             <button class="btn button-base" onclick="closeModal()">OK</button>
         </div>
     `;
 
-      modal.classList.remove("hidden");
-    }
-
-    function closeModal() {
-      const modal = document.getElementById("customModal");
-      modal.classList.add("hidden");
-      document.getElementById("modalButtons").innerHTML = "";
-
-      const showOriginalBtn = document.getElementById("showOriginal");
-      showOriginalBtn.classList.remove("active");
-      showOriginalBtn.disabled = false;
-
-      if (document.getElementById("modalMessage").querySelector(".completion-stats")) {
-        const modalContent = document.getElementById("modalMessage").innerHTML;
-        const resultBox = document.getElementById("completionResult");
-        resultBox.innerHTML = modalContent;
-        resultBox.style.display = "block";
-        resultBox.classList.add("completed-prev");
+        modal.classList.remove("hidden");
       }
-    }
 
-    function checkCompletion() {
-      const currentPieces = [...puzzleContainer.children];
-      let allCorrect = true;
+      function closeModal() {
+        const modal = document.getElementById("customModal");
+        modal.classList.add("hidden");
+        document.getElementById("modalButtons").innerHTML = "";
 
-      currentPieces.forEach((piece, index) => {
-        const correctRow = Math.floor(index / gridSize);
-        const correctCol = index % gridSize;
+        const showOriginalBtn = document.getElementById("showOriginal");
+        showOriginalBtn.classList.remove("active");
+        showOriginalBtn.disabled = false;
 
-        const expectedRow = parseInt(piece.dataset.correctRow, 10);
-        const expectedCol = parseInt(piece.dataset.correctCol, 10);
-
-        if (correctRow !== expectedRow || correctCol !== expectedCol) {
-          allCorrect = false;
+        if (
+          document
+            .getElementById("modalMessage")
+            .querySelector(".completion-stats")
+        ) {
+          const modalContent =
+            document.getElementById("modalMessage").innerHTML;
+          const resultBox = document.getElementById("completionResult");
+          resultBox.innerHTML = modalContent;
+          resultBox.style.display = "block";
+          resultBox.classList.add("completed-prev");
         }
+      }
 
-        const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
-        if (currentRotation !== 0) {
-          allCorrect = false;
+      function checkCompletion() {
+        const currentPieces = [...puzzleContainer.children];
+        let allCorrect = true;
+
+        currentPieces.forEach((piece, index) => {
+          const correctRow = Math.floor(index / gridSize);
+          const correctCol = index % gridSize;
+
+          const expectedRow = parseInt(piece.dataset.correctRow, 10);
+          const expectedCol = parseInt(piece.dataset.correctCol, 10);
+
+          if (correctRow !== expectedRow || correctCol !== expectedCol) {
+            allCorrect = false;
+          }
+
+          const currentRotation = parseInt(
+            piece.getAttribute("data-rotation") || "0"
+          );
+          if (currentRotation !== 0) {
+            allCorrect = false;
+          }
+        });
+
+        if (allCorrect) {
+          if (isChallengeMode) clearInterval(challengeTimer);
+          clearInterval(timer);
+          disablePuzzleInteraction();
+
+          zoomLevel = 100;
+          document.getElementById("zoomSlider").value = zoomLevel;
+          applyZoom();
+
+          setTimeout(() => {
+            clearInterval(chaosTimer);
+            showCompletionModal(formatTime(seconds));
+          }, 100);
         }
-      });
+      }
 
-      if (allCorrect) {
-        if (isChallengeMode) clearInterval(challengeTimer);
+      function endGame() {
+        if (!document.querySelector(".puzzle-piece")) return;
+
+        showConfirmationModal(
+          "Yakin Ingin Mengakhiri Permainan?",
+          "Semua progres akan hilang dan permainan akan berakhir. Kamu tidak akan mendapat skor.",
+          "Ya, Akhiri",
+          confirmEndGame,
+          "Batal",
+          closeModal
+        );
+        clearInterval(chaosTimer);
+      }
+
+      function confirmEndGame() {
+        if (!document.querySelector(".puzzle-piece")) return;
+        closeModal();
+
         clearInterval(timer);
+        if (isChallengeMode) clearInterval(challengeTimer);
+        setWarningOverlayVisible(false);
+
         disablePuzzleInteraction();
 
-        zoomLevel = 100;
-        document.getElementById("zoomSlider").value = zoomLevel;
-        applyZoom();
+        originalImage.style.display = "none";
+        const showOriginalBtn = document.getElementById("showOriginal");
+        showOriginalBtn.classList.remove("active");
+        showOriginalBtn.disabled = false;
 
-        setTimeout(() => {
-          clearInterval(chaosTimer);
-          showCompletionModal(formatTime(seconds));
-        }, 100);
+        const resultBox = document.getElementById("completionResult");
+        resultBox.innerHTML = "";
+        resultBox.classList.remove("completed-prev");
+        resultBox.style.display = "none";
+
+        showEndModal();
+        toggleControls(false);
+        toggleShowButton(false);
       }
-    }
 
-    function endGame() {
-      if (!document.querySelector(".puzzle-piece")) return;
+      function showConfirmationModal(
+        title,
+        message,
+        confirmText,
+        confirmAction,
+        cancelText,
+        cancelAction
+      ) {
+        closeModal();
+        const modal = document.getElementById("customModal");
+        const modalMessage = document.getElementById("modalMessage");
+        const buttons = document.getElementById("modalButtons");
 
-      showConfirmationModal(
-        "Yakin Ingin Mengakhiri Permainan?",
-        "Semua progres akan hilang dan permainan akan berakhir. Kamu tidak akan mendapat skor.",
-        "Ya, Akhiri",
-        confirmEndGame,
-        "Batal",
-        closeModal
-      );
-      clearInterval(chaosTimer);
-    }
-
-    function confirmEndGame() {
-      if (!document.querySelector(".puzzle-piece")) return;
-      closeModal();
-
-      clearInterval(timer);
-      if (isChallengeMode) clearInterval(challengeTimer);
-      setWarningOverlayVisible(false);
-
-      disablePuzzleInteraction();
-
-      originalImage.style.display = "none";
-      const showOriginalBtn = document.getElementById("showOriginal");
-      showOriginalBtn.classList.remove("active");
-      showOriginalBtn.disabled = false;
-
-      const resultBox = document.getElementById("completionResult");
-      resultBox.innerHTML = "";
-      resultBox.classList.remove("completed-prev");
-      resultBox.style.display = "none";
-
-      showEndModal();
-      toggleControls(false);
-      toggleShowButton(false);
-    }
-
-    function showConfirmationModal(title, message, confirmText, confirmAction, cancelText, cancelAction) {
-      closeModal();
-      const modal = document.getElementById("customModal");
-      const modalMessage = document.getElementById("modalMessage");
-      const buttons = document.getElementById("modalButtons");
-
-      modalMessage.innerHTML = `
+        modalMessage.innerHTML = `
           <div class="modal-content-center">
               <h3>${title}</h3>
               <p class="modal-paragraph-margin">${message}</p>
           </div>
       `;
 
-      buttons.innerHTML = `
+        buttons.innerHTML = `
           <div class="reset-container horizontal-buttons">
               <button class="btn btn-danger button-base" id="confirmActionButton">${confirmText}</button>
               <button class="btn button-base" id="cancelActionButton">${cancelText}</button>
           </div>
       `;
 
-      document.getElementById("confirmActionButton").onclick = confirmAction;
-      document.getElementById("cancelActionButton").onclick = cancelAction;
+        document.getElementById("confirmActionButton").onclick = confirmAction;
+        document.getElementById("cancelActionButton").onclick = cancelAction;
 
-      modal.classList.remove("hidden");
-    }
+        modal.classList.remove("hidden");
+      }
 
-    function closeGame() {
-      document.getElementById("previewImage").style.display = "block";
+      function closeGame() {
+        document.getElementById("previewImage").style.display = "block";
 
-      originalImage.style.display = "none";
-      const showOriginalBtn = document.getElementById("showOriginal");
-      showOriginalBtn.classList.remove("active");
-      showOriginalBtn.disabled = false;
+        originalImage.style.display = "none";
+        const showOriginalBtn = document.getElementById("showOriginal");
+        showOriginalBtn.classList.remove("active");
+        showOriginalBtn.disabled = false;
 
-      toggleControls(false);
-    }
+        toggleControls(false);
+      }
 
-    function showEndModal() {
-      const modal = document.getElementById("customModal");
-      const message = document.getElementById("modalMessage");
-      const buttons = document.getElementById("modalButtons");
+      function showEndModal() {
+        const modal = document.getElementById("customModal");
+        const message = document.getElementById("modalMessage");
+        const buttons = document.getElementById("modalButtons");
 
-      message.innerHTML = `
+        message.innerHTML = `
         <div class="modal-content-center">
             <h3>😓 Puzzle Tidak Diselesaikan</h3>
             <p>Kamu menyerah. Puzzle belum selesai.</p>
         </div>
     `;
 
-      buttons.innerHTML = `
+        buttons.innerHTML = `
         <div class="reset-container horizontal-buttons">
             <button class="btn button-base" onclick="closeModal()">OK</button>
         </div>
     `;
 
-      modal.classList.remove("hidden");
-      document.getElementById("previewImage").style.display = "block";
-    }
-
-    function startGame() {
-      filterMode = document.getElementById("filterModeSelect").value;
-      hasUpdatedStats = false;
-      showRandomMotivationalTip();
-      filterRemoved = false;
-      document.getElementById("removeFilterButton").style.display = filterMode !== "none" ? "inline-block" : "none";
-
-      document.getElementById("previewImage").style.display = "none";
-
-      const resultBox = document.getElementById("completionResult");
-      resultBox.innerHTML = "";
-      resultBox.classList.remove("completed-prev");
-
-      const selectedDifficulty = document.getElementById("difficulty").value;
-      gridSize = parseInt(selectedDifficulty);
-      createPieces();
-      originalImage.style.display = "none";
-      seconds = 0;
-      timerDisplay.textContent = "Time: 00:00";
-      clearInterval(timer);
-      isPaused = false;
-      document.getElementById("pauseButton").innerText = "Pause";
-      document.getElementById("pauseOverlay").style.display = "none";
-
-      timer = setInterval(() => {
-        seconds++;
-        timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
-      }, 1000);
-
-      const showOriginalBtn = document.querySelector('button[onclick="showOriginal()"]');
-      if (showOriginalBtn) {
-        showOriginalBtn.classList.remove("original-shown");
-        showOriginalBtn.disabled = false;
-        originalImage.style.display = "none";
+        modal.classList.remove("hidden");
+        document.getElementById("previewImage").style.display = "block";
       }
 
-      clearInterval(timer);
-      clearInterval(challengeTimer);
-      seconds = 0;
-      stepCount = 0;
-      hintCount = 0;
-      highlightUsed = 0;
-      filterRemoveCount = 0;
-      showOriginalUsed = false;
-      comboCount = 0;
-      lastCorrectPieces = 0;
-      wrongMoveCount = 0;
+      function startGame() {
+        filterMode = document.getElementById("filterModeSelect").value;
+        hasUpdatedStats = false;
+        showRandomMotivationalTip();
+        filterRemoved = false;
+        document.getElementById("removeFilterButton").style.display =
+          filterMode !== "none" ? "inline-block" : "none";
 
-      updateHintDisplay();
-      updateHighlightDisplay();
-      updateFilterRemoveDisplay();
+        document.getElementById("previewImage").style.display = "none";
 
-      challengeTimeLeft = 0;
-      challengeTimeInitial = 0;
+        const resultBox = document.getElementById("completionResult");
+        resultBox.innerHTML = "";
+        resultBox.classList.remove("completed-prev");
 
-      const challengeValue = parseInt(document.getElementById("challengeModeSelect").value);
-      isChallengeMode = challengeValue > 0;
-
-      if (isChallengeMode) {
-        challengeTimeLeft = challengeValue;
-        challengeTimeInitial = challengeValue;
-        timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
-
-        challengeTimer = setInterval(() => {
-          challengeTimeLeft--;
-          timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
-
-          if (challengeTimeLeft <= 30 && challengeTimeLeft > 0) {
-            timerDisplay.classList.add("blink-red");
-            setWarningOverlayVisible(true);
-          } else {
-            timerDisplay.classList.remove("blink-red");
-            setWarningOverlayVisible(false);
-          }
-
-          if (challengeTimeLeft <= 0) {
-            clearInterval(challengeTimer);
-            clearInterval(timer);
-            disablePuzzleInteraction();
-            setWarningOverlayVisible(false);
-
-            document.getElementById("undoButtonHidden").style.display = "none";
-            document.getElementById("toggleRotateButton").style.display = "none";
-            document.getElementById("highlightButton").style.display = "none";
-            document.getElementById("hintButton").style.display = "none";
-            document.getElementById("pauseButton").style.display = "none";
-            document.getElementById("showOriginal").style.display = "none";
-
-            document.getElementById("toggleEndButton").style.display = "block";
-            timerDisplay.classList.remove("blink-red");
-            alert("⏱️ Waktu habis! Kamu gagal menyelesaikan puzzle.");
-          }
-        }, 1000);
-      } else {
+        const selectedDifficulty = document.getElementById("difficulty").value;
+        gridSize = parseInt(selectedDifficulty);
+        createPieces();
+        originalImage.style.display = "none";
+        seconds = 0;
         timerDisplay.textContent = "Time: 00:00";
+        clearInterval(timer);
+        isPaused = false;
+        document.getElementById("pauseButton").innerText = "Pause";
+        document.getElementById("pauseOverlay").style.display = "none";
+
         timer = setInterval(() => {
           seconds++;
           timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
         }, 1000);
-      }
 
-      const chaosValue = parseInt(document.getElementById("chaosModeSelect").value);
-      chaosInterval = chaosValue;
+        const showOriginalBtn = document.querySelector(
+          'button[onclick="showOriginal()"]'
+        );
+        if (showOriginalBtn) {
+          showOriginalBtn.classList.remove("original-shown");
+          showOriginalBtn.disabled = false;
+          originalImage.style.display = "none";
+        }
 
-      if (chaosInterval > 0) {
-        chaosTimer = setInterval(chaosRandomSwap, chaosInterval);
-      } else {
-        chaosTimer = null;
-      }
-
-      const selectedMutateValue = parseInt(document.getElementById("mutateModeSelect").value);
-      mutateThreshold = selectedMutateValue;
-      wrongMoveCount = 0;
-
-      hintCount = 0;
-      stepCount = 0;
-      score = 0;
-      highlightCount = 0;
-      highlightUsed = 0;
-      filterRemoveCount = 0;
-
-      clearTimeout(filterTimer);
-      filterTimer = null;
-
-      confirmResetGame(true);
-      updateFilterRemoveDisplay();
-      updateHighlightDisplay();
-      updateHintDisplay();
-      updateStepDisplay();
-      toggleShowButton(false);
-      toggleControls(true);
-      toggleShowRotate(document.getElementById("rotationMode").checked);
-
-      updateProgress();
-    }
-
-    const mutateModeSelect = document.getElementById("mutateModeSelect");
-    mutateModeSelect.addEventListener("change", function () {
-      const value = mutateModeSelect.value;
-
-      mutateThreshold = parseInt(value);
-
-      if (value !== "0") {
-        mutateModeSelect.classList.add("active");
-      } else {
-        mutateModeSelect.classList.remove("active");
-      }
-    });
-
-    document.getElementById("imageUpload").addEventListener("change", function (e) {
-      const file = e.target.files[0];
-      if (file && file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onload = function (event) {
-          currentImageUrl = event.target.result;
-          updatePreviewImage(currentImageUrl);
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    function showOriginal() {
-      const img = document.getElementById("originalImagePreview");
-      img.src = currentImageUrl;
-      originalImage.style.display = "block";
-
-      const button = document.getElementById("showOriginal");
-      button.classList.add("active");
-      button.disabled = true;
-
-      showOriginalUsed = true;
-
-      const comboDisplay = document.getElementById("comboDisplay");
-      comboDisplay.textContent = "-100 poin (Show Original)";
-      comboDisplay.classList.add("active");
-      setTimeout(() => {
-        comboDisplay.classList.remove("active");
-        comboDisplay.textContent = "";
-      }, 1500);
-
-    }
-
-    function formatTime(secs) {
-      const min = Math.floor(secs / 60)
-        .toString()
-        .padStart(2, "0");
-      const sec = (secs % 60).toString().padStart(2, "0");
-      return `${min}:${sec}`;
-    }
-
-    const toggleButton = document.getElementById("toggleDarkMode");
-    document.getElementById("toggleDarkModeInGame").addEventListener("click", toggleTheme);
-
-    function toggleTheme() {
-      document.body.classList.toggle("dark-mode");
-      const isDark = document.body.classList.contains("dark-mode");
-      localStorage.setItem("theme", isDark ? "dark" : "light");
-    }
-
-    toggleButton.addEventListener("click", () => {
-      document.body.classList.toggle("dark-mode");
-
-      if (document.body.classList.contains("dark-mode")) {
-        localStorage.setItem("theme", "dark");
-      } else {
-        localStorage.setItem("theme", "light");
-      }
-    });
-
-    window.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("puzzle-container").style.display = "none";
-      if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark-mode");
-      }
-
-      const mutateCheckbox = document.getElementById("mutateMode");
-      const mutateLabel = document.getElementById("mutateModeButton");
-
-      mutateCheckbox.addEventListener("change", () => {
-        mutateMode = mutateCheckbox.checked;
-        mutateLabel.classList.toggle("active", mutateMode);
+        clearInterval(timer);
+        clearInterval(challengeTimer);
+        seconds = 0;
+        stepCount = 0;
+        hintCount = 0;
+        highlightUsed = 0;
+        filterRemoveCount = 0;
+        showOriginalUsed = false;
+        comboCount = 0;
+        lastCorrectPieces = 0;
         wrongMoveCount = 0;
+
+        updateHintDisplay();
+        updateHighlightDisplay();
+        updateFilterRemoveDisplay();
+
+        challengeTimeLeft = 0;
+        challengeTimeInitial = 0;
+
+        const challengeValue = parseInt(
+          document.getElementById("challengeModeSelect").value
+        );
+        isChallengeMode = challengeValue > 0;
+
+        if (isChallengeMode) {
+          challengeTimeLeft = challengeValue;
+          challengeTimeInitial = challengeValue;
+          timerDisplay.textContent = `Time left: ${formatTime(
+            challengeTimeLeft
+          )}`;
+
+          challengeTimer = setInterval(() => {
+            challengeTimeLeft--;
+            timerDisplay.textContent = `Time left: ${formatTime(
+              challengeTimeLeft
+            )}`;
+
+            if (challengeTimeLeft <= 30 && challengeTimeLeft > 0) {
+              timerDisplay.classList.add("blink-red");
+              setWarningOverlayVisible(true);
+            } else {
+              timerDisplay.classList.remove("blink-red");
+              setWarningOverlayVisible(false);
+            }
+
+            if (challengeTimeLeft <= 0) {
+              clearInterval(challengeTimer);
+              clearInterval(timer);
+              disablePuzzleInteraction();
+              setWarningOverlayVisible(false);
+
+              document.getElementById("undoButtonHidden").style.display =
+                "none";
+              document.getElementById("toggleRotateButton").style.display =
+                "none";
+              document.getElementById("highlightButton").style.display = "none";
+              document.getElementById("hintButton").style.display = "none";
+              document.getElementById("pauseButton").style.display = "none";
+              document.getElementById("showOriginal").style.display = "none";
+
+              document.getElementById("toggleEndButton").style.display =
+                "block";
+              timerDisplay.classList.remove("blink-red");
+              alert("⏱️ Waktu habis! Kamu gagal menyelesaikan puzzle.");
+            }
+          }, 1000);
+        } else {
+          timerDisplay.textContent = "Time: 00:00";
+          timer = setInterval(() => {
+            seconds++;
+            timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
+          }, 1000);
+        }
+
+        const chaosValue = parseInt(
+          document.getElementById("chaosModeSelect").value
+        );
+        chaosInterval = chaosValue;
+
+        if (chaosInterval > 0) {
+          chaosTimer = setInterval(chaosRandomSwap, chaosInterval);
+        } else {
+          chaosTimer = null;
+        }
+
+        const selectedMutateValue = parseInt(
+          document.getElementById("mutateModeSelect").value
+        );
+        mutateThreshold = selectedMutateValue;
+        wrongMoveCount = 0;
+
+        hintCount = 0;
+        stepCount = 0;
+        score = 0;
+        highlightCount = 0;
+        highlightUsed = 0;
+        filterRemoveCount = 0;
+
+        clearTimeout(filterTimer);
+        filterTimer = null;
+
+        confirmResetGame(true);
+        updateFilterRemoveDisplay();
+        updateHighlightDisplay();
+        updateHintDisplay();
+        updateStepDisplay();
+        toggleShowButton(false);
+        toggleControls(true);
+        toggleShowRotate(document.getElementById("rotationMode").checked);
+
+        updateProgress();
+      }
+
+      const mutateModeSelect = document.getElementById("mutateModeSelect");
+      mutateModeSelect.addEventListener("change", function () {
+        const value = mutateModeSelect.value;
+
+        mutateThreshold = parseInt(value);
+
+        if (value !== "0") {
+          mutateModeSelect.classList.add("active");
+        } else {
+          mutateModeSelect.classList.remove("active");
+        }
       });
 
-      updatePreviewImage(currentImageUrl);
-    });
+      document
+        .getElementById("imageUpload")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (file && file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              currentImageUrl = event.target.result;
+              updatePreviewImage(currentImageUrl);
+            };
+            reader.readAsDataURL(file);
+          }
+        });
 
-    document.getElementById("highlightButton").addEventListener("click", highlightCorrectPieces);
+      function showOriginal() {
+        const img = document.getElementById("originalImagePreview");
+        img.src = currentImageUrl;
+        originalImage.style.display = "block";
 
-    function highlightCorrectPieces() {
-      highlightUsed++;
-      highlightCount++;
-      updateHighlightDisplay();
-      const pieces = puzzleContainer.children;
+        const button = document.getElementById("showOriginal");
+        button.classList.add("active");
+        button.disabled = true;
 
-      for (let i = 0; i < pieces.length; i++) {
-        pieces[i].classList.remove("highlight-correct");
+        showOriginalUsed = true;
+
+        const comboDisplay = document.getElementById("comboDisplay");
+        comboDisplay.textContent = "-100 poin (Show Original)";
+        comboDisplay.classList.add("active");
+        setTimeout(() => {
+          comboDisplay.classList.remove("active");
+          comboDisplay.textContent = "";
+        }, 1500);
       }
 
-      clearTimeout(highlightTimer);
+      function formatTime(secs) {
+        const min = Math.floor(secs / 60)
+          .toString()
+          .padStart(2, "0");
+        const sec = (secs % 60).toString().padStart(2, "0");
+        return `${min}:${sec}`;
+      }
 
-      for (let i = 0; i < pieces.length; i++) {
-        const piece = pieces[i];
-        const correctRow = Math.floor(i / gridSize);
-        const correctCol = i % gridSize;
-        const expectedRow = parseInt(piece.dataset.correctRow, 10);
-        const expectedCol = parseInt(piece.dataset.correctCol, 10);
-        const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
-        const isCorrectRotation = currentRotation === 0;
-        const isCorrectPosition = correctRow === expectedRow && correctCol === expectedCol;
+      const toggleButton = document.getElementById("toggleDarkMode");
+      document
+        .getElementById("toggleDarkModeInGame")
+        .addEventListener("click", toggleTheme);
 
-        if (isCorrectPosition && isCorrectRotation) {
-          piece.classList.add("highlight-correct");
+      function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+        const isDark = document.body.classList.contains("dark-mode");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+      }
+
+      toggleButton.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+
+        if (document.body.classList.contains("dark-mode")) {
+          localStorage.setItem("theme", "dark");
+        } else {
+          localStorage.setItem("theme", "light");
         }
-      }
+      });
 
-      highlightTimer = setTimeout(() => {
+      window.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("puzzle-container").style.display = "none";
+        if (localStorage.getItem("theme") === "dark") {
+          document.body.classList.add("dark-mode");
+        }
+
+        const mutateCheckbox = document.getElementById("mutateMode");
+        const mutateLabel = document.getElementById("mutateModeButton");
+
+        mutateCheckbox.addEventListener("change", () => {
+          mutateMode = mutateCheckbox.checked;
+          mutateLabel.classList.toggle("active", mutateMode);
+          wrongMoveCount = 0;
+        });
+
+        updatePreviewImage(currentImageUrl);
+      });
+
+      document
+        .getElementById("highlightButton")
+        .addEventListener("click", highlightCorrectPieces);
+
+      function highlightCorrectPieces() {
+        highlightUsed++;
+        highlightCount++;
+        updateHighlightDisplay();
+        const pieces = puzzleContainer.children;
+
         for (let i = 0; i < pieces.length; i++) {
           pieces[i].classList.remove("highlight-correct");
         }
-      }, 5000);
-    }
 
-    function updateHighlightDisplay() {
-      document.getElementById("highlightCountDisplay").textContent = `Highlight used: ${highlightCount}`;
-    }
+        clearTimeout(highlightTimer);
 
-    function getProgressColor(percentage) {
-      if (percentage < 33) return "red";
-      if (percentage < 66) return "orange";
-      return "limegreen";
-    }
+        for (let i = 0; i < pieces.length; i++) {
+          const piece = pieces[i];
+          const correctRow = Math.floor(i / gridSize);
+          const correctCol = i % gridSize;
+          const expectedRow = parseInt(piece.dataset.correctRow, 10);
+          const expectedCol = parseInt(piece.dataset.correctCol, 10);
+          const currentRotation = parseInt(
+            piece.getAttribute("data-rotation") || "0"
+          );
+          const isCorrectRotation = currentRotation === 0;
+          const isCorrectPosition =
+            correctRow === expectedRow && correctCol === expectedCol;
 
-    function updateProgress() {
-      const pieces = puzzleContainer.children;
-      let correctCount = 0;
+          if (isCorrectPosition && isCorrectRotation) {
+            piece.classList.add("highlight-correct");
+          }
+        }
 
-      for (let i = 0; i < pieces.length; i++) {
-        const piece = pieces[i];
-        const correctRow = Math.floor(i / gridSize);
-        const correctCol = i % gridSize;
+        highlightTimer = setTimeout(() => {
+          for (let i = 0; i < pieces.length; i++) {
+            pieces[i].classList.remove("highlight-correct");
+          }
+        }, 5000);
+      }
 
-        const expectedRow = parseInt(piece.dataset.correctRow, 10);
-        const expectedCol = parseInt(piece.dataset.correctCol, 10);
+      function updateHighlightDisplay() {
+        document.getElementById(
+          "highlightCountDisplay"
+        ).textContent = `Highlight used: ${highlightCount}`;
+      }
 
-        const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
-        const isCorrectRotation = currentRotation === 0;
+      function getProgressColor(percentage) {
+        if (percentage < 33) return "red";
+        if (percentage < 66) return "orange";
+        return "limegreen";
+      }
 
-        if (correctRow === expectedRow && correctCol === expectedCol && isCorrectRotation) {
-          correctCount++;
+      function updateProgress() {
+        const pieces = puzzleContainer.children;
+        let correctCount = 0;
+
+        for (let i = 0; i < pieces.length; i++) {
+          const piece = pieces[i];
+          const correctRow = Math.floor(i / gridSize);
+          const correctCol = i % gridSize;
+
+          const expectedRow = parseInt(piece.dataset.correctRow, 10);
+          const expectedCol = parseInt(piece.dataset.correctCol, 10);
+
+          const currentRotation = parseInt(
+            piece.getAttribute("data-rotation") || "0"
+          );
+          const isCorrectRotation = currentRotation === 0;
+
+          if (
+            correctRow === expectedRow &&
+            correctCol === expectedCol &&
+            isCorrectRotation
+          ) {
+            correctCount++;
+          }
+        }
+
+        const total = gridSize * gridSize;
+        const percentage = Math.round((correctCount / total) * 100);
+
+        document.getElementById(
+          "progress"
+        ).textContent = `Progress: ${correctCount} / ${total} pieces in correct position (${percentage}%)`;
+
+        const progressBarFill = document.getElementById("progressBarFill");
+        progressBarFill.style.width = `${percentage}%`;
+        progressBarFill.style.backgroundColor = getProgressColor(percentage);
+
+        if (correctCount > lastCorrectPieces) {
+          comboCount++;
+          if (comboTimeout) clearTimeout(comboTimeout);
+
+          if (comboCount >= 3) {
+            const comboDisplay = document.getElementById("comboDisplay");
+            comboDisplay.textContent = `🔥 COMBO x${comboCount}!`;
+            comboDisplay.classList.add("active");
+
+            comboTimeout = setTimeout(() => {
+              comboDisplay.classList.remove("active");
+              comboDisplay.textContent = "";
+            }, 1500);
+          }
+        } else {
+          comboCount = 0;
+        }
+
+        lastCorrectPieces = correctCount;
+
+        if (percentage === 100) {
+          checkCompletion();
         }
       }
 
-      const total = gridSize * gridSize;
-      const percentage = Math.round((correctCount / total) * 100);
+      let isPaused = false;
 
-      document.getElementById(
-        "progress"
-      ).textContent = `Progress: ${correctCount} / ${total} pieces in correct position (${percentage}%)`;
+      document.getElementById("pauseButton").addEventListener("click", () => {
+        clearInterval(timer);
+        document.getElementById("pauseOverlay").style.display = "flex";
+        isPaused = true;
+      });
 
-      const progressBarFill = document.getElementById("progressBarFill");
-      progressBarFill.style.width = `${percentage}%`;
-      progressBarFill.style.backgroundColor = getProgressColor(percentage);
+      document
+        .getElementById("lockToggleButton")
+        .addEventListener("click", () => {
+          lockCorrectPieces = !lockCorrectPieces;
+          const btn = document.getElementById("lockToggleButton");
+          btn.textContent = lockCorrectPieces
+            ? "🔒 Lock Correct Pieces: ON"
+            : "🔓 Lock Correct Pieces: OFF";
 
-      if (correctCount > lastCorrectPieces) {
-        comboCount++;
-        if (comboTimeout) clearTimeout(comboTimeout);
+          if (lockCorrectPieces) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
 
-        if (comboCount >= 3) {
-          const comboDisplay = document.getElementById("comboDisplay");
-          comboDisplay.textContent = `🔥 COMBO x${comboCount}!`;
-          comboDisplay.classList.add("active");
+      document.getElementById("resumeButton").addEventListener("click", () => {
+        timer = setInterval(() => {
+          seconds++;
+          timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
+        }, 1000);
+        document.getElementById("pauseOverlay").style.display = "none";
+        isPaused = false;
+      });
 
-          comboTimeout = setTimeout(() => {
-            comboDisplay.classList.remove("active");
-            comboDisplay.textContent = "";
-          }, 1500);
+      const defaultImages = [
+        { name: "Gambar default...", url: "image/image1.jpg" },
+        { name: "Puncak-gunung", url: "image/Puncak-gunung.jpg" },
+        { name: "Meja kerja", url: "image/Meja-kerja.jpg" },
+        { name: "Pegunungan bersalju", url: "image/Pegunungan-bersalju.jpg" },
+        { name: "Gedung apartemen", url: "image/Gedung-apartemen.jpg" },
+        { name: "Kota metropolitan", url: "image/Kota-metropolitan.jpg" },
+      ];
+
+      const defaultImageSelector = document.getElementById(
+        "defaultImageSelector"
+      );
+
+      defaultImages.forEach((img) => {
+        const option = document.createElement("option");
+        option.value = img.url;
+        option.textContent = img.name;
+        defaultImageSelector.appendChild(option);
+      });
+
+      const uploadOption = document.createElement("option");
+      uploadOption.value = "__upload__";
+      uploadOption.textContent = "📁 Upload Gambar...";
+      defaultImageSelector.appendChild(uploadOption);
+
+      defaultImageSelector.addEventListener("change", (e) => {
+        const imageUrl = e.target.value;
+
+        if (imageUrl === "__upload__") {
+          document.getElementById("imageUpload").click();
+          e.target.value = "";
+        } else if (imageUrl) {
+          currentImageUrl = imageUrl;
+          updatePreviewImage(imageUrl);
         }
-      } else {
-        comboCount = 0;
-      }
+      });
 
-      lastCorrectPieces = correctCount;
+      document.getElementById("undoButton").addEventListener("click", () => {
+        if (!lastSwapped) return;
 
-      if (percentage === 100) {
+        const [index1, index2] = lastSwapped;
+        const children = Array.from(puzzleContainer.children);
+        const piece1 = children[index1];
+        const piece2 = children[index2];
+
+        const clone1 = piece1.cloneNode(true);
+        const clone2 = piece2.cloneNode(true);
+
+        puzzleContainer.replaceChild(clone1, piece2);
+        puzzleContainer.replaceChild(clone2, piece1);
+
+        [clone1, clone2].forEach((clone) => {
+          clone.addEventListener("dragstart", dragStart);
+          clone.addEventListener("dragover", dragOver);
+          clone.addEventListener("drop", dropPiece);
+          addClickToPiece(clone);
+        });
+
+        document.querySelectorAll(".puzzle-piece").forEach(addClickToPiece);
+        lastSwapped = null;
+        updateProgress();
+        highlightCorrectPieces();
+        document
+          .querySelectorAll(".puzzle-piece")
+          .forEach((p) => p.classList.remove("hint-highlight"));
+      });
+
+      function rotatePiece(piece) {
+        const currentRotation = parseInt(
+          piece.getAttribute("data-rotation") || "0"
+        );
+        const newRotation = (currentRotation + 90) % 360;
+        piece.style.transform = `rotate(${newRotation}deg)`;
+        piece.setAttribute("data-rotation", newRotation);
+
+        stepCount++;
+        updateStepDisplay();
+
         checkCompletion();
+        updateProgress();
       }
-    }
 
-    let isPaused = false;
+      document.addEventListener("contextmenu", (e) => {
+        const piece = e.target.closest(".puzzle-piece");
 
-    document.getElementById("pauseButton").addEventListener("click", () => {
-      clearInterval(timer);
-      document.getElementById("pauseOverlay").style.display = "flex";
-      isPaused = true;
-    });
+        if (piece) {
+          e.preventDefault();
 
-    document.getElementById("lockToggleButton").addEventListener("click", () => {
-      lockCorrectPieces = !lockCorrectPieces;
-      const btn = document.getElementById("lockToggleButton");
-      btn.textContent = lockCorrectPieces
-        ? "🔒 Lock Correct Pieces: ON"
-        : "🔓 Lock Correct Pieces: OFF";
-
-      if (lockCorrectPieces) {
-        btn.classList.add("active");
-      } else {
-        btn.classList.remove("active");
-      }
-    });
-
-    document.getElementById("resumeButton").addEventListener("click", () => {
-      timer = setInterval(() => {
-        seconds++;
-        timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
-      }, 1000);
-      document.getElementById("pauseOverlay").style.display = "none";
-      isPaused = false;
-    });
-
-    const defaultImages = [
-      { name: "Gambar default...", url: "image/image1.jpg" },
-      { name: "Puncak-gunung", url: "image/Puncak-gunung.jpg" },
-      { name: "Meja kerja", url: "image/Meja-kerja.jpg" },
-      { name: "Pegunungan bersalju", url: "image/Pegunungan-bersalju.jpg" },
-      { name: "Gedung apartemen", url: "image/Gedung-apartemen.jpg" },
-      { name: "Kota metropolitan", url: "image/Kota-metropolitan.jpg" },
-    ];
-
-    const defaultImageSelector = document.getElementById("defaultImageSelector");
-
-    defaultImages.forEach((img) => {
-      const option = document.createElement("option");
-      option.value = img.url;
-      option.textContent = img.name;
-      defaultImageSelector.appendChild(option);
-    });
-
-    const uploadOption = document.createElement("option");
-    uploadOption.value = "__upload__";
-    uploadOption.textContent = "📁 Upload Gambar...";
-    defaultImageSelector.appendChild(uploadOption);
-
-    defaultImageSelector.addEventListener("change", (e) => {
-      const imageUrl = e.target.value;
-
-      if (imageUrl === "__upload__") {
-        document.getElementById("imageUpload").click();
-        e.target.value = "";
-      } else if (imageUrl) {
-        currentImageUrl = imageUrl;
-        updatePreviewImage(imageUrl);
-      }
-    });
-
-    document.getElementById("undoButton").addEventListener("click", () => {
-      if (!lastSwapped) return;
-
-      const [index1, index2] = lastSwapped;
-      const children = Array.from(puzzleContainer.children);
-      const piece1 = children[index1];
-      const piece2 = children[index2];
-
-      const clone1 = piece1.cloneNode(true);
-      const clone2 = piece2.cloneNode(true);
-
-      puzzleContainer.replaceChild(clone1, piece2);
-      puzzleContainer.replaceChild(clone2, piece1);
-
-      [clone1, clone2].forEach((clone) => {
-        clone.addEventListener("dragstart", dragStart);
-        clone.addEventListener("dragover", dragOver);
-        clone.addEventListener("drop", dropPiece);
-        addClickToPiece(clone);
+          if (document.getElementById("rotationMode").checked) {
+            rotatePiece(piece);
+          }
+        }
       });
 
-      document.querySelectorAll(".puzzle-piece").forEach(addClickToPiece);
-      lastSwapped = null;
-      updateProgress();
-      highlightCorrectPieces();
-      document.querySelectorAll(".puzzle-piece").forEach((p) => p.classList.remove("hint-highlight"));
-    });
+      document
+        .getElementById("rotateSelected")
+        .addEventListener("click", () => {
+          if (!document.getElementById("rotationMode").checked) return;
 
-    function rotatePiece(piece) {
-      const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
-      const newRotation = (currentRotation + 90) % 360;
-      piece.style.transform = `rotate(${newRotation}deg)`;
-      piece.setAttribute("data-rotation", newRotation);
+          const selected = document.querySelector(".puzzle-piece.selected");
+          if (!selected) return;
 
-      stepCount++;
-      updateStepDisplay();
+          rotatePiece(selected);
+        });
 
-      checkCompletion();
-      updateProgress();
-    }
+      function addClickToPiece(piece) {
+        piece.addEventListener("click", () => {
+          if (!document.getElementById("rotationMode").checked) return;
 
-    document.addEventListener("contextmenu", (e) => {
-      const piece = e.target.closest(".puzzle-piece");
-
-      if (piece) {
-        e.preventDefault();
-
-        if (document.getElementById("rotationMode").checked) {
-          rotatePiece(piece);
-        }
+          document
+            .querySelectorAll(".puzzle-piece")
+            .forEach((p) => p.classList.remove("selected"));
+          piece.classList.add("selected");
+        });
       }
-    });
 
-    document.getElementById("rotateSelected").addEventListener("click", () => {
-      if (!document.getElementById("rotationMode").checked) return;
+      const rotationCheckbox = document.getElementById("rotationMode");
+      const rotationLabel = document.getElementById("rotationModeButton");
 
-      const selected = document.querySelector(".puzzle-piece.selected");
-      if (!selected) return;
-
-      rotatePiece(selected);
-    });
-
-    function addClickToPiece(piece) {
-      piece.addEventListener("click", () => {
-        if (!document.getElementById("rotationMode").checked) return;
-
-        document.querySelectorAll(".puzzle-piece").forEach((p) => p.classList.remove("selected"));
-        piece.classList.add("selected");
+      rotationCheckbox.addEventListener("change", () => {
+        rotationLabel.classList.toggle("active", rotationCheckbox.checked);
+        toggleShowRotate(rotationCheckbox.checked);
       });
-    }
 
-    const rotationCheckbox = document.getElementById("rotationMode");
-    const rotationLabel = document.getElementById("rotationModeButton");
+      const challengeModeSelect = document.getElementById(
+        "challengeModeSelect"
+      );
 
-    rotationCheckbox.addEventListener("change", () => {
-      rotationLabel.classList.toggle("active", rotationCheckbox.checked);
-      toggleShowRotate(rotationCheckbox.checked);
-    });
-
-    const challengeModeSelect = document.getElementById("challengeModeSelect");
-
-    challengeModeSelect.addEventListener("change", () => {
-      if (challengeModeSelect.value !== "0") {
-        challengeModeSelect.classList.add("active");
-      } else {
-        challengeModeSelect.classList.remove("active");
-      }
-    });
-
-    document.getElementById("hintButton").addEventListener("click", showHint);
-
-    function showHint() {
-      const children = Array.from(puzzleContainer.children);
-      const size = gridSize;
-
-      let wrongIndex = -1;
-      for (let i = 0; i < children.length; i++) {
-        const piece = children[i];
-        const expectedRow = Math.floor(i / size);
-        const expectedCol = i % size;
-        const row = parseInt(piece.dataset.correctRow, 10);
-        const col = parseInt(piece.dataset.correctCol, 10);
-        const rotation = parseInt(piece.getAttribute("data-rotation") || "0", 10);
-        const rotationWrong = document.getElementById("rotationMode").checked && rotation !== 0;
-
-        if (row !== expectedRow || col !== expectedCol || rotationWrong) {
-          wrongIndex = i;
-          break;
+      challengeModeSelect.addEventListener("change", () => {
+        if (challengeModeSelect.value !== "0") {
+          challengeModeSelect.classList.add("active");
+        } else {
+          challengeModeSelect.classList.remove("active");
         }
-      }
+      });
 
-      if (wrongIndex === -1) return;
+      document.getElementById("hintButton").addEventListener("click", showHint);
 
-      const atTarget = children[wrongIndex];
-      const expectedRow = Math.floor(wrongIndex / size);
-      const expectedCol = wrongIndex % size;
-      const row = parseInt(atTarget.dataset.correctRow, 10);
-      const col = parseInt(atTarget.dataset.correctCol, 10);
-      const rotation = parseInt(atTarget.getAttribute("data-rotation") || "0", 10);
-      const rotationMode = document.getElementById("rotationMode").checked;
+      function showHint() {
+        const children = Array.from(puzzleContainer.children);
+        const size = gridSize;
 
-      if (row === expectedRow && col === expectedCol && rotationMode && rotation !== 0) {
-        const fixed = atTarget.cloneNode(true);
-        fixed.style.transform = "rotate(0deg)";
-        fixed.setAttribute("data-rotation", "0");
-        puzzleContainer.replaceChild(fixed, atTarget);
-        addEventsToPiece(fixed);
+        let wrongIndex = -1;
+        for (let i = 0; i < children.length; i++) {
+          const piece = children[i];
+          const expectedRow = Math.floor(i / size);
+          const expectedCol = i % size;
+          const row = parseInt(piece.dataset.correctRow, 10);
+          const col = parseInt(piece.dataset.correctCol, 10);
+          const rotation = parseInt(
+            piece.getAttribute("data-rotation") || "0",
+            10
+          );
+          const rotationWrong =
+            document.getElementById("rotationMode").checked && rotation !== 0;
 
-        fixed.classList.add("hint-highlight");
-        setTimeout(() => fixed.classList.remove("hint-highlight"), 800);
+          if (row !== expectedRow || col !== expectedCol || rotationWrong) {
+            wrongIndex = i;
+            break;
+          }
+        }
+
+        if (wrongIndex === -1) return;
+
+        const atTarget = children[wrongIndex];
+        const expectedRow = Math.floor(wrongIndex / size);
+        const expectedCol = wrongIndex % size;
+        const row = parseInt(atTarget.dataset.correctRow, 10);
+        const col = parseInt(atTarget.dataset.correctCol, 10);
+        const rotation = parseInt(
+          atTarget.getAttribute("data-rotation") || "0",
+          10
+        );
+        const rotationMode = document.getElementById("rotationMode").checked;
+
+        if (
+          row === expectedRow &&
+          col === expectedCol &&
+          rotationMode &&
+          rotation !== 0
+        ) {
+          const fixed = atTarget.cloneNode(true);
+          fixed.style.transform = "rotate(0deg)";
+          fixed.setAttribute("data-rotation", "0");
+          puzzleContainer.replaceChild(fixed, atTarget);
+          addEventsToPiece(fixed);
+
+          fixed.classList.add("hint-highlight");
+          setTimeout(() => fixed.classList.remove("hint-highlight"), 800);
+
+          hintCount++;
+          updateHintDisplay();
+          stepCount++;
+          updateStepDisplay();
+          updateProgress();
+          checkCompletion();
+          lastSwapped = null;
+          return;
+        }
+
+        const correctIndex = children.findIndex(
+          (p) =>
+            parseInt(p.dataset.correctRow, 10) === expectedRow &&
+            parseInt(p.dataset.correctCol, 10) === expectedCol
+        );
+        if (correctIndex === -1) return;
+
+        const pieceAtTarget = children[wrongIndex];
+        const correctPiece = children[correctIndex];
+
+        const cloneA = pieceAtTarget.cloneNode(true);
+        const cloneB = correctPiece.cloneNode(true);
+
+        if (rotationMode) {
+          cloneB.style.transform = "rotate(0deg)";
+          cloneB.setAttribute("data-rotation", "0");
+        }
+
+        puzzleContainer.replaceChild(cloneB, pieceAtTarget);
+        puzzleContainer.replaceChild(cloneA, correctPiece);
+
+        addEventsToPiece(cloneA);
+        addEventsToPiece(cloneB);
+
+        lastSwapped = [wrongIndex, correctIndex];
+
+        const newChildren = Array.from(puzzleContainer.children);
+        newChildren[wrongIndex].classList.add("hint-highlight");
+        setTimeout(
+          () => newChildren[wrongIndex]?.classList.remove("hint-highlight"),
+          800
+        );
 
         hintCount++;
         updateHintDisplay();
@@ -2003,82 +2225,77 @@
         updateStepDisplay();
         updateProgress();
         checkCompletion();
-        lastSwapped = null;
-        return;
       }
 
-      const correctIndex = children.findIndex(
-        (p) =>
-          parseInt(p.dataset.correctRow, 10) === expectedRow && parseInt(p.dataset.correctCol, 10) === expectedCol
-      );
-      if (correctIndex === -1) return;
-
-      const pieceAtTarget = children[wrongIndex];
-      const correctPiece = children[correctIndex];
-
-      const cloneA = pieceAtTarget.cloneNode(true);
-      const cloneB = correctPiece.cloneNode(true);
-
-      if (rotationMode) {
-        cloneB.style.transform = "rotate(0deg)";
-        cloneB.setAttribute("data-rotation", "0");
+      function updateHintDisplay() {
+        document.getElementById(
+          "hintCountDisplay"
+        ).textContent = `Hint used: ${hintCount}`;
       }
 
-      puzzleContainer.replaceChild(cloneB, pieceAtTarget);
-      puzzleContainer.replaceChild(cloneA, correctPiece);
+      function saveScoreToLeaderboard(
+        difficulty,
+        isRotationEnabled,
+        challengeTime,
+        score,
+        time,
+        steps,
+        hints,
+        highlights,
+        filterMode,
+        mutateMode
+      ) {
+        const data = JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || {};
+        const key = `${difficulty}-${isRotationEnabled}-${challengeTime}-${filterMode}-${mutateMode}`;
+        const currentBest = data[key];
 
-      addEventsToPiece(cloneA);
-      addEventsToPiece(cloneB);
-
-      lastSwapped = [wrongIndex, correctIndex];
-
-      const newChildren = Array.from(puzzleContainer.children);
-      newChildren[wrongIndex].classList.add("hint-highlight");
-      setTimeout(() => newChildren[wrongIndex]?.classList.remove("hint-highlight"), 800);
-
-      hintCount++;
-      updateHintDisplay();
-      stepCount++;
-      updateStepDisplay();
-      updateProgress();
-      checkCompletion();
-    }
-
-    function updateHintDisplay() {
-      document.getElementById("hintCountDisplay").textContent = `Hint used: ${hintCount}`;
-    }
-
-    function saveScoreToLeaderboard(difficulty, isRotationEnabled, challengeTime, score, time, steps, hints, highlights, filterMode, mutateMode) {
-      const data = JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || {};
-      const key = `${difficulty}-${isRotationEnabled}-${challengeTime}-${filterMode}-${mutateMode}`;
-      const currentBest = data[key];
-
-      if (!currentBest || score > currentBest.score) {
-        data[key] = { score, time, steps, hints, isRotationEnabled, challengeTime, difficulty, filterMode, mutateMode };
-        localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(data));
-        return true;
+        if (!currentBest || score > currentBest.score) {
+          data[key] = {
+            score,
+            time,
+            steps,
+            hints,
+            isRotationEnabled,
+            challengeTime,
+            difficulty,
+            filterMode,
+            mutateMode,
+          };
+          localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(data));
+          return true;
+        }
+        return false;
       }
-      return false;
-    }
 
-    function showLeaderboard() {
-      const data = JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || {};
-      let html = `<div class="leaderboard"><div class="title">🏆 Best Scores:</div>`;
+      function showLeaderboard() {
+        const data = JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || {};
+        let html = `<div class="leaderboard"><div class="title">🏆 Best Scores:</div>`;
 
-      const keys = Object.keys(data);
-      if (keys.length === 0) {
-        html += `<div class="leaderboard-empty-message">Belum ada skor</div>`;
-      } else {
-        for (const key of keys) {
-          const entry = data[key];
-          const rotationText = entry.isRotationEnabled ? "🔄 Aktif" : "❌ Nonaktif";
-          const challengeText = entry.challengeTime > 0 ? `${entry.challengeTime / 60} Menit` : "❌ Nonaktif";
-          const filterText = entry.filterMode && entry.filterMode !== "none"
-            ? (entry.filterMode === "grayscale" ? "⚫ Grayscale" : "🟤 Sepia")
-            : "❌ Nonaktif";
-          const mutateText = entry.mutateMode > 0 ? `${entry.mutateMode} Kesalahan` : "❌ Nonaktif";
+        const keys = Object.keys(data);
+        if (keys.length === 0) {
+          html += `<div class="leaderboard-empty-message">Belum ada skor</div>`;
+        } else {
+          for (const key of keys) {
+            const entry = data[key];
+            const rotationText = entry.isRotationEnabled
+              ? "🔄 Aktif"
+              : "❌ Nonaktif";
+            const challengeText =
+              entry.challengeTime > 0
+                ? `${entry.challengeTime / 60} Menit`
+                : "❌ Nonaktif";
+            const filterText =
+              entry.filterMode && entry.filterMode !== "none"
+                ? entry.filterMode === "grayscale"
+                  ? "⚫ Grayscale"
+                  : "🟤 Sepia"
+                : "❌ Nonaktif";
+            const mutateText =
+              entry.mutateMode > 0
+                ? `${entry.mutateMode} Kesalahan`
+                : "❌ Nonaktif";
 
-          html += `
+            html += `
         <div class="board-block">
           <div class="diff-row">🧩 ${entry.difficulty}x${entry.difficulty}</div>
           <div class="stat-row"><span class="label">Mode Rotasi</span><span class="value">${rotationText}</span></div>
@@ -2091,565 +2308,656 @@
           <div class="stat-row"><span class="label">Hint</span><span class="value">${entry.hints}</span></div>
         </div>
       `;
+          }
         }
-      }
 
-      html += `</div>`;
+        html += `</div>`;
 
-      const modal = document.getElementById("customModal");
-      const message = document.getElementById("modalMessage");
-      message.innerHTML = html;
-      const buttons = document.getElementById("modalButtons");
+        const modal = document.getElementById("customModal");
+        const message = document.getElementById("modalMessage");
+        message.innerHTML = html;
+        const buttons = document.getElementById("modalButtons");
 
-      buttons.innerHTML = `
+        buttons.innerHTML = `
           <div class="reset-container horizontal-buttons">
             <button onclick="resetLeaderboard()" class="btn btn-danger button-base">🗑️ Reset Leaderboard</button>
             <button class="btn close-modal-button button-base" onclick="closeModal()">OK</button>
           </div>
         `;
 
-      modal.classList.remove("hidden");
-    }
-
-    function previewLastSwap() {
-      document.querySelectorAll(".highlight-preview").forEach((p) => {
-        p.classList.remove("highlight-preview");
-      });
-
-      if (!lastSwapped) return;
-
-      const children = Array.from(puzzleContainer.children);
-      const [index1, index2] = lastSwapped;
-      const piece1 = children[index1];
-      const piece2 = children[index2];
-
-      [piece1, piece2].forEach((piece) => {
-        piece.classList.add("highlight-preview");
-      });
-
-      setTimeout(() => {
-        [piece1, piece2].forEach((piece) => {
-          piece.classList.remove("highlight-preview");
-        });
-      }, 3000);
-    }
-
-    function updateLifetimeStats(score, time, hints) {
-      const stats = JSON.parse(localStorage.getItem(STATS_KEY)) || {
-        totalGames: 0,
-        totalTime: 0,
-        totalScore: 0,
-        totalHints: 0,
-        goldCount: 0,
-        silverCount: 0,
-        bronzeCount: 0,
-      };
-
-      stats.totalGames += 1;
-      stats.totalTime += time;
-      stats.totalScore += score;
-      stats.totalHints += hints;
-
-      if (score >= 800) {
-        stats.goldCount += 1;
-      } else if (score >= 500) {
-        stats.silverCount += 1;
-      } else if (score >= 200) {
-        stats.bronzeCount += 1;
+        modal.classList.remove("hidden");
       }
 
-      localStorage.setItem(STATS_KEY, JSON.stringify(stats));
-    }
+      function previewLastSwap() {
+        document.querySelectorAll(".highlight-preview").forEach((p) => {
+          p.classList.remove("highlight-preview");
+        });
 
-    function showStats() {
-      const stats = JSON.parse(localStorage.getItem(STATS_KEY)) || {
-        totalGames: 0,
-        totalTime: 0,
-        totalScore: 0,
-        totalHints: 0,
-        goldCount: 0,
-        silverCount: 0,
-        bronzeCount: 0,
-      };
+        if (!lastSwapped) return;
 
-      const avgScore = stats.totalGames > 0 ? Math.round(stats.totalScore / stats.totalGames) : 0;
+        const children = Array.from(puzzleContainer.children);
+        const [index1, index2] = lastSwapped;
+        const piece1 = children[index1];
+        const piece2 = children[index2];
 
-      const html = `
+        [piece1, piece2].forEach((piece) => {
+          piece.classList.add("highlight-preview");
+        });
+
+        setTimeout(() => {
+          [piece1, piece2].forEach((piece) => {
+            piece.classList.remove("highlight-preview");
+          });
+        }, 3000);
+      }
+
+      function updateLifetimeStats(score, time, hints) {
+        const stats = JSON.parse(localStorage.getItem(STATS_KEY)) || {
+          totalGames: 0,
+          totalTime: 0,
+          totalScore: 0,
+          totalHints: 0,
+          goldCount: 0,
+          silverCount: 0,
+          bronzeCount: 0,
+        };
+
+        stats.totalGames += 1;
+        stats.totalTime += time;
+        stats.totalScore += score;
+        stats.totalHints += hints;
+
+        if (score >= 800) {
+          stats.goldCount += 1;
+        } else if (score >= 500) {
+          stats.silverCount += 1;
+        } else if (score >= 200) {
+          stats.bronzeCount += 1;
+        }
+
+        localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+      }
+
+      function showStats() {
+        const stats = JSON.parse(localStorage.getItem(STATS_KEY)) || {
+          totalGames: 0,
+          totalTime: 0,
+          totalScore: 0,
+          totalHints: 0,
+          goldCount: 0,
+          silverCount: 0,
+          bronzeCount: 0,
+        };
+
+        const avgScore =
+          stats.totalGames > 0
+            ? Math.round(stats.totalScore / stats.totalGames)
+            : 0;
+
+        const html = `
         <div class="lifetime-stats">
           <div class="title">📊 Statistik Lifetime</div>
-          <div class="stat-row"><span class="label">🧩 Total Puzzle</span><span class="value">${stats.totalGames
-        }</span></div>
+          <div class="stat-row"><span class="label">🧩 Total Puzzle</span><span class="value">${
+            stats.totalGames
+          }</span></div>
           <div class="stat-row"><span class="label">⏱️ Total Waktu</span><span class="value">${formatTime(
-          stats.totalTime
-        )}</span></div>
+            stats.totalTime
+          )}</span></div>
           <div class="stat-row"><span class="label">🎯 Rata-rata Skor</span><span class="value">${avgScore}</span></div>
-          <div class="stat-row"><span class="label">💡 Total Hint</span><span class="value">${stats.totalHints}</span></div> 
+          <div class="stat-row"><span class="label">💡 Total Hint</span><span class="value">${
+            stats.totalHints
+          }</span></div> 
         
         <div class="title stats-medal-title">🏅 Total Medali</div>
-          <div class="stat-row"><span class="label">🥇 Emas</span><span class="value gold">${stats.goldCount}</span></div>
-          <div class="stat-row"><span class="label">🥈 Perak</span><span class="value silver">${stats.silverCount}</span></div>
-          <div class="stat-row"><span class="label">🥉 Perunggu</span><span class="value bronze">${stats.bronzeCount}</span></div>
+          <div class="stat-row"><span class="label">🥇 Emas</span><span class="value gold">${
+            stats.goldCount
+          }</span></div>
+          <div class="stat-row"><span class="label">🥈 Perak</span><span class="value silver">${
+            stats.silverCount
+          }</span></div>
+          <div class="stat-row"><span class="label">🥉 Perunggu</span><span class="value bronze">${
+            stats.bronzeCount
+          }</span></div>
         </div>
       `;
 
-      const modal = document.getElementById("customModal");
-      const message = document.getElementById("modalMessage");
-      const buttons = document.getElementById("modalButtons");
-      message.innerHTML = html;
+        const modal = document.getElementById("customModal");
+        const message = document.getElementById("modalMessage");
+        const buttons = document.getElementById("modalButtons");
+        message.innerHTML = html;
 
-      buttons.innerHTML = `
+        buttons.innerHTML = `
             <div class="reset-container horizontal-buttons">
                 <button onclick="resetStats()" class="btn btn-danger button-base">🗑️ Reset Statistik</button>
                 <button class="btn close-modal-button button-base" onclick="closeModal()">OK</button>
             </div>
         `;
 
-      modal.classList.remove("hidden");
-    }
-
-    function resetStats() {
-      showConfirmationModal(
-        "Hapus Statistik?",
-        "Tindakan ini akan menghapus semua statistik lifetime. Yakin ingin melanjutkan?",
-        "Ya, Hapus",
-        () => {
-          localStorage.removeItem(STATS_KEY);
-          showStats();
-        },
-        "Batal",
-        closeModal
-      );
-    }
-
-    function resetLeaderboard() {
-      showConfirmationModal(
-        "Hapus Leaderboard?",
-        "Tindakan ini akan menghapus semua rekor skor terbaik. Yakin ingin melanjutkan?",
-        "Ya, Hapus",
-        () => {
-          localStorage.removeItem(LEADERBOARD_KEY);
-          showLeaderboard();
-        },
-        "Batal",
-        closeModal
-      );
-    }
-
-    function disablePuzzleInteraction() {
-      const pieces = document.querySelectorAll(".puzzle-piece");
-      pieces.forEach((piece) => {
-        piece.setAttribute("draggable", "false");
-        piece.style.cursor = "default";
-        piece.removeEventListener("click", rotatePiece);
-        piece.removeEventListener("dragstart", dragStart);
-        piece.removeEventListener("dragover", dragOver);
-        piece.removeEventListener("drop", dropPiece);
-      });
-    }
-
-    document.getElementById("imageUpload").addEventListener("change", function (e) {
-      const file = e.target.files[0];
-      if (file && file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onload = function (event) {
-          currentImageUrl = event.target.result;
-          updatePreviewImage(currentImageUrl);
-
-          const opt = document.createElement("option");
-          opt.value = currentImageUrl;
-          opt.textContent = "📂 " + file.name;
-          defaultImageSelector.appendChild(opt);
-          defaultImageSelector.value = currentImageUrl;
-        };
-        reader.readAsDataURL(file);
+        modal.classList.remove("hidden");
       }
-    });
 
-    let zoomLevel = 100;
-
-    function applyZoom() {
-      const scaler = document.getElementById("puzzle-scaler");
-      const scale = zoomLevel / 100;
-      scaler.style.transform = `scale(${scale})`;
-
-      const puzzle = document.getElementById("puzzle-container");
-      const maxWidth = window.innerWidth * 0.9;
-      if (puzzle.offsetWidth * scale > maxWidth) {
-        zoomLevel = (maxWidth / puzzle.offsetWidth) * 100;
-        scaler.style.transform = `scale(${zoomLevel / 100})`;
-        document.getElementById("zoomSlider").value = zoomLevel;
+      function resetStats() {
+        showConfirmationModal(
+          "Hapus Statistik?",
+          "Tindakan ini akan menghapus semua statistik lifetime. Yakin ingin melanjutkan?",
+          "Ya, Hapus",
+          () => {
+            localStorage.removeItem(STATS_KEY);
+            showStats();
+          },
+          "Batal",
+          closeModal
+        );
       }
-    }
 
-    document.getElementById("zoomOut").addEventListener("click", () => {
-      zoomLevel = Math.max(50, zoomLevel - 10);
-      document.getElementById("zoomSlider").value = zoomLevel;
-      applyZoom();
-    });
-
-    document.getElementById("zoomIn").addEventListener("click", () => {
-      zoomLevel = Math.min(150, zoomLevel + 10);
-      document.getElementById("zoomSlider").value = zoomLevel;
-      applyZoom();
-    });
-
-    document.getElementById("zoomSlider").addEventListener("input", (e) => {
-      zoomLevel = parseInt(e.target.value);
-      applyZoom();
-    });
-
-    window.addEventListener("resize", applyZoom);
-
-    document.getElementById("zoomOut").addEventListener("click", () => {
-      zoomLevel = Math.max(50, zoomLevel - 10);
-      document.getElementById("zoomSlider").value = zoomLevel;
-      applyZoom();
-    });
-
-    document.getElementById("zoomIn").addEventListener("click", () => {
-      zoomLevel = Math.min(150, zoomLevel + 10);
-      document.getElementById("zoomSlider").value = zoomLevel;
-      applyZoom();
-    });
-
-    document.getElementById("zoomSlider").addEventListener("input", (e) => {
-      zoomLevel = parseInt(e.target.value);
-      applyZoom();
-    });
-
-    window.addEventListener("resize", applyZoom);
-
-    document.getElementById("filterModeSelect").addEventListener("change", (e) => {
-      filterMode = e.target.value;
-      applyFilterToPieces();
-
-      if (filterMode !== "none") {
-        e.target.classList.add("active");
-      } else {
-        e.target.classList.remove("active");
+      function resetLeaderboard() {
+        showConfirmationModal(
+          "Hapus Leaderboard?",
+          "Tindakan ini akan menghapus semua rekor skor terbaik. Yakin ingin melanjutkan?",
+          "Ya, Hapus",
+          () => {
+            localStorage.removeItem(LEADERBOARD_KEY);
+            showLeaderboard();
+          },
+          "Batal",
+          closeModal
+        );
       }
-    });
 
-    function applyFilterToPieces() {
-      const pieces = document.querySelectorAll(".puzzle-piece");
-      pieces.forEach((piece) => {
-        piece.classList.remove("filter-grayscale", "filter-sepia");
-        if (!filterRemoved) {
-          if (filterMode === "grayscale") piece.classList.add("filter-grayscale");
-          if (filterMode === "sepia") piece.classList.add("filter-sepia");
-        }
-      });
-    }
-
-    document.getElementById("removeFilterButton").addEventListener("click", () => {
-      clearTimeout(filterTimer);
-
-      filterRemoved = true;
-      applyFilterToPieces();
-
-      filterRemoveCount++;
-      updateFilterRemoveDisplay();
-
-      filterTimer = setTimeout(() => {
-        filterRemoved = false;
-        applyFilterToPieces();
-      }, 10000);
-    });
-
-    const motivationalQuotes = [
-      "🧩 Jangan terburu-buru, satu potongan dalam satu waktu.",
-      "☕ Istirahat sejenak bisa bantu kamu melihat solusi lebih jelas.",
-      "🎯 Fokus pada bagian kecil, hasil besar akan mengikuti.",
-      "💡 Kadang potongan yang salah justru menunjukkan arah yang benar.",
-      "🔥 Semakin sulit puzzle-nya, semakin besar kepuasanmu nanti.",
-      "🌈 Nikmati prosesnya, bukan hanya hasil akhirnya.",
-      "🕒 Setiap detik berharga, tapi jangan lupa senyum.",
-      "💪 Kamu pasti bisa menyelesaikannya!",
-    ];
-
-    function showRandomMotivationalTip() {
-      const randomTip = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
-      const tipElement = document.getElementById("motivationalTip");
-      if (tipElement) tipElement.textContent = randomTip;
-    }
-
-    window.addEventListener("DOMContentLoaded", showRandomMotivationalTip);
-
-    function updateFilterRemoveDisplay() {
-      document.getElementById("filterRemoveCountDisplay").textContent = `Filter removed: ${filterRemoveCount}`;
-    }
-
-    document.getElementById("screenshotButton").addEventListener("click", () => {
-      const puzzleContainer = document.getElementById("puzzle-container");
-      const pieces = puzzleContainer.querySelectorAll(".puzzle-piece");
-      const modal = document.getElementById("modalMessage");
-      const gridCount = Math.sqrt(pieces.length);
-      const size = puzzleContainer.clientWidth;
-      const pieceSize = size / gridCount;
-
-      const modalHeight = 250;
-      const canvas = document.createElement("canvas");
-      canvas.width = size;
-      canvas.height = size + modalHeight;
-      const ctx = canvas.getContext("2d");
-
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      pieces.forEach((piece, index) => {
-        const row = Math.floor(index / gridCount);
-        const col = index % gridCount;
-        const img = piece.querySelector("img");
-        const rotation = parseInt(piece.getAttribute("data-rotation") || "0");
-
-        if (img) {
-          const tempImg = new Image();
-          tempImg.src = img.src;
-          ctx.save();
-          const centerX = col * pieceSize + pieceSize / 2;
-          const centerY = row * pieceSize + pieceSize / 2;
-          ctx.translate(centerX, centerY);
-          ctx.rotate((rotation * Math.PI) / 180);
-          ctx.drawImage(tempImg, -pieceSize / 2, -pieceSize / 2, pieceSize, pieceSize);
-          ctx.restore();
-        }
-      });
-
-      const cardX = 1;
-      const cardY = size;
-      const cardWidth = canvas.width - 1;
-      const cardHeight = modalHeight;
-      const radius = 1;
-
-      ctx.fillStyle = "#103b0f";
-      ctx.beginPath();
-      ctx.moveTo(cardX + radius, cardY);
-      ctx.lineTo(cardX + cardWidth - radius, cardY);
-      ctx.quadraticCurveTo(cardX + cardWidth, cardY, cardX + cardWidth, cardY + radius);
-      ctx.lineTo(cardX + cardWidth, cardY + cardHeight - radius);
-      ctx.quadraticCurveTo(cardX + cardWidth, cardY + cardHeight, cardX + cardWidth - radius, cardY + cardHeight);
-      ctx.lineTo(cardX + radius, cardY + cardHeight);
-      ctx.quadraticCurveTo(cardX, cardY + cardHeight, cardX, cardY + cardHeight - radius);
-      ctx.lineTo(cardX, cardY + radius);
-      ctx.quadraticCurveTo(cardX, cardY, cardX + radius, cardY);
-      ctx.closePath();
-      ctx.fill();
-
-      ctx.strokeStyle = "#00ff5a";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 20px Arial";
-      ctx.textAlign = "center";
-      ctx.fillText("🎉 Puzzle Completed!", canvas.width / 2, cardY + 35);
-
-      if (modal) {
-        const modalText = modal.innerText
-          .split("\n")
-          .filter((t) => t.trim() !== "" && !t.toLowerCase().includes("puzzle completed"));
-        ctx.font = "16px Arial";
-        ctx.textAlign = "left";
-        ctx.fillStyle = "#f0f0f0";
-
-        let y = cardY + 65;
-        const lineHeight = 24;
-        const labelX = cardX + 40;
-        const valueX = cardX + cardWidth - 130;
-
-        modalText.forEach((line) => {
-          const match = line.match(/^(.*?)(\d{1,2}[:.]?\d{0,2}|Gold|Silver|Bronze|Medal|No Medal|0|\d+)$/);
-          if (match) {
-            ctx.fillText(match[1].trim(), labelX, y);
-            ctx.textAlign = "right";
-            ctx.fillText(match[2].trim(), valueX + 80, y);
-            ctx.textAlign = "left";
-          } else {
-            ctx.fillText(line.trim(), labelX, y);
-          }
-          y += lineHeight;
+      function disablePuzzleInteraction() {
+        const pieces = document.querySelectorAll(".puzzle-piece");
+        pieces.forEach((piece) => {
+          piece.setAttribute("draggable", "false");
+          piece.style.cursor = "default";
+          piece.removeEventListener("click", rotatePiece);
+          piece.removeEventListener("dragstart", dragStart);
+          piece.removeEventListener("dragover", dragOver);
+          piece.removeEventListener("drop", dropPiece);
         });
       }
 
-      const link = document.createElement("a");
-      link.download = "puzzle_result_with_stats.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    });
+      document
+        .getElementById("imageUpload")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (file && file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              currentImageUrl = event.target.result;
+              updatePreviewImage(currentImageUrl);
 
-    function updateStepDisplay() {
-      document.getElementById("stepCountDisplay").textContent = `Langkah: ${stepCount}`;
-    }
-
-    function resetCurrentGame() {
-      showConfirmationModal(
-        "Konfirmasi Reset",
-        "Apakah Anda yakin ingin mengocok ulang puzzle? Waktu, langkah, dan hitungan petunjuk akan direset.",
-        "Ya, Reset",
-        () => confirmResetGame(false),
-        "Batal",
-        closeModal
-      );
-    }
-
-    function confirmResetGame(skipModal = false) {
-      if (!skipModal) closeModal();
-
-      puzzleContainer.innerHTML = "";
-      shufflePieces();
-
-      seconds = 0;
-      stepCount = 0;
-      hintCount = 0;
-      highlightCount = 0;
-      highlightUsed = 0;
-      filterRemoveCount = 0;
-      lastSwapped = null;
-
-      clearInterval(timer);
-      clearInterval(challengeTimer);
-      setWarningOverlayVisible(false);
-
-      const challengeValue = parseInt(document.getElementById("challengeModeSelect").value);
-      isChallengeMode = challengeValue > 0;
-
-      if (isChallengeMode) {
-        challengeTimeLeft = challengeValue;
-        challengeTimeInitial = challengeValue;
-        timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
-        timerDisplay.classList.remove("blink-red");
-
-        challengeTimer = setInterval(() => {
-          challengeTimeLeft--;
-          timerDisplay.textContent = `Time left: ${formatTime(challengeTimeLeft)}`;
-
-          if (challengeTimeLeft <= 30 && challengeTimeLeft > 0) {
-            timerDisplay.classList.add("blink-red");
-            setWarningOverlayVisible(true);
-          } else {
-            timerDisplay.classList.remove("blink-red");
-            setWarningOverlayVisible(false);
+              const opt = document.createElement("option");
+              opt.value = currentImageUrl;
+              opt.textContent = "📂 " + file.name;
+              defaultImageSelector.appendChild(opt);
+              defaultImageSelector.value = currentImageUrl;
+            };
+            reader.readAsDataURL(file);
           }
+        });
 
-          if (challengeTimeLeft <= 0) {
-            clearInterval(challengeTimer);
-            clearInterval(timer);
-            disablePuzzleInteraction();
-            setWarningOverlayVisible(false);
+      let zoomLevel = 100;
 
-            document.getElementById("undoButtonHidden").style.display = "none";
-            document.getElementById("toggleRotateButton").style.display = "none";
-            document.getElementById("highlightButton").style.display = "none";
-            document.getElementById("hintButton").style.display = "none";
-            document.getElementById("pauseButton").style.display = "none";
-            document.getElementById("showOriginal").style.display = "none";
+      function applyZoom() {
+        const scaler = document.getElementById("puzzle-scaler");
+        const scale = zoomLevel / 100;
+        scaler.style.transform = `scale(${scale})`;
 
-            document.getElementById("toggleEndButton").style.display = "block";
-            timerDisplay.classList.remove("blink-red");
-            alert("⏱️ Waktu habis! Kamu gagal menyelesaikan puzzle.");
-          }
-        }, 1000);
-      } else {
-        timerDisplay.textContent = "Time: 00:00";
-        timer = setInterval(() => {
-          seconds++;
-          timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
-        }, 1000);
+        const puzzle = document.getElementById("puzzle-container");
+        const maxWidth = window.innerWidth * 0.9;
+        if (puzzle.offsetWidth * scale > maxWidth) {
+          zoomLevel = (maxWidth / puzzle.offsetWidth) * 100;
+          scaler.style.transform = `scale(${zoomLevel / 100})`;
+          document.getElementById("zoomSlider").value = zoomLevel;
+        }
       }
 
-      updateStepDisplay();
-      updateHintDisplay();
-      updateHighlightDisplay();
-      updateFilterRemoveDisplay();
-      updateProgress();
-
-      const resultBox = document.getElementById("completionResult");
-      resultBox.innerHTML = "";
-      resultBox.classList.remove("completed-prev");
-      resultBox.style.display = "none";
-
-      if (!skipModal) {
-        alert("Puzzle telah diacak ulang!");
-      }
-    }
-
-    function forceMoveRandomCorrectPiece() {
-      const piecesArr = Array.from(document.querySelectorAll(".puzzle-piece"));
-
-      const correctPieces = piecesArr.filter((piece, index) => {
-        const correctRow = Math.floor(index / gridSize);
-        const correctCol = index % gridSize;
-        const expectedRow = parseInt(piece.dataset.correctRow, 10);
-        const expectedCol = parseInt(piece.dataset.correctCol, 10);
-        const currentRotation = parseInt(piece.getAttribute("data-rotation") || "0");
-
-        return correctRow === expectedRow && correctCol === expectedCol && currentRotation === 0;
+      document.getElementById("zoomOut").addEventListener("click", () => {
+        zoomLevel = Math.max(50, zoomLevel - 10);
+        document.getElementById("zoomSlider").value = zoomLevel;
+        applyZoom();
       });
 
-      if (correctPieces.length === 0) return;
+      document.getElementById("zoomIn").addEventListener("click", () => {
+        zoomLevel = Math.min(150, zoomLevel + 10);
+        document.getElementById("zoomSlider").value = zoomLevel;
+        applyZoom();
+      });
 
-      const targetPiece = correctPieces[Math.floor(Math.random() * correctPieces.length)];
+      document.getElementById("zoomSlider").addEventListener("input", (e) => {
+        zoomLevel = parseInt(e.target.value);
+        applyZoom();
+      });
 
-      const others = piecesArr.filter(p => p !== targetPiece);
-      const randomSpot = others[Math.floor(Math.random() * others.length)];
+      window.addEventListener("resize", applyZoom);
 
-      const cloneA = targetPiece.cloneNode(true);
-      const cloneB = randomSpot.cloneNode(true);
+      document.getElementById("zoomOut").addEventListener("click", () => {
+        zoomLevel = Math.max(50, zoomLevel - 10);
+        document.getElementById("zoomSlider").value = zoomLevel;
+        applyZoom();
+      });
 
-      targetPiece.replaceWith(cloneB);
-      randomSpot.replaceWith(cloneA);
+      document.getElementById("zoomIn").addEventListener("click", () => {
+        zoomLevel = Math.min(150, zoomLevel + 10);
+        document.getElementById("zoomSlider").value = zoomLevel;
+        applyZoom();
+      });
 
-      addEventsToPiece(cloneA);
-      addEventsToPiece(cloneB);
+      document.getElementById("zoomSlider").addEventListener("input", (e) => {
+        zoomLevel = parseInt(e.target.value);
+        applyZoom();
+      });
 
-      cloneA.classList.add("blink-red");
-      cloneB.classList.add("blink-red");
-      setTimeout(() => {
-        cloneA.classList.remove("blink-red");
-        cloneB.classList.remove("blink-red");
-      }, 600);
+      window.addEventListener("resize", applyZoom);
+
+      document
+        .getElementById("filterModeSelect")
+        .addEventListener("change", (e) => {
+          filterMode = e.target.value;
+          applyFilterToPieces();
+
+          if (filterMode !== "none") {
+            e.target.classList.add("active");
+          } else {
+            e.target.classList.remove("active");
+          }
+        });
+
+      function applyFilterToPieces() {
+        const pieces = document.querySelectorAll(".puzzle-piece");
+        pieces.forEach((piece) => {
+          piece.classList.remove("filter-grayscale", "filter-sepia");
+          if (!filterRemoved) {
+            if (filterMode === "grayscale")
+              piece.classList.add("filter-grayscale");
+            if (filterMode === "sepia") piece.classList.add("filter-sepia");
+          }
+        });
+      }
+
+      document
+        .getElementById("removeFilterButton")
+        .addEventListener("click", () => {
+          clearTimeout(filterTimer);
+
+          filterRemoved = true;
+          applyFilterToPieces();
+
+          filterRemoveCount++;
+          updateFilterRemoveDisplay();
+
+          filterTimer = setTimeout(() => {
+            filterRemoved = false;
+            applyFilterToPieces();
+          }, 10000);
+        });
+
+      const motivationalQuotes = [
+        "🧩 Jangan terburu-buru, satu potongan dalam satu waktu.",
+        "☕ Istirahat sejenak bisa bantu kamu melihat solusi lebih jelas.",
+        "🎯 Fokus pada bagian kecil, hasil besar akan mengikuti.",
+        "💡 Kadang potongan yang salah justru menunjukkan arah yang benar.",
+        "🔥 Semakin sulit puzzle-nya, semakin besar kepuasanmu nanti.",
+        "🌈 Nikmati prosesnya, bukan hanya hasil akhirnya.",
+        "🕒 Setiap detik berharga, tapi jangan lupa senyum.",
+        "💪 Kamu pasti bisa menyelesaikannya!",
+      ];
+
+      function showRandomMotivationalTip() {
+        const randomTip =
+          motivationalQuotes[
+            Math.floor(Math.random() * motivationalQuotes.length)
+          ];
+        const tipElement = document.getElementById("motivationalTip");
+        if (tipElement) tipElement.textContent = randomTip;
+      }
+
+      window.addEventListener("DOMContentLoaded", showRandomMotivationalTip);
+
+      function updateFilterRemoveDisplay() {
+        document.getElementById(
+          "filterRemoveCountDisplay"
+        ).textContent = `Filter removed: ${filterRemoveCount}`;
+      }
+
+      document
+        .getElementById("screenshotButton")
+        .addEventListener("click", () => {
+          const puzzleContainer = document.getElementById("puzzle-container");
+          const pieces = puzzleContainer.querySelectorAll(".puzzle-piece");
+          const modal = document.getElementById("modalMessage");
+          const gridCount = Math.sqrt(pieces.length);
+          const size = puzzleContainer.clientWidth;
+          const pieceSize = size / gridCount;
+
+          const modalHeight = 250;
+          const canvas = document.createElement("canvas");
+          canvas.width = size;
+          canvas.height = size + modalHeight;
+          const ctx = canvas.getContext("2d");
+
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          pieces.forEach((piece, index) => {
+            const row = Math.floor(index / gridCount);
+            const col = index % gridCount;
+            const img = piece.querySelector("img");
+            const rotation = parseInt(
+              piece.getAttribute("data-rotation") || "0"
+            );
+
+            if (img) {
+              const tempImg = new Image();
+              tempImg.src = img.src;
+              ctx.save();
+              const centerX = col * pieceSize + pieceSize / 2;
+              const centerY = row * pieceSize + pieceSize / 2;
+              ctx.translate(centerX, centerY);
+              ctx.rotate((rotation * Math.PI) / 180);
+              ctx.drawImage(
+                tempImg,
+                -pieceSize / 2,
+                -pieceSize / 2,
+                pieceSize,
+                pieceSize
+              );
+              ctx.restore();
+            }
+          });
+
+          const cardX = 1;
+          const cardY = size;
+          const cardWidth = canvas.width - 1;
+          const cardHeight = modalHeight;
+          const radius = 1;
+
+          ctx.fillStyle = "#103b0f";
+          ctx.beginPath();
+          ctx.moveTo(cardX + radius, cardY);
+          ctx.lineTo(cardX + cardWidth - radius, cardY);
+          ctx.quadraticCurveTo(
+            cardX + cardWidth,
+            cardY,
+            cardX + cardWidth,
+            cardY + radius
+          );
+          ctx.lineTo(cardX + cardWidth, cardY + cardHeight - radius);
+          ctx.quadraticCurveTo(
+            cardX + cardWidth,
+            cardY + cardHeight,
+            cardX + cardWidth - radius,
+            cardY + cardHeight
+          );
+          ctx.lineTo(cardX + radius, cardY + cardHeight);
+          ctx.quadraticCurveTo(
+            cardX,
+            cardY + cardHeight,
+            cardX,
+            cardY + cardHeight - radius
+          );
+          ctx.lineTo(cardX, cardY + radius);
+          ctx.quadraticCurveTo(cardX, cardY, cardX + radius, cardY);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.strokeStyle = "#00ff5a";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 20px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText("🎉 Puzzle Completed!", canvas.width / 2, cardY + 35);
+
+          if (modal) {
+            const modalText = modal.innerText
+              .split("\n")
+              .filter(
+                (t) =>
+                  t.trim() !== "" &&
+                  !t.toLowerCase().includes("puzzle completed")
+              );
+            ctx.font = "16px Arial";
+            ctx.textAlign = "left";
+            ctx.fillStyle = "#f0f0f0";
+
+            let y = cardY + 65;
+            const lineHeight = 24;
+            const labelX = cardX + 40;
+            const valueX = cardX + cardWidth - 130;
+
+            modalText.forEach((line) => {
+              const match = line.match(
+                /^(.*?)(\d{1,2}[:.]?\d{0,2}|Gold|Silver|Bronze|Medal|No Medal|0|\d+)$/
+              );
+              if (match) {
+                ctx.fillText(match[1].trim(), labelX, y);
+                ctx.textAlign = "right";
+                ctx.fillText(match[2].trim(), valueX + 80, y);
+                ctx.textAlign = "left";
+              } else {
+                ctx.fillText(line.trim(), labelX, y);
+              }
+              y += lineHeight;
+            });
+          }
+
+          const link = document.createElement("a");
+          link.download = "puzzle_result_with_stats.png";
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        });
+
+      function updateStepDisplay() {
+        document.getElementById(
+          "stepCountDisplay"
+        ).textContent = `Langkah: ${stepCount}`;
+      }
+
+      function resetCurrentGame() {
+        showConfirmationModal(
+          "Konfirmasi Reset",
+          "Apakah Anda yakin ingin mengocok ulang puzzle? Waktu, langkah, dan hitungan petunjuk akan direset.",
+          "Ya, Reset",
+          () => confirmResetGame(false),
+          "Batal",
+          closeModal
+        );
+      }
+
+      function confirmResetGame(skipModal = false) {
+        if (!skipModal) closeModal();
+
+        puzzleContainer.innerHTML = "";
+        shufflePieces();
+
+        seconds = 0;
+        stepCount = 0;
+        hintCount = 0;
+        highlightCount = 0;
+        highlightUsed = 0;
+        filterRemoveCount = 0;
+        lastSwapped = null;
+
+        clearInterval(timer);
+        clearInterval(challengeTimer);
+        setWarningOverlayVisible(false);
+
+        const challengeValue = parseInt(
+          document.getElementById("challengeModeSelect").value
+        );
+        isChallengeMode = challengeValue > 0;
+
+        if (isChallengeMode) {
+          challengeTimeLeft = challengeValue;
+          challengeTimeInitial = challengeValue;
+          timerDisplay.textContent = `Time left: ${formatTime(
+            challengeTimeLeft
+          )}`;
+          timerDisplay.classList.remove("blink-red");
+
+          challengeTimer = setInterval(() => {
+            challengeTimeLeft--;
+            timerDisplay.textContent = `Time left: ${formatTime(
+              challengeTimeLeft
+            )}`;
+
+            if (challengeTimeLeft <= 30 && challengeTimeLeft > 0) {
+              timerDisplay.classList.add("blink-red");
+              setWarningOverlayVisible(true);
+            } else {
+              timerDisplay.classList.remove("blink-red");
+              setWarningOverlayVisible(false);
+            }
+
+            if (challengeTimeLeft <= 0) {
+              clearInterval(challengeTimer);
+              clearInterval(timer);
+              disablePuzzleInteraction();
+              setWarningOverlayVisible(false);
+
+              document.getElementById("undoButtonHidden").style.display =
+                "none";
+              document.getElementById("toggleRotateButton").style.display =
+                "none";
+              document.getElementById("highlightButton").style.display = "none";
+              document.getElementById("hintButton").style.display = "none";
+              document.getElementById("pauseButton").style.display = "none";
+              document.getElementById("showOriginal").style.display = "none";
+
+              document.getElementById("toggleEndButton").style.display =
+                "block";
+              timerDisplay.classList.remove("blink-red");
+              alert("⏱️ Waktu habis! Kamu gagal menyelesaikan puzzle.");
+            }
+          }, 1000);
+        } else {
+          timerDisplay.textContent = "Time: 00:00";
+          timer = setInterval(() => {
+            seconds++;
+            timerDisplay.textContent = `Time: ${formatTime(seconds)}`;
+          }, 1000);
+        }
+
+        updateStepDisplay();
+        updateHintDisplay();
+        updateHighlightDisplay();
+        updateFilterRemoveDisplay();
+        updateProgress();
+
+        const resultBox = document.getElementById("completionResult");
+        resultBox.innerHTML = "";
+        resultBox.classList.remove("completed-prev");
+        resultBox.style.display = "none";
+
+        if (!skipModal) {
+          alert("Puzzle telah diacak ulang!");
+        }
+      }
+
+      function forceMoveRandomCorrectPiece() {
+        const piecesArr = Array.from(
+          document.querySelectorAll(".puzzle-piece")
+        );
+
+        const correctPieces = piecesArr.filter((piece, index) => {
+          const correctRow = Math.floor(index / gridSize);
+          const correctCol = index % gridSize;
+          const expectedRow = parseInt(piece.dataset.correctRow, 10);
+          const expectedCol = parseInt(piece.dataset.correctCol, 10);
+          const currentRotation = parseInt(
+            piece.getAttribute("data-rotation") || "0"
+          );
+
+          return (
+            correctRow === expectedRow &&
+            correctCol === expectedCol &&
+            currentRotation === 0
+          );
+        });
+
+        if (correctPieces.length === 0) return;
+
+        const targetPiece =
+          correctPieces[Math.floor(Math.random() * correctPieces.length)];
+
+        const others = piecesArr.filter((p) => p !== targetPiece);
+        const randomSpot = others[Math.floor(Math.random() * others.length)];
+
+        const cloneA = targetPiece.cloneNode(true);
+        const cloneB = randomSpot.cloneNode(true);
+
+        targetPiece.replaceWith(cloneB);
+        randomSpot.replaceWith(cloneA);
+
+        addEventsToPiece(cloneA);
+        addEventsToPiece(cloneB);
+
+        cloneA.classList.add("blink-red");
+        cloneB.classList.add("blink-red");
+        setTimeout(() => {
+          cloneA.classList.remove("blink-red");
+          cloneB.classList.remove("blink-red");
+        }, 600);
+
+        updateProgress();
+      }
+
+      function toggleControls(isPlaying) {
+        document.getElementById("preGameControls").style.display = isPlaying
+          ? "none"
+          : "block";
+        document.getElementById("inGameControls").style.display = isPlaying
+          ? "block"
+          : "none";
+        document.getElementById("puzzle-container").style.display = isPlaying
+          ? "flex"
+          : "none";
+        document.getElementById("zoomControls").style.display = isPlaying
+          ? "flex"
+          : "none";
+
+        const previewElement = document.getElementById("previewContainer");
+        if (previewElement) {
+          previewElement.style.display = isPlaying ? "none" : "flex";
+        }
+
+        const tipElement = document.getElementById("motivationalTip");
+        if (tipElement) {
+          tipElement.style.display = isPlaying ? "none" : "block";
+        }
+      }
+
+      function toggleShowButton(isPlaying) {
+        document.getElementById("toggleShowButton").style.display = isPlaying
+          ? "block"
+          : "none";
+        document.getElementById("toggleEndButton").style.display = isPlaying
+          ? "none"
+          : "block";
+        document.getElementById("undoButtonHidden").style.display = isPlaying
+          ? "none"
+          : "block";
+      }
+
+      function toggleShowRotate(isRotationMode) {
+        document.getElementById("toggleRotateButton").style.display =
+          isRotationMode ? "block" : "none";
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const initialUrl = document.getElementById(
+          "defaultImageSelector"
+        ).value;
+        if (initialUrl && initialUrl !== "__upload__") {
+          currentImageUrl = initialUrl;
+          updatePreviewImage(currentImageUrl);
+        }
+      });
 
       updateProgress();
-    }
-
-    function toggleControls(isPlaying) {
-      document.getElementById("preGameControls").style.display = isPlaying ? "none" : "block";
-      document.getElementById("inGameControls").style.display = isPlaying ? "block" : "none";
-      document.getElementById("puzzle-container").style.display = isPlaying ? "flex" : "none";
-      document.getElementById("zoomControls").style.display = isPlaying ? "flex" : "none";
-
-      const previewElement = document.getElementById("previewContainer");
-      if (previewElement) {
-        previewElement.style.display = isPlaying ? "none" : "flex";
-      }
-
-      const tipElement = document.getElementById("motivationalTip");
-      if (tipElement) {
-        tipElement.style.display = isPlaying ? "none" : "block";
-      }
-    }
-
-    function toggleShowButton(isPlaying) {
-      document.getElementById("toggleShowButton").style.display = isPlaying ? "block" : "none";
-      document.getElementById("toggleEndButton").style.display = isPlaying ? "none" : "block";
-      document.getElementById("undoButtonHidden").style.display = isPlaying ? "none" : "block";
-    }
-
-    function toggleShowRotate(isRotationMode) {
-      document.getElementById("toggleRotateButton").style.display = isRotationMode ? "block" : "none";
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const initialUrl = document.getElementById("defaultImageSelector").value;
-      if (initialUrl && initialUrl !== "__upload__") {
-        currentImageUrl = initialUrl;
-        updatePreviewImage(currentImageUrl);
-      }
-    });
-
-    updateProgress();
-    // startGame();
-  </script>
-</body>
-
+      // startGame();
+    </script>
+  </body>
 </html>
