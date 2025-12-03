@@ -1432,7 +1432,14 @@
 
         const label = document.createElement("div");
         label.className = "penalty-value-label";
-        label.style.left = 100 - percent + "%";
+        const redSpace = percent;
+        const labelWidth = 20;
+
+        if (redSpace < labelWidth) {
+          label.style.left = 100 - labelWidth + "%";
+        } else {
+          label.style.left = 100 - percent + "%";
+        }
         label.textContent = `${score} | ${penaltyTotal}`;
 
         const container = document.querySelector(".penalty-progress-container");
