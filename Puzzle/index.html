@@ -782,6 +782,17 @@
         right: 0;
       }
 
+      .penalty-value-label {
+        position: absolute;
+        top: 0;
+        transform: translateX(-50%);
+        font-size: 12px;
+        font-weight: bold;
+        color: black;
+        line-height: 18px;
+        pointer-events: none;
+      }
+
       @media (max-width: 500px) {
         #puzzle-container {
           width: 95vw;
@@ -1417,7 +1428,17 @@
         if (percent > 100) percent = 100;
 
         bar.style.width = percent + "%";
-        bar.textContent = `${score} / ${penaltyTotal}`;
+        bar.textContent = "";
+
+        const label = document.createElement("div");
+        label.className = "penalty-value-label";
+        label.style.left = 100 - percent + "%";
+        label.textContent = `${score} | ${penaltyTotal}`;
+
+        const container = document.querySelector(".penalty-progress-container");
+        container.innerHTML = "";
+        container.appendChild(bar);
+        container.appendChild(label);
 
         buttons.innerHTML = `
         <div class="reset-container horizontal-buttons">
