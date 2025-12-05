@@ -248,6 +248,11 @@
       }
 
       .completion-stats {
+      border: 2px solid #cc0000;
+        border-radius: 10px;
+        padding: 15px 5px;
+        margin: 10px auto;
+        max-width: 350px;
         font-size: 16px;
         line-height: 1.8;
         padding: 0 10px;
@@ -375,6 +380,14 @@
         grid-template-columns: 130px 1fr;
         gap: 15px;
         align-items: center;
+      }
+
+      .stat-row > :first-child {
+        text-align: left;
+      }
+      
+      .stat-row > :last-child {
+        text-align: right; 
       }
 
       .stat-row .score {
@@ -1433,7 +1446,7 @@
         const label = document.createElement("div");
         label.className = "penalty-value-label";
         const redSpace = percent;
-        const labelWidth = 20;
+        const labelWidth = 19;
 
         if (redSpace < labelWidth) {
           label.style.left = 100 - labelWidth + "%";
