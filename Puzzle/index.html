@@ -384,9 +384,9 @@
       .stat-row > :first-child {
         text-align: left;
       }
-      
+
       .stat-row > :last-child {
-        text-align: right; 
+        text-align: right;
       }
 
       .stat-row .score {
@@ -882,6 +882,11 @@
         🔒 Lock Correct Pieces: OFF
       </button>
 
+      <div>
+        <input type="checkbox" id="blindModeCheckbox" />
+        <label for="blindModeCheckbox">Blind Mode (No Status/Hints)</label>
+      </div>
+
       <button class="btn button-base" onclick="showLeaderboard()">
         🏆 Leaderboard
       </button>
@@ -1064,6 +1069,7 @@
       let mutateThreshold = 0;
       let wrongMoveCount = 0;
       let showOriginalUsed = false;
+      let isBlindMode = false;
 
       const STATS_KEY = "jigsawStats";
 
@@ -1534,7 +1540,10 @@
 
       function endGame() {
         if (!document.querySelector(".puzzle-piece")) return;
-
+        if (isBlindMode) {
+          isBlindMode = false;
+          updateBlindModeDisplay();
+        }
         showConfirmationModal(
           "Yakin Ingin Mengakhiri Permainan?",
           "Semua progres akan hilang dan permainan akan berakhir. Kamu tidak akan mendapat skor.",
@@ -1646,7 +1655,7 @@
           filterMode !== "none" ? "inline-block" : "none";
 
         document.getElementById("previewImage").style.display = "none";
-
+        isBlindMode = document.getElementById("blindModeCheckbox").checked;
         const resultBox = document.getElementById("completionResult");
         resultBox.innerHTML = "";
         resultBox.classList.remove("completed-prev");
@@ -1691,6 +1700,7 @@
         updateHintDisplay();
         updateHighlightDisplay();
         updateFilterRemoveDisplay();
+        updateBlindModeDisplay();
 
         challengeTimeLeft = 0;
         challengeTimeInitial = 0;
@@ -2947,6 +2957,42 @@
         }, 600);
 
         updateProgress();
+      }
+
+      function updateBlindModeDisplay() {
+        const timerElement = document.getElementById("timerDisplay");
+        const progressContainer = document.getElementById("progressContainer");
+        const moveCountElement = document.getElementById("moveCount");
+        const hintUsedElement = document.getElementById("hintUsedDisplay");
+        const filterRemovedElement = document.getElementById(
+          "filterRemovedDisplay"
+        );
+
+        const statusElements = [
+          timerElement,
+          progressContainer,
+          moveCountElement,
+          hintUsedElement,
+          filterRemovedElement,
+        ];
+
+        const displayStyle = isBlindMode ? "none" : "block";
+
+        statusElements.forEach((el) => {
+          if (el) {
+            el.style.display = displayStyle;
+          }
+        });
+
+        const undoButton = document.getElementById("undoButton");
+        const hintButton = document.getElementById("toggleShowButton");
+
+        if (undoButton) {
+          undoButton.style.display = displayStyle;
+        }
+        if (hintButton) {
+          hintButton.style.display = displayStyle;
+        }
       }
 
       function toggleControls(isPlaying) {
