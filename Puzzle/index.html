@@ -882,13 +882,11 @@
         🔒 Lock Correct Pieces: OFF
       </button>
 
-      <button
-        class="btn button-base"
-        onclick="toggleBlindMode()"
-        id="toggleBlindModeButton"
-      >
-        Blind Mode: OFF
-      </button>
+      <!-- <div>
+        <input type="checkbox" id="blindModeCheckbox" />
+        <label for="blindModeCheckbox">Blind Mode (No Status/Hints)</label>
+      </div> -->
+
 
       <button class="btn button-base" onclick="showLeaderboard()">
         🏆 Leaderboard
@@ -1658,7 +1656,6 @@
           filterMode !== "none" ? "inline-block" : "none";
 
         document.getElementById("previewImage").style.display = "none";
-        isBlindMode = document.getElementById("blindModeCheckbox").checked;
         const resultBox = document.getElementById("completionResult");
         resultBox.innerHTML = "";
         resultBox.classList.remove("completed-prev");
@@ -1703,7 +1700,6 @@
         updateHintDisplay();
         updateHighlightDisplay();
         updateFilterRemoveDisplay();
-        updateBlindModeDisplay();
 
         challengeTimeLeft = 0;
         challengeTimeInitial = 0;
@@ -2960,52 +2956,6 @@
         }, 600);
 
         updateProgress();
-      }
-
-      function toggleBlindMode() {
-        isBlindMode = !isBlindMode;
-        const button = document.getElementById("toggleBlindModeButton");
-        if (button) {
-          button.textContent = isBlindMode
-            ? "Blind Mode: ON"
-            : "Blind Mode: OFF";
-        }
-      }
-
-      function updateBlindModeDisplay() {
-        const displayStyle = isBlindMode ? "none" : "block";
-
-        const statusElements = [
-          document.getElementById("timer"),
-          document.getElementById("highlightCountDisplay"),
-          document.getElementById("hintCountDisplay"),
-          document.getElementById("filterRemoveCountDisplay"),
-          document.getElementById("moveCountDisplay"),
-          document.getElementById("progress"),
-          document.getElementById("progressBarContainer"),
-          document.getElementById("comboDisplay"),
-        ];
-
-        const assistButtons = [
-          document.getElementById("showOriginal"),
-          document.getElementById("highlightButton"),
-          document.getElementById("undoButton"),
-          document.getElementById("hintButton"),
-          document.getElementById("removeFilterButton"),
-          document.getElementById("lockToggleButton"),
-        ];
-
-        statusElements.forEach((el) => {
-          if (el) {
-            el.style.display = displayStyle;
-          }
-        });
-
-        assistButtons.forEach((el) => {
-          if (el) {
-            el.style.display = displayStyle;
-          }
-        });
       }
 
       function toggleControls(isPlaying) {
