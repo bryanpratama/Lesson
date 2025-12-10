@@ -882,11 +882,10 @@
         🔒 Lock Correct Pieces: OFF
       </button>
 
-      <!-- <div>
+      <label id="blindModeButton" class="custom-checkbox-button button-base">
         <input type="checkbox" id="blindModeCheckbox" />
-        <label for="blindModeCheckbox">Blind Mode (No Status/Hints)</label>
-      </div> -->
-
+        Blind Mode (Sembunyikan Status)
+      </label>
 
       <button class="btn button-base" onclick="showLeaderboard()">
         🏆 Leaderboard
@@ -962,16 +961,17 @@
         <button class="btn button-base" id="pauseButton">Pause</button>
       </div>
 
-      <div id="timer">Time: 00:00</div>
-      <div id="highlightCountDisplay" class="counter-display">
-        Highlight used: 0
+      <div id="statusCounters">
+        <div id="timer">Time: 00:00</div>
+        <div id="highlightCountDisplay" class="counter-display">
+          Highlight used: 0
+        </div>
+        <div id="hintCountDisplay" class="counter-display">Hint used: 0</div>
+        <div id="filterRemoveCountDisplay" class="counter-display">
+          Filter removed: 0
+        </div>
+        <div id="stepCountDisplay" class="counter-display">Langkah: 0</div>
       </div>
-      <div id="hintCountDisplay" class="counter-display">Hint used: 0</div>
-      <div id="filterRemoveCountDisplay" class="counter-display">
-        Filter removed: 0
-      </div>
-      <div id="stepCountDisplay" class="counter-display">Langkah: 0</div>
-
       <div id="toggleEndButton" style="display: none">
         <button
           class="btn btn-danger button-base"
@@ -1073,6 +1073,44 @@
       let isBlindMode = false;
 
       const STATS_KEY = "jigsawStats";
+
+      function updateBlindModeDisplay() {
+        const statusCounters = document.getElementById("statusCounters");
+        const highlightButton = document.getElementById("highlightButton");
+        const hintButton = document.getElementById("hintButton");
+        const removeFilterButton =
+          document.getElementById("removeFilterButton");
+        const showOriginalButton = document.getElementById("showOriginal");
+        const previewSwapButton = document.querySelector(
+          'button[onclick="previewLastSwap()"]'
+        );
+
+        if (isBlindMode) {
+          // Sembunyikan semua counter status dan tombol bantuan
+          if (statusCounters) statusCounters.style.display = "none";
+
+          if (highlightButton) highlightButton.style.display = "none";
+          if (hintButton) hintButton.style.display = "none";
+          if (removeFilterButton) removeFilterButton.style.display = "none";
+          if (showOriginalButton) showOriginalButton.style.display = "none";
+          if (previewSwapButton) previewSwapButton.style.display = "none";
+        } else {
+          // Tampilkan kembali status dan tombol (sesuai logika game biasa)
+          if (statusCounters) statusCounters.style.display = "block";
+
+          if (highlightButton) highlightButton.style.display = "inline-block";
+          if (hintButton) hintButton.style.display = "inline-block";
+          if (showOriginalButton)
+            showOriginalButton.style.display = "inline-block";
+          if (previewSwapButton)
+            previewSwapButton.style.display = "inline-block";
+
+          // Filter button hanya ditampilkan jika filter sedang aktif
+          if (removeFilterButton)
+            removeFilterButton.style.display =
+              filterMode !== "none" ? "inline-block" : "none";
+        }
+      }
 
       const warningOverlayEl = document.getElementById("warningOverlay");
       function setWarningOverlayVisible(show) {
@@ -1575,7 +1613,9 @@
         resultBox.innerHTML = "";
         resultBox.classList.remove("completed-prev");
         resultBox.style.display = "none";
+        isBlindMode = false;
 
+        updateBlindModeDisplay();
         showEndModal();
         toggleControls(false);
         toggleShowButton(false);
@@ -1622,7 +1662,12 @@
         showOriginalBtn.classList.remove("active");
         showOriginalBtn.disabled = false;
 
+        isBlindMode = false;
+        updateBlindModeDisplay();
+
         toggleControls(false);
+        toggleShowButton(false);
+        document.getElementById("puzzle-container").style.display = "none";
       }
 
       function showEndModal() {
@@ -1662,6 +1707,8 @@
 
         const selectedDifficulty = document.getElementById("difficulty").value;
         gridSize = parseInt(selectedDifficulty);
+        const blindModeCheckbox = document.getElementById("blindModeCheckbox");
+        isBlindMode = blindModeCheckbox.checked;
         createPieces();
         originalImage.style.display = "none";
         seconds = 0;
@@ -1700,6 +1747,7 @@
         updateHintDisplay();
         updateHighlightDisplay();
         updateFilterRemoveDisplay();
+        updateBlindModeDisplay();
 
         challengeTimeLeft = 0;
         challengeTimeInitial = 0;
@@ -1888,6 +1936,15 @@
           mutateLabel.classList.toggle("active", mutateMode);
           wrongMoveCount = 0;
         });
+
+        const blindModeCheckbox = document.getElementById("blindModeCheckbox");
+        const blindModeButton = document.getElementById("blindModeButton");
+        if (blindModeCheckbox) {
+          blindModeCheckbox.addEventListener("change", () => {
+            isBlindMode = blindModeCheckbox.checked;
+            blindModeButton.classList.toggle("active", isBlindMode);
+          });
+        }
 
         updatePreviewImage(currentImageUrl);
       });
