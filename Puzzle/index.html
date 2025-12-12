@@ -1758,7 +1758,6 @@
         updateHintDisplay();
         updateHighlightDisplay();
         updateFilterRemoveDisplay();
-        updateBlindModeDisplay();
 
         challengeTimeLeft = 0;
         challengeTimeInitial = 0;
@@ -1846,6 +1845,7 @@
         filterTimer = null;
 
         confirmResetGame(true);
+        updateBlindModeDisplay();
         updateFilterRemoveDisplay();
         updateHighlightDisplay();
         updateHintDisplay();
@@ -1957,11 +1957,33 @@
             blindModeToggleButton.innerHTML = isBlindMode
               ? "👁️ Blind Mode: ON"
               : "👁️ Blind Mode: OFF";
+            blindModeToggleButton.classList.toggle("active", isBlindMode);
+
+            updateBlindModeDisplay();
           });
         }
 
         updatePreviewImage(currentImageUrl);
       });
+
+      function toggleBlindMode() {
+        isBlindMode = !isBlindMode;
+        const button = document.getElementById("blindModeToggleButton");
+
+        if (isBlindMode) {
+          button.innerHTML = "👁️ Blind Mode: ON";
+          button.classList.add("active");
+        } else {
+          button.innerHTML = "👁️ Blind Mode: OFF";
+          button.classList.remove("active");
+        }
+
+        updateBlindModeDisplay();
+      }
+
+      document
+        .getElementById("blindModeToggleButton")
+        .addEventListener("click", toggleBlindMode);
 
       document
         .getElementById("highlightButton")
