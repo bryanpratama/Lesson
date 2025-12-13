@@ -1590,6 +1590,7 @@
           "Batal",
           closeModal
         );
+        updateBlindModeButtonDisplay();
         clearInterval(chaosTimer);
       }
 
@@ -1966,8 +1967,22 @@
         updatePreviewImage(currentImageUrl);
       });
 
+      function updateBlindModeButtonDisplay() {
+    const button = document.getElementById("blindModeToggleButton");
+    if (!button) return; // Safety check
+
+    if (isBlindMode) {
+        button.innerHTML = "👁️ Blind Mode: ON";
+        button.classList.add("active");
+    } else {
+        button.innerHTML = "👁️ Blind Mode: OFF";
+        button.classList.remove("active");
+    }
+}
+
       function toggleBlindMode() {
         isBlindMode = !isBlindMode;
+        updateBlindModeButtonDisplay();
         const button = document.getElementById("blindModeToggleButton");
 
         if (isBlindMode) {
