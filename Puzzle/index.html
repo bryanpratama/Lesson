@@ -2211,7 +2211,15 @@
         document.querySelectorAll(".puzzle-piece").forEach(addClickToPiece);
         lastSwapped = null;
         updateProgress();
-        highlightCorrectPieces();
+
+        clone1.classList.add("highlight-preview");
+        clone2.classList.add("highlight-preview");
+
+        setTimeout(() => {
+          clone1.classList.remove("highlight-preview");
+          clone2.classList.remove("highlight-preview");
+        }, 2000);
+
         document
           .querySelectorAll(".puzzle-piece")
           .forEach((p) => p.classList.remove("hint-highlight"));
