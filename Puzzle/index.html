@@ -2938,6 +2938,18 @@
       function confirmResetGame(skipModal = false) {
         if (!skipModal) closeModal();
 
+        const originalImg = document.getElementById("original-image");
+        if (originalImg) {
+          originalImg.style.display = "none";
+        }
+
+        const btnOriginal = document.getElementById("showOriginal");
+        if (btnOriginal) {
+          btnOriginal.textContent = "Show Original";
+        }
+        
+        showOriginalUsed = false;
+
         puzzleContainer.innerHTML = "";
         shufflePieces();
 
