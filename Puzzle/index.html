@@ -1570,10 +1570,6 @@
 
       function endGame() {
         if (!document.querySelector(".puzzle-piece")) return;
-        if (isBlindMode) {
-          isBlindMode = false;
-          updateBlindModeDisplay();
-        }
         showConfirmationModal(
           "Yakin Ingin Mengakhiri Permainan?",
           "Semua progres akan hilang dan permainan akan berakhir. Kamu tidak akan mendapat skor.",
@@ -1605,7 +1601,6 @@
         resultBox.innerHTML = "";
         resultBox.classList.remove("completed-prev");
         resultBox.style.display = "none";
-        isBlindMode = false;
 
         updateBlindModeDisplay();
         const blindModeToggleButton = document.getElementById(
@@ -1661,7 +1656,6 @@
         showOriginalBtn.classList.remove("active");
         showOriginalBtn.disabled = false;
 
-        isBlindMode = false;
         updateBlindModeDisplay();
         const blindModeToggleButton = document.getElementById(
           "blindModeToggleButton",
@@ -1961,7 +1955,7 @@
 
       function updateBlindModeButtonDisplay() {
         const button = document.getElementById("blindModeToggleButton");
-        if (!button) return; // Safety check
+        if (!button) return;
 
         if (isBlindMode) {
           button.innerHTML = "👁️ Blind Mode: ON";
