@@ -1603,13 +1603,6 @@
         resultBox.style.display = "none";
 
         updateBlindModeDisplay();
-        const blindModeToggleButton = document.getElementById(
-          "blindModeToggleButton",
-        );
-        if (blindModeToggleButton) {
-          blindModeToggleButton.innerHTML = "👁️ Blind Mode: OFF";
-        }
-
         showEndModal();
         toggleControls(false);
         toggleShowButton(false);
@@ -1657,13 +1650,6 @@
         showOriginalBtn.disabled = false;
 
         updateBlindModeDisplay();
-        const blindModeToggleButton = document.getElementById(
-          "blindModeToggleButton",
-        );
-        if (blindModeToggleButton) {
-          blindModeToggleButton.innerHTML = "👁️ Blind Mode: OFF";
-        }
-
         toggleControls(false);
         toggleShowButton(false);
         document.getElementById("puzzle-container").style.display = "none";
