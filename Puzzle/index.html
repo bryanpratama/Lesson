@@ -1063,6 +1063,26 @@
       let showOriginalUsed = false;
       let isBlindMode = false;
 
+      const sounds = {
+        click: new Audio("audio/back_001.ogg"),
+        swap: new Audio("audio/bong_001.ogg"),
+        undo: new Audio("audio/click_001.ogg"),
+        success: new Audio("audio/close_001.ogg"),
+        exit: new Audio("audio/select_001.ogg"),
+        exit: new Audio("audio/switch_001.ogg"),
+        exit: new Audio("audio/toggle_001.ogg"),
+      };
+
+      function playSound(soundName) {
+        const sound = sounds[soundName];
+        if (sound) {
+          sound.currentTime = 0;
+          sound
+            .play()
+            .catch((e) => console.log("Audio play blocked by browser"));
+        }
+      }
+
       const STATS_KEY = "jigsawStats";
 
       function updateBlindModeDisplay() {
@@ -1678,6 +1698,7 @@
       }
 
       function startGame() {
+        playSound('click_001');
         filterMode = document.getElementById("filterModeSelect").value;
         hasUpdatedStats = false;
         showRandomMotivationalTip();
@@ -2915,7 +2936,7 @@
         if (btnOriginal) {
           btnOriginal.textContent = "Show Original";
         }
-        
+
         showOriginalUsed = false;
 
         puzzleContainer.innerHTML = "";
