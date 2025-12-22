@@ -1083,6 +1083,23 @@
         }
       }
 
+      const gameSounds = {
+        click: new Audio("click.ogg"),
+        swap: new Audio("swap.ogg"),
+        undo: new Audio("undo.ogg"),
+        success: new Audio("success.ogg"),
+        exit: new Audio("exit.ogg"),
+      };
+
+      function playSfx(name) {
+        if (gameSounds[name]) {
+          gameSounds[name].currentTime = 0;
+          gameSounds[name]
+            .play()
+            .catch((e) => console.warn("Audio play blocked"));
+        }
+      }
+
       const STATS_KEY = "jigsawStats";
 
       function updateBlindModeDisplay() {
@@ -1698,7 +1715,7 @@
       }
 
       function startGame() {
-        playSound('click_001');
+        playSfx('click');
         filterMode = document.getElementById("filterModeSelect").value;
         hasUpdatedStats = false;
         showRandomMotivationalTip();
