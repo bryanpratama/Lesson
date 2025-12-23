@@ -1063,8 +1063,8 @@
       let showOriginalUsed = false;
       let isBlindMode = false;
 
-      const sounds = {
-        click: new Audio("audio/back_001.ogg"),
+      const gameSounds = {
+        click: new Audio("audio/click_001.ogg"),
         swap: new Audio("audio/bong_001.ogg"),
         undo: new Audio("audio/click_001.ogg"),
         success: new Audio("audio/close_001.ogg"),
@@ -1073,30 +1073,16 @@
         exit: new Audio("audio/toggle_001.ogg"),
       };
 
-      function playSound(soundName) {
-        const sound = sounds[soundName];
-        if (sound) {
-          sound.currentTime = 0;
-          sound
-            .play()
-            .catch((e) => console.log("Audio play blocked by browser"));
-        }
-      }
-
-      const gameSounds = {
-        click: new Audio("click.ogg"),
-        swap: new Audio("swap.ogg"),
-        undo: new Audio("undo.ogg"),
-        success: new Audio("success.ogg"),
-        exit: new Audio("exit.ogg"),
-      };
-
       function playSfx(name) {
         if (gameSounds[name]) {
           gameSounds[name].currentTime = 0;
-          gameSounds[name]
-            .play()
-            .catch((e) => console.warn("Audio play blocked"));
+          const playPromise = gameSounds[name].play();
+
+          if (playPromise !== undefined) {
+            playPromise.catch((e) => {
+              console.warn("Audio diblokir browser. Klik layar dulu sekali.");
+            });
+          }
         }
       }
 
@@ -1715,7 +1701,7 @@
       }
 
       function startGame() {
-        playSfx('click');
+        playSfx("click");
         filterMode = document.getElementById("filterModeSelect").value;
         hasUpdatedStats = false;
         showRandomMotivationalTip();
