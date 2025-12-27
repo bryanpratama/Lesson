@@ -967,6 +967,7 @@
         <button
           class="btn btn-danger button-base"
           id="endGameButton"
+          data-sound="exit"
           onclick="endGame()"
         >
           🛑 End Game
@@ -1087,7 +1088,13 @@
           event.target.closest(".button-base");
 
         if (target) {
-          playSfx("click");
+          const customSound = target.getAttribute("data-sound");
+
+          if (customSound) {
+            playSfx(customSound);
+          } else {
+            playSfx("click");
+          }
         }
       });
 
@@ -1329,7 +1336,7 @@
         addEventsToPiece(targetClone);
 
         lastSwapped = [index1, index2];
-        playSfx('swap');
+        playSfx("swap");
         stepCount++;
         updateStepDisplay();
 
