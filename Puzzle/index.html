@@ -1620,7 +1620,7 @@
       function confirmEndGame() {
         if (!document.querySelector(".puzzle-piece")) return;
         closeModal();
-
+        playSfx('exit');
         clearInterval(timer);
         if (isChallengeMode) clearInterval(challengeTimer);
         setWarningOverlayVisible(false);
