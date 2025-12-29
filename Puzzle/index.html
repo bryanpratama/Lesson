@@ -1070,6 +1070,7 @@
         success: new Audio("audio/close_001.ogg"),
         exit: new Audio("audio/toggle_001.ogg"),
         swap: new Audio("audio/switch_001.ogg"),
+        completed: new Audio("audio/completed_sound.mp3"),
       };
 
       function playSfx(name) {
@@ -1398,6 +1399,7 @@
         const currentSeconds = seconds || 0;
         const initialChallengeTime = challengeTimeInitial || 0;
         const timeLeftChallenge = challengeTimeLeft || 0;
+        playSfx("completed");
 
         toggleShowButton(true);
         let timeSpent = isChallengeMode
@@ -1620,7 +1622,7 @@
       function confirmEndGame() {
         if (!document.querySelector(".puzzle-piece")) return;
         closeModal();
-        playSfx('exit');
+        playSfx("exit");
         clearInterval(timer);
         if (isChallengeMode) clearInterval(challengeTimer);
         setWarningOverlayVisible(false);
