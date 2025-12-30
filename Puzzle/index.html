@@ -1073,6 +1073,10 @@
         completed: new Audio("audio/completed_sound.mp3"),
       };
 
+      const bgMusic = new Audio("audio/background_music.mp3");
+      bgMusic.loop = true;
+      bgMusic.volume = 0.3;
+
       function playSfx(name) {
         const sound = gameSounds[name];
         if (sound) {
@@ -1716,6 +1720,7 @@
 
       function startGame() {
         playSfx("click");
+        bgMusic.play().catch((e) => console.log("Menunggu interaksi user untuk memutar musik"));
         filterMode = document.getElementById("filterModeSelect").value;
         hasUpdatedStats = false;
         showRandomMotivationalTip();
