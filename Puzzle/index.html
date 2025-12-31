@@ -823,6 +823,9 @@
         class="custom-select button-base"
       ></select>
       <button class="btn button-base" id="toggleDarkMode">Dark Mode</button>
+      <button id="muteButton" class="button-base" onclick="toggleMasterMute()">
+        🔊 Sound On
+      </button>
       <div id="previewContainer">
         <p>Preview Gambar:</p>
         <img id="previewImage" src="" alt="Preview" />
@@ -1063,6 +1066,7 @@
       let wrongMoveCount = 0;
       let showOriginalUsed = false;
       let isBlindMode = false;
+      let isMuted = false;
 
       const gameSounds = {
         click: new Audio("audio/bong_001.ogg"),
@@ -1073,21 +1077,35 @@
         completed: new Audio("audio/completed_sound.mp3"),
       };
 
+      function toggleMasterMute() {
+        isMuted = !isMuted;
+
+        if (isMuted) {
+          bgMusic.pause();
+        } else {
+          if (isPlaying) {
+            bgMusic.play().catch((e) => {});
+          }
+        }
+
+        const muteBtn = document.getElementById("muteButton");
+        muteBtn.innerText = isMuted ? "🔇 Sound Off" : "🔊 Sound On";
+      }
+
       const bgMusic = new Audio("audio/background_music.mp3");
       bgMusic.loop = true;
       bgMusic.volume = 0.3;
 
       function playSfx(name) {
-        const sound = gameSounds[name];
-        if (sound) {
-          sound.currentTime = 0;
-          sound
-            .play()
-            .catch((e) => console.warn("Audio diblokir atau file tidak ada"));
+        if (isMuted) return;
+        if (gameSounds[name]) {
+          gameSounds[name].currentTime = 0;
+          gameSounds[name].play().catch((e) => console.warn("Audio blocked"));
         }
       }
 
       document.addEventListener("click", function (event) {
+        if (isMuted) return;
         const target =
           event.target.closest("button") ||
           event.target.closest(".button-base");
@@ -1720,7 +1738,11 @@
 
       function startGame() {
         playSfx("click");
-        bgMusic.play().catch((e) => console.log("Menunggu interaksi user untuk memutar musik"));
+        bgMusic
+          .play()
+          .catch((e) =>
+            console.log("Menunggu interaksi user untuk memutar musik"),
+          );
         filterMode = document.getElementById("filterModeSelect").value;
         hasUpdatedStats = false;
         showRandomMotivationalTip();
