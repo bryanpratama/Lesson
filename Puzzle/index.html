@@ -1080,16 +1080,17 @@
       function toggleMasterMute() {
         isMuted = !isMuted;
 
+        const muteBtn = document.getElementById("muteButton");
+
         if (isMuted) {
           bgMusic.pause();
+          if (muteBtn) muteBtn.innerText = "🔇 Sound Off";
         } else {
           if (isPlaying) {
-            bgMusic.play().catch((e) => {});
+            bgMusic.play().catch((e) => console.log("Musik tertunda"));
           }
+          if (muteBtn) muteBtn.innerText = "🔊 Sound On";
         }
-
-        const muteBtn = document.getElementById("muteButton");
-        muteBtn.innerText = isMuted ? "🔇 Sound Off" : "🔊 Sound On";
       }
 
       const bgMusic = new Audio("audio/background_music.mp3");
