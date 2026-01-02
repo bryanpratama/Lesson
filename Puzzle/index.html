@@ -1086,9 +1086,8 @@
           bgMusic.pause();
           if (muteBtn) muteBtn.innerText = "🔇 Sound Off";
         } else {
-          if (isPlaying) {
-            bgMusic.play().catch((e) => console.log("Musik tertunda"));
-          }
+          bgMusic.play().catch((e) => console.log("Musik tertunda"));
+
           if (muteBtn) muteBtn.innerText = "🔊 Sound On";
         }
       }
