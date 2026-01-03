@@ -3170,6 +3170,19 @@
         }
       });
 
+      function enableAudioOnInteraction() {
+        if (!isMuted) {
+          bgMusic
+            .play()
+            .catch((e) => console.log("Menunggu interaksi nyata..."));
+        }
+        document.removeEventListener("click", enableAudioOnInteraction);
+        document.removeEventListener("touchstart", enableAudioOnInteraction);
+      }
+
+      document.addEventListener("click", enableAudioOnInteraction);
+      document.addEventListener("touchstart", enableAudioOnInteraction);
+
       updateProgress();
       // startGame();
     </script>
