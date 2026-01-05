@@ -1079,15 +1079,12 @@
 
       function toggleMasterMute() {
         isMuted = !isMuted;
-
         const muteBtn = document.getElementById("muteButton");
-
         if (isMuted) {
           bgMusic.pause();
           if (muteBtn) muteBtn.innerText = "🔇 Sound Off";
         } else {
           bgMusic.play().catch((e) => console.log("Musik tertunda"));
-
           if (muteBtn) muteBtn.innerText = "🔊 Sound On";
         }
       }
@@ -1106,13 +1103,12 @@
 
       document.addEventListener("click", function (event) {
         if (isMuted) return;
+
         const target =
           event.target.closest("button") ||
           event.target.closest(".button-base");
-
         if (target) {
           const customSound = target.getAttribute("data-sound");
-
           if (customSound) {
             playSfx(customSound);
           } else {
@@ -1738,11 +1734,9 @@
 
       function startGame() {
         playSfx("click");
-        bgMusic
-          .play()
-          .catch((e) =>
-            console.log("Menunggu interaksi user untuk memutar musik"),
-          );
+        if (!isMuted) {
+          bgMusic.play().catch((e) => console.log("Audio play blocked"));
+        }
         filterMode = document.getElementById("filterModeSelect").value;
         hasUpdatedStats = false;
         showRandomMotivationalTip();
