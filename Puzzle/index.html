@@ -1131,7 +1131,6 @@
         );
 
         if (isBlindMode) {
-          // Sembunyikan semua counter status dan tombol bantuan
           if (statusCounters) statusCounters.style.display = "none";
 
           if (highlightButton) highlightButton.style.display = "none";
@@ -1140,7 +1139,6 @@
           if (showOriginalButton) showOriginalButton.style.display = "none";
           if (previewSwapButton) previewSwapButton.style.display = "none";
         } else {
-          // Tampilkan kembali status dan tombol (sesuai logika game biasa)
           if (statusCounters) statusCounters.style.display = "block";
 
           if (highlightButton) highlightButton.style.display = "inline-block";
@@ -1150,7 +1148,6 @@
           if (previewSwapButton)
             previewSwapButton.style.display = "inline-block";
 
-          // Filter button hanya ditampilkan jika filter sedang aktif
           if (removeFilterButton)
             removeFilterButton.style.display =
               filterMode !== "none" ? "inline-block" : "none";
