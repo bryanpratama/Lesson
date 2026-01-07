@@ -328,7 +328,7 @@
         margin-bottom: 10px;
       }
 
-      .lifetime-stats .stat-row {
+      .lifetime-stats {
         display: grid;
         grid-template-columns: 150px 1fr;
       }
@@ -3167,8 +3167,9 @@
             .play()
             .catch((e) => console.log("Menunggu interaksi nyata..."));
         }
-        document.removeEventListener("click", enableAudioOnInteraction);
-        document.removeEventListener("touchstart", enableAudioOnInteraction);
+        ["click", "touchstart"].forEach((evt) =>
+          document.removeEventListener(evt, enableAudioOnInteraction),
+        );
       }
 
       document.addEventListener("click", enableAudioOnInteraction);
