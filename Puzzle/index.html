@@ -3171,6 +3171,20 @@
       document.addEventListener("click", enableAudioOnInteraction);
       document.addEventListener("touchstart", enableAudioOnInteraction);
 
+      document.addEventListener("keydown", (e) => {
+        if (e.code === "Space") {
+          e.preventDefault();
+
+          const originalImageDiv = document.getElementById("original-image");
+
+          if (originalImageDiv.style.display === "none") {
+            originalImageDiv.style.display = "block";
+          } else {
+            originalImageDiv.style.display = "none";
+          }
+        }
+
+      });
       updateProgress();
     </script>
   </body>
