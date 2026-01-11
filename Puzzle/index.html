@@ -3187,6 +3187,13 @@
         if (e.key.toLowerCase() === "m") {
           toggleMasterMute();
         }
+        if (e.key.toLowerCase() === "d") {
+          console.log("Tombol D ditekan - Toggle Dark Mode");
+          document.body.classList.toggle("dark-mode");
+          if (typeof toggleDarkMode === "function") {
+            toggleDarkMode();
+          }
+        }
       });
 
       updateProgress();
