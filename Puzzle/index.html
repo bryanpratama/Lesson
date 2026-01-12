@@ -3194,6 +3194,13 @@
             toggleDarkMode();
           }
         }
+        if (key === "u") {
+          const actualUndoBtn = document.getElementById("undoButton");
+          if (actualUndoBtn) {
+            console.log("Memicu tombol Undo...");
+            actualUndoBtn.click();
+          }
+        }
       });
 
       updateProgress();
