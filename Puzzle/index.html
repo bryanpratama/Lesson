@@ -3194,11 +3194,13 @@
             toggleDarkMode();
           }
         }
-        if (key === "u") {
-          const actualUndoBtn = document.getElementById("undoButton");
-          if (actualUndoBtn) {
-            console.log("Memicu tombol Undo...");
-            actualUndoBtn.click();
+        const tag = e.target.tagName.toLowerCase();
+        if (tag === "input" || tag === "select" || tag === "textarea") return;
+
+        if (e.key.toLowerCase() === "u") {
+          const undoBtn = document.getElementById("undoButton");
+          if (undoBtn && !undoBtn.disabled) {
+            undoBtn.click();
           }
         }
       });
