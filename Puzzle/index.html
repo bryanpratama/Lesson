@@ -3194,6 +3194,7 @@
             toggleDarkMode();
           }
         }
+        const key = e.key.toLowerCase();
         const tag = e.target.tagName.toLowerCase();
         if (tag === "input" || tag === "select" || tag === "textarea") return;
 
@@ -3201,6 +3202,13 @@
           const undoBtn = document.getElementById("undoButton");
           if (undoBtn && !undoBtn.disabled) {
             undoBtn.click();
+          }
+        }
+        if (key === "s") {
+          const shuffleBtn = document.getElementById("shuffleButtonHidden");
+          if (shuffleBtn && !shuffleBtn.disabled) {
+            console.log("Memicu tombol Shuffle...");
+            shuffleBtn.click();
           }
         }
       });
