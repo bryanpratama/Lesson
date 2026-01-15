@@ -3204,11 +3204,9 @@
             undoBtn.click();
           }
         }
-        if (key === "s") {
-          const shuffleBtn = document.getElementById("shuffleButtonHidden");
-          if (shuffleBtn && !shuffleBtn.disabled) {
-            console.log("Memicu tombol Shuffle...");
-            shuffleBtn.click();
+        if (key === "l") {
+          if (typeof previewLastSwap === "function") {
+            previewLastSwap();
           }
         }
       });
