@@ -3209,6 +3209,14 @@
             previewLastSwap();
           }
         }
+        if (key === "h") {
+          if (typeof highlightCorrectPieces === "function") {
+            highlightCorrectPieces();
+          } else if (typeof showHints === "function") {
+            showHints();
+          }
+          console.log("Shortcut H: Menampilkan highlight posisi benar");
+        }
       });
 
       updateProgress();
