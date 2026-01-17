@@ -3217,6 +3217,14 @@
           }
           console.log("Shortcut H: Menampilkan highlight posisi benar");
         }
+        if (key === "p") {
+          const pauseBtn = document.getElementById("pauseButton");
+          if (pauseBtn && !pauseBtn.disabled) {
+            pauseBtn.click();
+          } else if (typeof togglePause === "function") {
+            togglePause();
+          }
+        }
       });
 
       updateProgress();
