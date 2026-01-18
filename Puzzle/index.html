@@ -3219,10 +3219,14 @@
         }
         if (key === "p") {
           const pauseBtn = document.getElementById("pauseButton");
-          if (pauseBtn && !pauseBtn.disabled) {
-            pauseBtn.click();
-          } else if (typeof togglePause === "function") {
-            togglePause();
+
+          if (pauseBtn) {
+            if (typeof isPaused !== "undefined") {
+              togglePause();
+            } else {
+              pauseBtn.click();
+            }
+            console.log("Shortcut P: Toggle Pause/Resume");
           }
         }
       });
