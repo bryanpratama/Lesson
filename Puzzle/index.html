@@ -3218,15 +3218,23 @@
           console.log("Shortcut H: Menampilkan highlight posisi benar");
         }
         if (key === "p") {
-          const pauseBtn = document.getElementById("pauseButton");
+          const pauseOverlay = document.getElementById("pauseOverlay");
+          const isPausedNow =
+            pauseOverlay &&
+            window.getComputedStyle(pauseOverlay).display !== "none";
 
-          if (pauseBtn) {
-            if (typeof isPaused !== "undefined") {
-              togglePause();
-            } else {
+          if (isPausedNow) {
+            const resumeBtn = document.getElementById("resumeButton");
+            if (resumeBtn) {
+              console.log("Shortcut P: Memicu Resume");
+              resumeBtn.click();
+            }
+          } else {
+            const pauseBtn = document.getElementById("pauseButton");
+            if (pauseBtn && !pauseBtn.disabled) {
+              console.log("Shortcut P: Memicu Pause");
               pauseBtn.click();
             }
-            console.log("Shortcut P: Toggle Pause/Resume");
           }
         }
       });
