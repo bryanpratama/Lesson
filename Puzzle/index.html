@@ -3237,6 +3237,16 @@
             }
           }
         }
+        if (key === "i") {
+          const hintBtn = document.getElementById("hintButton");
+
+          if (hintBtn && !hintBtn.disabled) {
+            console.log("Shortcut I: Memicu Hint");
+            hintBtn.click();
+          } else if (typeof showHint === "function") {
+            showHint();
+          }
+        }
       });
 
       updateProgress();
