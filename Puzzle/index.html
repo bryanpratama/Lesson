@@ -3247,6 +3247,13 @@
             showHint();
           }
         }
+        if (key === "r") {
+          const resetBtn = document.getElementById("resetGameButton");
+
+          if (resetBtn && !resetBtn.disabled) {
+            resetBtn.click();
+          }
+        }
       });
 
       updateProgress();
