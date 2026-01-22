@@ -3254,6 +3254,21 @@
             resetBtn.click();
           }
         }
+        const modal = document.getElementById("customModal");
+
+        if (!modal || modal.classList.contains("hidden")) return;
+
+        if (key === "enter") {
+          e.preventDefault();
+
+          const confirmBtn = [...modal.querySelectorAll("button")].find((btn) =>
+            btn.textContent.trim().toLowerCase().includes("ya"),
+          );
+
+          if (confirmBtn) {
+            confirmBtn.click();
+          }
+        }
       });
 
       updateProgress();
