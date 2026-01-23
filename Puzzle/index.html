@@ -3269,6 +3269,17 @@
             confirmBtn.click();
           }
         }
+        if (key === "escape") {
+          e.preventDefault();
+
+          const cancelBtn = [...modal.querySelectorAll("button")].find((btn) =>
+            btn.textContent.trim().toLowerCase().includes("batal"),
+          );
+
+          if (cancelBtn) {
+            cancelBtn.click();
+          }
+        }
       });
 
       updateProgress();
